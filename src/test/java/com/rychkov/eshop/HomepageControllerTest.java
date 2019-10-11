@@ -24,7 +24,7 @@ public class HomepageControllerTest {
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("homepage"))
-                .andExpect(content().string(containsString("Java School E-shop")));
+                .andExpect(content().string(containsString("")));
 
     }
 }
