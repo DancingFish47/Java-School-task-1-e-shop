@@ -1,7 +1,7 @@
 package com.rychkov.eshop.Repositorys;
 
-import com.rychkov.eshop.Entitys.Orders;
+import com.rychkov.eshop.Entitys.OrderEntity;
 import org.springframework.data.repository.CrudRepository;
 
-public interface OrderRepository extends CrudRepository<Orders, Integer> {
+public interface OrderRepository extends CrudRepository<OrderEntity, Integer> {
 }

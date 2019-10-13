@@ -4,13 +4,12 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.sql.Date;
 import java.util.ArrayList;
 
 @Entity
 @Getter
 @Setter
-public class Orders {
+public class OrderEntity {
     public enum DeliveryMethod{
         FAST,
         SLOW,
@@ -29,11 +28,12 @@ public class Orders {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
-    private Integer userId;
+    @ManyToOne
+    private User user;
     private String customerAddress;
     private PaymentMethod paymentMethod;
     private DeliveryMethod deliveryMethod;
-    private ArrayList<Products> products;
+    private ArrayList<Book> books;
     private PaymentStatus paymentStatus;
     private OrderStatus orderStatus;
 

@@ -1,0 +1,30 @@
+.mainContainer{
+    position: relative;
+    margin-left:2%;
+    margin-right: 2%;
+    margin-top: 60px;
+    border-radius: 10px;
+}
+.mainContainer h1{
+    vertical-align: middle;
+    text-align: center;
+    margin-top: 40px;
+}
+.mainContainer p{
+    font-family: "sans-serif";
+}
+.mainContainer .bookDiv{
+    width: 300px;
+    height: auto;
+    margin: 5px;
+    border-color: #0f0f0f;
+    border-radius: 5px;
+    border-width: 1px;
+    background: #d7f5ff;
+    align: center;
+    min-height: 450px;
+}
+.float-left {
+    float:left;
+    width:33%;
+}

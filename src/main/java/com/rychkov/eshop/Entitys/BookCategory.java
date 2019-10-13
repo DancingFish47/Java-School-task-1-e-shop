@@ -1,5 +1,6 @@
 package com.rychkov.eshop.Entitys;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,24 +8,16 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.sql.Date;
+import javax.validation.constraints.NotNull;
 
 @Entity
+@Data
 @Getter
 @Setter
-public class Users {
-    public enum Role{
-        CUSTOMER,
-        EMPLOYEE,
-        ADMIN
-    }
+public class BookCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
-    private Role role;
-    private String firstName;
-    private String secondName;
-    private Date birthDate;
-    private String email;
-    private String password;
+    @NotNull
+    private String name;
 }

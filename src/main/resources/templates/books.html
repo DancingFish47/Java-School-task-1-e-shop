@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+  <head th:insert="htmlparts/header.html"></head>
+  <body>
+  <nav th:replace="~{htmlparts/navbar.html :: navbar (books='active') }"></nav>
+  <
+    <div class="mainContainer" >
+    <h1>Books</h1>
+    <br>
+        <div th:each="book : ${books}" class="bookDiv float-left">
+          <img src="images/placeholder.png" style="width: 300px; height: 200px;">
+          <h3 th:text="${book.name + '. ' + book.author}"></h3>
+          <p th:text="${'Amount left: ' + book.amount}"></p>
+          <p th:text="${'Pages: ' + book.pages}"></p>
+          <p th:text="${'Price: ' + book.price + '$'}"></p>
+          <p th:text="${'Category: ' + book.bookCategory.name}">"></p>
+          <p><button>Add in cart</button></p>
+        </div>
+  </div>
+
+  </body>
+</html>

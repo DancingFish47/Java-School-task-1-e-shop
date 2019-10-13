@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <title>E-shop</title>
+  <link rel="stylesheet" href="css/signin.css" type="text/css">
+  <link rel="stylesheet" href="css/bootstrap.css" type="text/css">
+  <script src="js/jquery.js" type="text/javascript"></script>
+  <script src="js/bootstrap.min.js" type="text/javascript"></script>
+</head>
+<body>
+<form  class="text-center" method="POST" th:action="@{/registration}" id="registerForm">
+
+  <h1 class="h3 mb-3 font-weight-normal">New account</h1>
+
+  <label for="username" class="sr-only">First name</label>
+  <input type="text" id="username" class="form-control" placeholder="Username" required="" autofocus="autofocus" name="username" >
+
+  <label for="firstname" class="sr-only">First name</label>
+  <input type="text" id="firstname" class="form-control" placeholder="First name" required="" autofocus="autofocus" name="firstname" >
+
+  <label for="lastname" class="sr-only">Last name</label>
+  <input type="text" id="lastname" class="form-control" placeholder="Last name" required="" name="lastname" >
+
+  <label for="birthdate" class="sr-only">Email address</label>
+  <input type="date" id="birthdate" class="form-control" placeholder="birthday" required="" name="birthdate">
+
+  <label for="inputEmail" class="sr-only">Email address</label>
+  <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required="" name="email">
+
+  <label for="inputPassword" class="sr-only">Password</label>
+  <input type="password" id="inputPassword" class="form-control" placeholder="Password" required="" name="password">
+
+  <label for="inputPassword2" class="sr-only">Password</label>
+  <input type="password" id="inputPassword2" class="form-control" placeholder="Repeat password" required="" name="confirmpassword">
+
+  <label for="inputRole" style="visibility: hidden"></label>
+  <input id="inputRole" style="visibility: hidden" value="User" name="role">
+
+  <button class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
+
+  <p><a href="/login">Already have an account?<br>Sign in</a></p>
+
+  <p><a href="/homepage">Back to home page</a></p>
+</form>
+</body>
+</html>
