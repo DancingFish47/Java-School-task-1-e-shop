@@ -16,7 +16,7 @@ import java.util.Collection;
 @Getter
 @Setter
 @Table(name = "User")
-public class User extends AbstractEntity implements UserDetails {
+public class User extends AbstractEntity {
     @NotNull
     @Column(name = "username", unique = true)
     private String username;
@@ -45,43 +45,4 @@ public class User extends AbstractEntity implements UserDetails {
     @OneToOne(targetEntity = UserRole.class)
     private UserRole role;
 
-    public User(String username, String password, String firstname, String lastname, String email, String birthdate, String role) {
-        this.username = username;
-        this.password = password;
-        this.firstName = firstname;
-        this.lastName = lastname;
-        this.email = email;
-        this.birthdate = birthdate;
-        this.role.setId(1);
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.asList(new SimpleGrantedAuthority("User"));
-    }
-
-    @Override
-    public String getUsername() {
-        return username;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return false;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return false;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return false;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return false;
-    }
 }
