@@ -1,7 +1,7 @@
-package com.rychkov.eshop.Services;
+package com.rychkov.eshop.services;
 
-import com.rychkov.eshop.Entitys.User;
-import com.rychkov.eshop.Repositorys.UserRepository;
+import com.rychkov.eshop.entitys.User;
+import com.rychkov.eshop.repositorys.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

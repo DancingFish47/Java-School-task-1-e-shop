@@ -1,7 +1,7 @@
-package com.rychkov.eshop.Controllers;
+package com.rychkov.eshop.controllers;
 
-import com.rychkov.eshop.DTOs.RegistrationDto;
-import com.rychkov.eshop.Repositorys.UserRepository;
+import com.rychkov.eshop.dtos.RegistrationDto;
+import com.rychkov.eshop.repositorys.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

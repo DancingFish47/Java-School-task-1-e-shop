@@ -1,4 +1,4 @@
-package com.rychkov.eshop.Services;
+package com.rychkov.eshop.services;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

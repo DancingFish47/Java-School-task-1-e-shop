@@ -1,4 +1,4 @@
-package com.rychkov.eshop.Controllers;
+package com.rychkov.eshop.controllers;
 
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.web.bind.annotation.GetMapping;

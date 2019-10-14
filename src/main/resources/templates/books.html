@@ -14,7 +14,7 @@
           <p th:text="${'Amount left: ' + book.amount}"></p>
           <p th:text="${'Pages: ' + book.pages}"></p>
           <p th:text="${'Price: ' + book.price + '$'}"></p>
-          <p th:text="${'Category: ' + book.bookCategory.name}">"></p>
+          <p th:each="category : ${book.bookCategories}" th:text="${'Categorys: ' + category.name + ' '}" ></p>
           <p><button>Add in cart</button></p>
         </div>
   </div>

@@ -1,6 +1,6 @@
-package com.rychkov.eshop.Controllers;
+package com.rychkov.eshop.controllers;
 
-import com.rychkov.eshop.Repositorys.BooksRepository;
+import com.rychkov.eshop.repositorys.BooksRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

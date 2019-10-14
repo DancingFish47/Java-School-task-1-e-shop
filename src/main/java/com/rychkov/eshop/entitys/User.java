@@ -1,4 +1,4 @@
-package com.rychkov.eshop.Entitys;
+package com.rychkov.eshop.entitys;
 
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -10,32 +10,40 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Date;
 
 @Entity
 @Data
 @Getter
 @Setter
-public class User implements UserDetails {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+@Table(name = "User")
+public class User extends AbstractEntity implements UserDetails {
     @NotNull
-    @Column(unique = true)
+    @Column(name = "username", unique = true)
     private String username;
+
     @NotNull
+    @Column(name = "first_name")
     private String firstName;
+
     @NotNull
+    @Column(name = "last_name")
     private String lastName;
+
     @NotEmpty
+    @Column(name = "birthdate")
     private String birthdate;
+
     @NotNull
-    @Column(unique = true)
+    @Column(name = "email", unique = true)
     private String email;
+
     @NotNull
+    @Column(name = "password")
     private String password;
+
     @NotNull
-    private String role;
+    @OneToOne(targetEntity = UserRole.class)
+    private UserRole role;
 
     public User(String username, String password, String firstname, String lastname, String email, String birthdate, String role) {
         this.username = username;
@@ -44,7 +52,7 @@ public class User implements UserDetails {
         this.lastName = lastname;
         this.email = email;
         this.birthdate = birthdate;
-        this.role = role;
+        this.role.setId(1);
     }
 
     @Override

@@ -1,6 +1,6 @@
-package com.rychkov.eshop.DTOs;
+package com.rychkov.eshop.dtos;
 
-import com.rychkov.eshop.Entitys.User;
+import com.rychkov.eshop.entitys.User;
 import lombok.Data;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
