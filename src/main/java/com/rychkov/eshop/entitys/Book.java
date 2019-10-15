@@ -22,7 +22,7 @@ public class Book extends AbstractEntity {
     @NotNull
     @Column(name = "price")
     private Float price;
-    @OneToMany(targetEntity = BookCategory.class)
+    @OneToMany(fetch = FetchType.EAGER, targetEntity = BookCategory.class)
     @Column(name = "book_category_id")
     private Set<BookCategory> bookCategories = new HashSet<>();
     @NotNull
