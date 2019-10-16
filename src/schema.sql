@@ -27,6 +27,7 @@ CREATE TABLE IF NOT EXISTS `address` (
   `street` varchar(255) COLLATE utf16_bin DEFAULT NULL,
   `zip` varchar(255) COLLATE utf16_bin DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL,
+  `date` date DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FKtrot3fhihthq0l9koef094xwr` (`user_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf16 COLLATE=utf16_bin;
@@ -45,13 +46,14 @@ CREATE TABLE IF NOT EXISTS `book` (
   `pages` int(11) DEFAULT NULL,
   `price` float DEFAULT NULL,
   `sold` int(11) DEFAULT NULL,
+  `date` date DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf16 COLLATE=utf16_bin;
 
 -- Dumping data for table eshopdb.book: 1 rows
 /*!40000 ALTER TABLE `book` DISABLE KEYS */;
-INSERT IGNORE INTO `book` (`id`, `version`, `amount`, `author`, `name`, `pages`, `price`, `sold`) VALUES
-	(1, 1, 20, 'Herman Melvill', 'Moby Dick', 300, 250, 20);
+INSERT IGNORE INTO `book` (`id`, `version`, `amount`, `author`, `name`, `pages`, `price`, `sold`, `date`) VALUES
+	(1, 1, 20, 'Herman Melvill', 'Moby Dick', 300, 250, 20, NULL);
 /*!40000 ALTER TABLE `book` ENABLE KEYS */;
 
 -- Dumping structure for table eshopdb.book_book_category
@@ -73,13 +75,14 @@ CREATE TABLE IF NOT EXISTS `book_category` (
   `id` int(11) NOT NULL,
   `version` int(11) DEFAULT NULL,
   `name` varchar(255) COLLATE utf16_bin DEFAULT NULL,
+  `date` date DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf16 COLLATE=utf16_bin;
 
 -- Dumping data for table eshopdb.book_category: 1 rows
 /*!40000 ALTER TABLE `book_category` DISABLE KEYS */;
-INSERT IGNORE INTO `book_category` (`id`, `version`, `name`) VALUES
-	(1, 1, 'Novel');
+INSERT IGNORE INTO `book_category` (`id`, `version`, `name`, `date`) VALUES
+	(1, 1, 'Novel', NULL);
 /*!40000 ALTER TABLE `book_category` ENABLE KEYS */;
 
 -- Dumping structure for table eshopdb.delivery_method
@@ -87,6 +90,7 @@ CREATE TABLE IF NOT EXISTS `delivery_method` (
   `id` int(11) NOT NULL,
   `version` int(11) DEFAULT NULL,
   `method` varchar(255) COLLATE utf16_bin DEFAULT NULL,
+  `date` date DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf16 COLLATE=utf16_bin;
 
@@ -113,6 +117,42 @@ INSERT IGNORE INTO `hibernate_sequence` (`next_val`) VALUES
 	(1),
 	(1);
 /*!40000 ALTER TABLE `hibernate_sequence` ENABLE KEYS */;
+
+-- Dumping structure for table eshopdb.orders
+CREATE TABLE IF NOT EXISTS `orders` (
+  `id` int(11) NOT NULL,
+  `date` date DEFAULT NULL,
+  `version` int(11) DEFAULT NULL,
+  `address_id` int(11) DEFAULT NULL,
+  `deliveryMethod_id` int(11) DEFAULT NULL,
+  `orderStatus_id` int(11) DEFAULT NULL,
+  `paymentMethod_id` int(11) DEFAULT NULL,
+  `paymentStatus_id` int(11) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKky1pbb8qo6fa1hg5m5tmcb962` (`address_id`),
+  KEY `FKc3773rir9odyf3fsytc7mr4mn` (`deliveryMethod_id`),
+  KEY `FK1k8meh5vonqpdb7576wcjnt7b` (`orderStatus_id`),
+  KEY `FK9c6dagllwd96ltkb96uo1uf8w` (`paymentMethod_id`),
+  KEY `FK6dwwtxyfk3whxr5gp9ulgp5ss` (`paymentStatus_id`),
+  KEY `FKsgwj42spshwc3eestq5vk520j` (`user_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf16 COLLATE=utf16_bin;
+
+-- Dumping data for table eshopdb.orders: 0 rows
+/*!40000 ALTER TABLE `orders` DISABLE KEYS */;
+/*!40000 ALTER TABLE `orders` ENABLE KEYS */;
+
+-- Dumping structure for table eshopdb.orders_book
+CREATE TABLE IF NOT EXISTS `orders_book` (
+  `OrderEntity_id` int(11) NOT NULL,
+  `books_id` int(11) NOT NULL,
+  PRIMARY KEY (`OrderEntity_id`,`books_id`),
+  UNIQUE KEY `UK_ehv1jqa3i286914eneefa274o` (`books_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf16 COLLATE=utf16_bin;
+
+-- Dumping data for table eshopdb.orders_book: 0 rows
+/*!40000 ALTER TABLE `orders_book` DISABLE KEYS */;
+/*!40000 ALTER TABLE `orders_book` ENABLE KEYS */;
 
 -- Dumping structure for table eshopdb.order_book
 CREATE TABLE IF NOT EXISTS `order_book` (
@@ -143,6 +183,7 @@ CREATE TABLE IF NOT EXISTS `order_status` (
   `id` int(11) NOT NULL,
   `version` int(11) DEFAULT NULL,
   `status` varchar(255) COLLATE utf16_bin DEFAULT NULL,
+  `date` date DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf16 COLLATE=utf16_bin;
 
@@ -155,6 +196,7 @@ CREATE TABLE IF NOT EXISTS `payment_method` (
   `id` int(11) NOT NULL,
   `version` int(11) DEFAULT NULL,
   `method` varchar(255) COLLATE utf16_bin DEFAULT NULL,
+  `date` date DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf16 COLLATE=utf16_bin;
 
@@ -167,6 +209,7 @@ CREATE TABLE IF NOT EXISTS `payment_status` (
   `id` int(11) NOT NULL,
   `version` int(11) DEFAULT NULL,
   `status` varchar(255) COLLATE utf16_bin DEFAULT NULL,
+  `date` date DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf16 COLLATE=utf16_bin;
 
@@ -185,6 +228,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `password` varchar(255) COLLATE utf16_bin DEFAULT NULL,
   `username` varchar(255) COLLATE utf16_bin DEFAULT NULL,
   `role_id` int(11) DEFAULT NULL,
+  `date` date DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK7p4y6cmlfd1fd1istmuqjwkrt` (`role_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf16 COLLATE=utf16_bin;
@@ -198,6 +242,7 @@ CREATE TABLE IF NOT EXISTS `user_role` (
   `id` int(11) NOT NULL,
   `version` int(11) DEFAULT NULL,
   `role` varchar(255) COLLATE utf16_bin DEFAULT NULL,
+  `date` date DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf16 COLLATE=utf16_bin;
 

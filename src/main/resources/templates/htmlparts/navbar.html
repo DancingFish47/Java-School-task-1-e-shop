@@ -1,42 +1,52 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
-<nav th:fragment="navbar" class="navbar navbar-default navbar-fixed-top">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="/homepage">E-Shop</a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-                <li th:class="${home}"><a href="/homepage">Home</a></li>
-                <li th:class="${books}"><a href="/books">Books</a></li>
-                <li><input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search" style="margin: 5px"></li>
-                <li><button class="btn btn-outline-success my-2 my-sm-0" type="submit" style="margin: 5px">Search</button></li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                <li th:class="${cart}"><a href="/cart">Cart</a></li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Your profile<span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="/profile">Details</a></li>
-                        <li><a href="/profile/orders">Your orders</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li><a href="/logout">Log out</a></li>
-                    </ul>
-                </li>
-                <li><a href="/login">Login</a></li>
-                <li><a href="/registration">Register</a></li>
-                <li><a href="/adminpage">Admin page</a></li>
-            </ul>
-        </div><!--/.nav-collapse -->
+<div class="container">
+<nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">E-Shop</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li th:class="${home + ' nav-item'}">
+                <a class="nav-link" href="/homepage">Home<span class="sr-only">(current)</span></a>
+            </li>
+            <li th:class="${books + ' nav-item'}">
+                <a class="nav-link" href="/books">Books</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Profile
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="#">Orders</a>
+                    <a class="dropdown-item" href="#">Settings</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#">Logout</a>
+                </div>
+            </li>
+            <li th:class="${cart + ' nav-item'}">
+                <a class="nav-link" href="/books">Cart</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Admin page</a>
+            </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+        <ul class="navbar-nav float-right">
+        <li class="nav-item">
+            <a class="nav-link" href="/login">Log in</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/registration">Sign up</a>
+        </li>
+        </ul>
     </div>
 </nav>
-
 </body>
 </html>

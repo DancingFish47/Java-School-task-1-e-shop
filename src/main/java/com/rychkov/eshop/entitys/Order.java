@@ -11,8 +11,8 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
-@Table(name = "Order")
-public class OrderEntity extends AbstractEntity {
+@Table(name = "Orders")
+public class Order extends AbstractEntity {
     @NotNull
     @ManyToOne(targetEntity = User.class)
     private User user;

@@ -2,10 +2,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
   <head th:insert="htmlparts/header.html"></head>
-  <body>
+  <body class="bg-light">
   <nav th:replace="~{htmlparts/navbar.html :: navbar (home='active') }"></nav>
-  <div class="mainContainer">
+  <div class="container">
     <h1>Main page</h1>
+    <p th:text="${currentUser}"></p>
     <p></p>
   </div>
   </body>

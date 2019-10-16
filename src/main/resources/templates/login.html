@@ -9,8 +9,8 @@
   <script src="js/jquery.js" type="text/javascript"></script>
   <script src="js/bootstrap.min.js" type="text/javascript"></script>
 </head>
-<body>
-  <form class="text-center"  th:action="@{/login}" method="POST" id="loginForm">
+<body class="text-center" style="background-color: #f5f5f5">
+  <form class="form-signin"  th:object="${user}" method="post" id="loginForm">
     <div th:if="${error}">
  Unable to login. Check your username and password.
  </div>

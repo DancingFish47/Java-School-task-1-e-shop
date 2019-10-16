@@ -1,6 +1,7 @@
-package com.rychkov.eshop;
+package com.rychkov.eshop.configurations;
 
 import com.rychkov.eshop.configurations.AppConfiguration;
+import com.rychkov.eshop.configurations.WebSecurityConfig;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
@@ -13,7 +14,7 @@ public class AppInitializer extends AbstractAnnotationConfigDispatcherServletIni
 
     @Override
     protected Class<?>[] getRootConfigClasses() {
-        return new Class[] { AppConfiguration.class };
+        return new Class[] { AppConfiguration.class, WebSecurityConfig.class };
     }
 
     @Override

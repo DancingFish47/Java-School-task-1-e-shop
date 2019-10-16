@@ -15,6 +15,7 @@ public class BooksPageController {
     @GetMapping
     public String bookspage(Model model){
         model.addAttribute("books", booksRepository.findAll());
+
         return "books";
     }
 
