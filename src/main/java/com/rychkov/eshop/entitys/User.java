@@ -11,14 +11,13 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
 
 @Entity
 @Data
 @Getter
 @Setter
 @Table(name = "User")
-public class User extends AbstractEntity {
+public class User extends AbstractEntity implements UserDetails{
     @NotNull
     @Column(name = "username", unique = true)
     private String username;
@@ -46,4 +45,29 @@ public class User extends AbstractEntity {
     @NotNull
     @Column(name ="role")
     private String userRole;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Arrays.asList(new SimpleGrantedAuthority(this.userRole));
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return false;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return false;
+    }
 }
