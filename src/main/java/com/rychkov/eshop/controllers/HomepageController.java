@@ -12,7 +12,7 @@ public class HomepageController {
     @GetMapping({"/", "/homepage"})
     public String homepage(Model model, Principal principal){
         if(principal!=null) model.addAttribute(principal.getName(), "username");
-        else model.addAttribute("anonymous", "username");
+        else model.addAttribute("username", "anonymous");
         return "homepage";
     }
 }

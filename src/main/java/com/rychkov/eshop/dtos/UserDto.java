@@ -22,10 +22,6 @@ public class UserDto {
 
     @NotNull
     @NotEmpty
-    private String confirmPassword;
-
-    @NotNull
-    @NotEmpty
     private String firstName;
 
     @NotNull
@@ -39,5 +35,4 @@ public class UserDto {
     @NotNull
     @NotEmpty
     private String birthdate;
-    private Integer role;
 }

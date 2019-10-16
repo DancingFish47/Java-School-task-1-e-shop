@@ -5,15 +5,18 @@ import com.rychkov.eshop.entitys.User;
 import com.rychkov.eshop.exceptions.EmailExistsException;
 import com.rychkov.eshop.repositorys.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
 @Service
-public class UserServiceImpl implements IUserService {
+public class UserServiceImpl implements UserService {
     @Autowired
-    private UserRepository repository;
-
+    private UserRepository userRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     @Transactional
     @Override
     public User registerNewUser(UserDto userDto) throws EmailExistsException {
@@ -21,15 +24,16 @@ public class UserServiceImpl implements IUserService {
         User user = new User();
         user.setUsername(userDto.getUsername());
         user.setBirthdate(userDto.getBirthdate());
-        user.setEmail(userDto.getEmail());
+        user.setEmail(userDto.getEmail().toLowerCase());
         user.setFirstName(userDto.getFirstName());
         user.setLastName(userDto.getLastName());
-        user.setPassword(userDto.getPassword());
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         user.setUserRole("User");
-        return repository.save(user);
+        return userRepository.save(user);
     }
+
     private boolean emailExists(String email) {
-        User user = repository.findByEmail(email);
+        User user = userRepository.findByEmail(email.toLowerCase());
         if (user != null) {
             return true;
         }

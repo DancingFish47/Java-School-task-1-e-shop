@@ -11,6 +11,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 
 @Entity
 @Data
@@ -43,6 +44,6 @@ public class User extends AbstractEntity {
     private String password;
 
     @NotNull
-    @Column(name = "userRole")
+    @Column(name ="role")
     private String userRole;
 }
