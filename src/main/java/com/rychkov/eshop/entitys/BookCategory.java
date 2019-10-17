@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Entity
 @Getter
@@ -13,4 +14,7 @@ import javax.validation.constraints.NotNull;
 public class BookCategory extends AbstractEntity {
     @NotNull
     private String name;
+
+    @OneToMany(mappedBy = "bookCategory")
+    private List<Book> books;
 }

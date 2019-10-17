@@ -16,22 +16,31 @@ public class Book extends AbstractEntity {
     @NotNull
     @Column(name = "name")
     private String name;
+
     @NotNull
     @Column(name = "author")
     private String author;
+
     @NotNull
     @Column(name = "price")
     private Float price;
-    @OneToMany(fetch = FetchType.EAGER, targetEntity = BookCategory.class)
-    @Column(name = "book_category_id")
-    private Set<BookCategory> bookCategories = new HashSet<>();
+
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="category_id")
+    private BookCategory bookCategory;
+
     @NotNull
     @Column(name = "pages")
     private Integer pages;
+
     @NotNull
     @Column(name = "amount")
     private Integer amount;
+
     @NotNull
     @Column(name = "sold")
     private Integer sold;
+
+    @ManyToMany(mappedBy = "books")
+    private Set<Order> orders = new HashSet<>();
 }

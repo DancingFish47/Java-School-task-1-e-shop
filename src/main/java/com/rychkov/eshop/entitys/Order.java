@@ -14,31 +14,36 @@ import java.util.Set;
 @Table(name = "Orders")
 public class Order extends AbstractEntity {
     @NotNull
-    @ManyToOne(targetEntity = User.class)
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="user_id")
     private User user;
 
-    @NotNull
-    @OneToOne(targetEntity = Address.class)
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="address_id")
     private Address address;
 
-    @NotNull
-    @OneToOne(targetEntity = PaymentMethod.class)
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="paymentMethod_id")
     private PaymentMethod paymentMethod;
 
-    @NotNull
-    @OneToOne(targetEntity = DeliveryMethod.class)
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="deliveryMethod_id")
     private DeliveryMethod deliveryMethod;
 
-    @NotNull
-    @OneToMany(targetEntity = Book.class)
-    private Set<Book> books = new HashSet<>();
+    @ManyToMany(cascade = { CascadeType.ALL })
+    @JoinTable(
+            name = "Order_Books",
+            joinColumns = { @JoinColumn(name = "order_id") },
+            inverseJoinColumns = { @JoinColumn(name = "book_id") }
+    )
+    Set<Book> books = new HashSet<>();
 
-    @NotNull
-    @OneToOne(targetEntity = PaymentStatus.class)
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="paymentStatus_id")
     private PaymentStatus paymentStatus;
 
-    @NotNull
-    @OneToOne(targetEntity = OrderStatus.class)
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="orderStatus_id")
     private OrderStatus orderStatus;
 
 }
