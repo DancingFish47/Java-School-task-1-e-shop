@@ -14,19 +14,19 @@ import java.util.Set;
 @Table(name = "Orders")
 public class Order extends AbstractEntity {
     @NotNull
-    @ManyToOne(fetch=FetchType.LAZY)
+    @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="user_id")
     private User user;
 
-    @ManyToOne(fetch=FetchType.LAZY)
+    @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="address_id")
     private Address address;
 
-    @ManyToOne(fetch=FetchType.LAZY)
+    @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="paymentMethod_id")
     private PaymentMethod paymentMethod;
 
-    @ManyToOne(fetch=FetchType.LAZY)
+    @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="deliveryMethod_id")
     private DeliveryMethod deliveryMethod;
 
@@ -38,11 +38,11 @@ public class Order extends AbstractEntity {
     )
     Set<Book> books = new HashSet<>();
 
-    @ManyToOne(fetch=FetchType.LAZY)
+    @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="paymentStatus_id")
     private PaymentStatus paymentStatus;
 
-    @ManyToOne(fetch=FetchType.LAZY)
+    @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="orderStatus_id")
     private OrderStatus orderStatus;
 

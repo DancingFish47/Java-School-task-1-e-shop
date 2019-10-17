@@ -14,7 +14,7 @@
             <p class="card-text" th:text="${'Amount left: ' + book.amount}"></p>
             <p class="card-text" th:text="${'Pages: ' + book.pages}"></p>
             <p class="card-text" th:text="${'Price: ' + book.price + '$'}"></p>
-            <p class="card-text" th:each="category : ${book.bookCategories}" th:text="${'Categorys: ' + category.name + ' '}"></p>
+            <p class="card-text" th:each="category : ${book.bookCategory}" th:text="${'Categorys: ' + category.name + ' '}"></p>
             <a href="#" class="btn btn-primary">Add to cart</a>
           </div>
         </div>

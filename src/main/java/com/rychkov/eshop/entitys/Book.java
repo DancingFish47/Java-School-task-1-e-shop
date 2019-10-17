@@ -25,7 +25,7 @@ public class Book extends AbstractEntity {
     @Column(name = "price")
     private Float price;
 
-    @ManyToOne(fetch=FetchType.LAZY)
+    @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="category_id")
     private BookCategory bookCategory;
 

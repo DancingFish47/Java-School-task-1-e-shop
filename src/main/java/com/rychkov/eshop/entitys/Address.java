@@ -12,7 +12,7 @@ import java.util.List;
 @Setter
 @Table(name = "Address")
 public class Address extends AbstractEntity {
-    @ManyToOne(fetch=FetchType.LAZY)
+    @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="user_id")
     private User user;
 
