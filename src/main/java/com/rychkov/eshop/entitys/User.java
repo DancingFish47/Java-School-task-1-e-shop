@@ -7,6 +7,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.transaction.Transactional;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.Arrays;
@@ -17,6 +18,7 @@ import java.util.List;
 @Data
 @Getter
 @Setter
+@Transactional
 @Table(name = "User")
 public class User extends AbstractEntity implements UserDetails{
     @NotNull
@@ -47,10 +49,12 @@ public class User extends AbstractEntity implements UserDetails{
     @Column(name ="role")
     private String userRole;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(fetch = FetchType.EAGER)
+    @OrderColumn
     private List<Address> addresses;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(fetch = FetchType.EAGER)
+    @OrderColumn
     private List<Order> orders;
 
     @Override
@@ -60,21 +64,21 @@ public class User extends AbstractEntity implements UserDetails{
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 }

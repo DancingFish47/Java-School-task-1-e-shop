@@ -1,7 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org">
 <body>
-<div class="container">
 <nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-dark bg-dark">
     <a class="navbar-brand" href="/homepage">E-Shop</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -16,37 +15,43 @@
             <li th:class="${books + ' nav-item'}">
                 <a class="nav-link" href="/books">Books</a>
             </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Profile
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="#">Orders</a>
-                    <a class="dropdown-item" href="#">Settings</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="/doLogout">Logout</a>
-                </div>
-            </li>
+
             <li th:class="${cart + ' nav-item'}">
-                <a class="nav-link" href="/books">Cart</a>
+                <a class="nav-link" href="/cart">Cart</a>
             </li>
+
             <li class="nav-item">
-                <a class="nav-link" href="#">Admin page</a>
-            </li>
-            <li class="nav-item disabled">
-                <a class="nav-link" th:text="${username}"></a>
+                <div sec:authorize="hasAuthority('Admin')">
+                    <a th:class="${admin + ' nav-link'}" href="/adminPage">Admin page</a>
+                 </div>
             </li>
         </ul>
-        <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
         <ul class="navbar-nav float-right">
-        <li class="nav-item">
-            <a class="nav-link" href="/login">Log in</a>
+        <li class="nav-item dropdown">
+            <div sec:authorize="isAuthenticated()">
+            <a th:class="${profile + ' nav-link dropdown-toggle'}" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" sec:authentication="name">
+
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/orders">Orders</a>
+                <a class="dropdown-item" href="/profileSettings">Settings</a>
+            </div>
+            </div>
         </li>
         <li class="nav-item">
+            <div sec:authorize="!isAuthenticated()" >
+                <a class="nav-link" href="/login">Log in</a>
+            </div>
+        </li>
+        <li class="nav-item">
+            <div sec:authorize="!isAuthenticated()">
             <a class="nav-link" href="/registration">Sign up</a>
+            </div>
+        </li>
+        <li class="nav-item">
+            <div sec:authorize="isAuthenticated()">
+            <a class="nav-link" href="/logout">Log out</a>
+            </div>
         </li>
         </ul>
     </div>

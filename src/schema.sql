@@ -55,7 +55,9 @@ CREATE TABLE IF NOT EXISTS `book` (
 -- Dumping data for table eshopdb.book: 1 rows
 /*!40000 ALTER TABLE `book` DISABLE KEYS */;
 INSERT IGNORE INTO `book` (`id`, `created_date`, `version`, `amount`, `author`, `name`, `pages`, `price`, `sold`, `category_id`) VALUES
-	(1, '2019-10-17', 0, 20, 'Herman Melvill', 'Moby Dick', 600, 20, 10, 1);
+	(1, '2019-10-17', 0, 20, 'Herman Melvill', 'Moby Dick', 600, 20, 10, 1),
+	(2, '2019-10-17', 0, 20, 'A.S.Pushkin', 'Captain\'s daughter', 400, 10, 5, 1),
+	(3, '2019-10-17', 0, 30, 'V.Nabokov', 'Pale Fire', 200, 5, 2, 1);
 /*!40000 ALTER TABLE `book` ENABLE KEYS */;
 
 -- Dumping structure for table eshopdb.book_category
@@ -82,7 +84,7 @@ CREATE TABLE IF NOT EXISTS `delivery_method` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
--- Dumping data for table eshopdb.delivery_method: 0 rows
+-- Dumping data for table eshopdb.delivery_method: 2 rows
 /*!40000 ALTER TABLE `delivery_method` DISABLE KEYS */;
 INSERT IGNORE INTO `delivery_method` (`id`, `created_date`, `version`, `method`) VALUES
 	(1, '2019-10-17', 0, 'FAST'),
@@ -97,15 +99,15 @@ CREATE TABLE IF NOT EXISTS `hibernate_sequence` (
 -- Dumping data for table eshopdb.hibernate_sequence: 9 rows
 /*!40000 ALTER TABLE `hibernate_sequence` DISABLE KEYS */;
 INSERT IGNORE INTO `hibernate_sequence` (`next_val`) VALUES
-	(2),
-	(2),
-	(2),
-	(2),
-	(2),
-	(2),
-	(2),
-	(2),
-	(2);
+	(6),
+	(6),
+	(6),
+	(6),
+	(6),
+	(6),
+	(6),
+	(6),
+	(6);
 /*!40000 ALTER TABLE `hibernate_sequence` ENABLE KEYS */;
 
 -- Dumping structure for table eshopdb.orders
@@ -153,7 +155,7 @@ CREATE TABLE IF NOT EXISTS `order_status` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
--- Dumping data for table eshopdb.order_status: 0 rows
+-- Dumping data for table eshopdb.order_status: 2 rows
 /*!40000 ALTER TABLE `order_status` DISABLE KEYS */;
 INSERT IGNORE INTO `order_status` (`id`, `created_date`, `version`, `status`) VALUES
 	(1, '2019-10-17', 0, 'DELIVERED'),
@@ -169,7 +171,7 @@ CREATE TABLE IF NOT EXISTS `payment_method` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
--- Dumping data for table eshopdb.payment_method: 0 rows
+-- Dumping data for table eshopdb.payment_method: 2 rows
 /*!40000 ALTER TABLE `payment_method` DISABLE KEYS */;
 INSERT IGNORE INTO `payment_method` (`id`, `created_date`, `version`, `method`) VALUES
 	(1, '2019-10-17', 0, 'CASH'),
@@ -185,7 +187,7 @@ CREATE TABLE IF NOT EXISTS `payment_status` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
--- Dumping data for table eshopdb.payment_status: 0 rows
+-- Dumping data for table eshopdb.payment_status: 2 rows
 /*!40000 ALTER TABLE `payment_status` DISABLE KEYS */;
 INSERT IGNORE INTO `payment_status` (`id`, `created_date`, `version`, `status`) VALUES
 	(1, '2019-10-17', 0, 'PAYED'),
@@ -209,10 +211,13 @@ CREATE TABLE IF NOT EXISTS `user` (
   UNIQUE KEY `UK_jreodf78a7pl5qidfh43axdfb` (`username`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
--- Dumping data for table eshopdb.user: 1 rows
+-- Dumping data for table eshopdb.user: 0 rows
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
 INSERT IGNORE INTO `user` (`id`, `created_date`, `version`, `birthdate`, `email`, `first_name`, `last_name`, `password`, `role`, `username`) VALUES
-	(1, '2019-10-17', 0, '1996-06-19', 'roman@mail.ru', 'Roman', 'Roman', '$2a$10$saUidXTUyOpcT/3p4xvOQ.0CeuQKUZt.omEW3z7OkXb1kWHzFORi.', 'User', 'Roman');
+	(3, '2019-10-17', 0, '1996-06-19', 'roman@mail.ru', 'Roman', 'Roman', '$2a$10$jy/JHnKGR.loWQxYw4cSBejXuWfh6K6psjxhRYJcpjoZ0zJJjIXLy', 'User', 'Roman'),
+	(4, '2019-10-17', 0, '1996-06-19', 'snake@mail.ru', 'Snake', 'Snake', '$2a$10$5XB3.98JOePhoStYeXbxCuLmHNZF3/0lTp4ERo9K.GIPPn11qsGte', 'User', 'Snake'),
+	(1, '2019-10-17', 0, '1996-06-19', 'admin@mail.ru', 'Admin', 'Admin', '$2a$10$jy/JHnKGR.loWQxYw4cSBejXuWfh6K6psjxhRYJcpjoZ0zJJjIXLy', 'Admin', 'Admin'),
+	(5, '2019-10-18', 0, '1998-03-19', 'john@mail.ru', 'Snow', 'Jack', '$2a$10$UDUxdZqWesFTgyLe2aI3bOsLpor9E1s7VIF0GRXn3hO7nf4kgppvq', 'User', 'John');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

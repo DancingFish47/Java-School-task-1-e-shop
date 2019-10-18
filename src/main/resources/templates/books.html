@@ -6,16 +6,25 @@
   <nav th:replace="~{htmlparts/navbar.html :: navbar (books='active') }"></nav>
     <div class="container">
     <h1>Books</h1>
+      <div class="container bg-light">
+        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Sort by
+        </a>
+
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+          <a class="dropdown-item" href="/books/sortByName">Book name</a>
+          <a class="dropdown-item" href="/books/sortByPrice">Price</a>
+      </div>
       <div class="card-columns">
         <div th:each="book : ${books}"  class="card" style="width: 18rem;">
-          <img src="images/placeholder.png" class="card-img-top" alt="...">
+          <img src="/images/placeholder.png" class="card-img-top" alt="...">
           <div class="card-body">
             <h5 class="card-title" th:text="${book.name + '. ' + book.author}"></h5>
             <p class="card-text" th:text="${'Amount left: ' + book.amount}"></p>
             <p class="card-text" th:text="${'Pages: ' + book.pages}"></p>
             <p class="card-text" th:text="${'Price: ' + book.price + '$'}"></p>
             <p class="card-text" th:each="category : ${book.bookCategory}" th:text="${'Categorys: ' + category.name + ' '}"></p>
-            <a href="#" class="btn btn-primary">Add to cart</a>
+            <a class="btn btn-primary" th:onclick="'javascript:addToCart(\'' + ${book.id} + '\');'">Add to cart</a>
           </div>
         </div>
       </div>
