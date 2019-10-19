@@ -76,16 +76,63 @@
         <form>
             <h3 th:if="${#lists.isEmpty(addresses)}">You don't have any addresses</h3>
             <h3 th:if="${!#lists.isEmpty(addresses)}">Your addresses</h3>
-            <div class="form-group row">
-                <div class="col-sm-10" th:each="address : ${addresses}">
-                    <input th:value="${address.street}">
+            <div id="addressesList">
+            <div class="form-group row" th:each="address : ${addresses}" th:id="${'div' + address.id}">
+                <div class="col-auto m-1">
+                    <button type="button" class="row btn btn-primary" th:onclick="'javascript:editAddress(\'' + ${address.id} + '\');'">Edit</button>
+                </div>
+                <div class="col-auto m-1">
+                    <button type="button" class="row btn btn-danger" th:onclick="'javascript:deleteAddress(\'' + ${address.id} + '\');'">Delete</button>
+                </div>
+                    <div class="col-auto w-50" >
+                    <input th:id="${'input' + address.id}" type="text" readonly  class="form-control" th:value="${address.country + ', '
+                                                                                          + address.city + ', '
+                                                                                           + address.street + ', '
+                                                                                            + address.building + ', '
+                                                                                             + address.apartment}">
+                    </div>
+            </div>
+            </div>
+            <form>
+            <div id="newAddressForm" style="display: none">
+                <div class="form-row">
+                    <div class="col">
+                        <label class="col-sm-2 col-form-label" for="country">Country</label>
+                            <input class="form-control" type="text" required="" placeholder="Country" id="country">
+                    </div>
+                    <div class="col">
+                        <label class="col-sm-2 col-form-label" for="city">City</label>
+                        <input class="form-control" type="text" required="" placeholder="City" id="city">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col">
+                        <label class="col-sm-2 col-form-label" for="street">Street</label>
+                        <input class="form-control" type="text" required="" placeholder="Street" id="street">
+                    </div>
+                    <div class="col">
+                        <label class="col-sm-2 col-form-label" for="building">Building</label>
+                        <input class="form-control" placeholder="Bulding" id="building">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col">
+                        <label class="col-sm-2 col-form-label" for="apartment">Apartment</label>
+                        <input class="form-control" type="number" required="" placeholder="Apartment" id="apartment">
+                    </div>
+                    <div class="col">
+                        <label class="col-sm-2 col-form-label" for="zipcode">Zipcode</label>
+                        <input class="form-control" type="number" required="" placeholder="Zipcode" id="zipcode">
+                    </div>
                 </div>
             </div>
             <div class="form-group row">
-                <button type="button" class="m-2 btn btn-primary col-sm-2">Add new address</button>
-                <button type="button" class="m-2 btn btn-danger col-sm-2">Cancel</button>
-                <button type="button" class="m-2 btn btn-success col-sm-2">Save</button>
+                <button type="button" class="m-2 btn btn-primary col-sm-2" id="addNewAddressButton" onclick="addAddress()">Add new address</button>
+                <button type="button" class="m-2 btn btn-danger col-sm-2" id="cancelAddressButton" onclick="cancelAddress()" style="display: none">Cancel</button>
+                <button type="button" class="m-2 btn btn-success col-sm-2" id="saveNewAddressButton" style="display: none" onclick="saveNewAddress()">Save Address</button>
+                <button type="button" class="m-2 btn btn-success col-sm-2" id="saveEditAddressButton" style="display: none">Save Edit</button>
             </div>
+            </form>
         </form>
     </div>
 </div>

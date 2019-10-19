@@ -1,9 +1,11 @@
 package com.rychkov.eshop.services;
 
 import com.rychkov.eshop.dtos.UserDto;
+import com.rychkov.eshop.entitys.Address;
 import com.rychkov.eshop.entitys.User;
 import com.rychkov.eshop.exceptions.EmailExistsException;
 import com.rychkov.eshop.exceptions.PasswordMismatchException;
+import com.rychkov.eshop.repositorys.AddressesRepository;
 import com.rychkov.eshop.repositorys.UserRepository;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,8 @@ import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
+    @Autowired
+    private AddressesRepository addressesRepository;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -67,6 +71,51 @@ public class UserServiceImpl implements UserService {
 
         userRepository.save(user);
     }
+
+    @Override
+    public Address editAddress(JSONObject edit, Integer id) {
+        Optional<Address> optionalAddress = addressesRepository.findById(id);
+        Address address;
+        if (optionalAddress.isPresent()){
+            address = optionalAddress.get();
+            address.setCountry((String) edit.get("country"));
+            address.setCity((String) edit.get("city"));
+            address.setStreet((String) edit.get("street"));
+            address.setBuilding((String) edit.get("building"));
+            address.setApartment((String) edit.get("apartment"));
+            address.setZip((String) edit.get("zip"));
+            addressesRepository.save(address);
+        }else {
+            return null;
+        }
+        return address;
+    }
+
+    @Override
+    public boolean deleteAddressById(Integer addressId) {
+        Optional<Address> deleteAddress = addressesRepository.findById(addressId);
+
+        if(deleteAddress.isPresent()){
+            addressesRepository.delete(deleteAddress.get());
+        } else return false;
+
+        Optional<Address> address = addressesRepository.findById(addressId);
+        return !address.isPresent();
+    }
+
+    @Override
+    public Address saveNewAddress(JSONObject newAddress, User user) {
+        Address address = new Address();
+        address.setCountry((String) newAddress.get("country"));
+        address.setCity((String) newAddress.get("city"));
+        address.setStreet((String) newAddress.get("street"));
+        address.setBuilding((String) newAddress.get("building"));
+        address.setApartment((String) newAddress.get("apartment"));
+        address.setZip((String) newAddress.get("zip"));
+        address.setUser(user);
+        return addressesRepository.save(address);
+    }
+
 
     private boolean emailExists(String email) {
         User user = userRepository.findByEmail(email.toLowerCase());

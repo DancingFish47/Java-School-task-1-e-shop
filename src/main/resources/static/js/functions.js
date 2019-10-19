@@ -150,3 +150,168 @@ function clearPasswordFields() {
     currentPassword.value = null;
     newPassword.value = null;
 }
+
+/*
+Addresses functions
+ */
+async function editAddress(id) {
+    clearNewAddressForm();
+    document.getElementById("newAddressForm").style.display = 'block';
+    document.getElementById("addNewAddressButton").style.display = 'none';
+    document.getElementById("saveEditAddressButton").style.display = 'block';
+    document.getElementById("cancelAddressButton").style.display = 'block';
+    document.getElementById("saveEditAddressButton").setAttribute( "onClick", "javascript: saveEditAddress("+ id + ");" );
+    const countryField = document.getElementById("country");
+    const cityField = document.getElementById("city");
+    const streetField = document.getElementById("street");
+    const buildingField = document.getElementById("building");
+    const apartmentField = document.getElementById("apartment");
+    const zipcodeField = document.getElementById("zipcode");
+
+    let addressId = {
+        id: id
+    };
+    let call = await fetch('profileSettings/getAddressById', {
+        method: 'POST',
+        headers : {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify(addressId)
+    });
+
+    let result = await call.json();
+
+    if(!result.error){
+        countryField.value = result.address.country;
+        cityField.value = result.address.city;
+        streetField.value = result.address.street;
+        buildingField.value = result.address.building;
+        apartmentField.value = result.address.apartment;
+        zipcodeField.value = result.address.zip;
+    }else{
+        alert(result.message);
+    }
+}
+async function deleteAddress(id) {
+    const deleteAddressDiv = document.getElementById("div" + id);
+    let deleteId = {
+        id: id
+    };
+    let call = await fetch('profileSettings/deleteAddress', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify(deleteId)
+    });
+    let result = await call.json();
+    if (!result.error) {
+        alert(result.message);
+        deleteAddressDiv.style.display = 'none';
+    } else {
+        alert(result.message);
+    }
+}
+function addAddress() {
+    clearNewAddressForm();
+    document.getElementById("newAddressForm").style.display = 'block';
+    document.getElementById("addNewAddressButton").style.display = 'none';
+    document.getElementById("saveNewAddressButton").style.display = 'block';
+    document.getElementById("cancelAddressButton").style.display = 'block';
+}
+function cancelAddress(){
+    clearNewAddressForm();
+    document.getElementById("newAddressForm").style.display = 'none';
+    document.getElementById("addNewAddressButton").style.display = 'block';
+    document.getElementById("cancelAddressButton").style.display = 'none';
+    document.getElementById("saveEditAddressButton").style.display = 'none';
+    document.getElementById("saveNewAddressButton").style.display = 'none';
+
+}
+async function saveNewAddress() {
+    const countryField = document.getElementById("country");
+    const cityField = document.getElementById("city");
+    const streetField = document.getElementById("street");
+    const buildingField = document.getElementById("building");
+    const apartmentField = document.getElementById("apartment");
+    const zipcodeField = document.getElementById("zipcode");
+
+    let newAddress = {
+        country: countryField.value,
+        city: cityField.value,
+        street: streetField.value,
+        building: buildingField.value,
+        apartment: apartmentField.value,
+        zip: zipcodeField.value
+    };
+    let call = await fetch('profileSettings/saveNewAddress', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify(newAddress)
+    });
+
+    let result = await call.json();
+
+    if (!result.error) {
+        alert(result.message);
+        cancelAddress();
+        document.location.reload();
+
+    } else {
+        alert(result.message);
+        cancelAddress();
+    }
+}
+
+
+async function saveEditAddress(id) {
+    const countryField = document.getElementById("country");
+    const cityField = document.getElementById("city");
+    const streetField = document.getElementById("street");
+    const buildingField = document.getElementById("building");
+    const apartmentField = document.getElementById("apartment");
+    const zipcodeField = document.getElementById("zipcode");
+    const editingAddressField = document.getElementById('input' + id);
+    let edit = {
+        id: id,
+        country: countryField.value,
+        city: cityField.value,
+        street: streetField.value,
+        building: buildingField.value,
+        apartment: apartmentField.value,
+        zip: zipcodeField.value
+    };
+    let call = await fetch('profileSettings/saveEditAddress', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify(edit)
+    });
+
+    let result = await call.json();
+
+    if (!result.error) {
+        editingAddressField.value = result.address.country + ", " + result.address.city + ", " +
+                                    result.address.street + ", " + result.address.building  + ", " +
+                                    result.address.apartment  + ", " + result.address.zip;
+        cancelAddress();
+        alert(result.message);
+    } else {
+        alert(result.message);
+    }
+}
+function clearNewAddressForm() {
+    document.getElementById("country").value = null;
+    document.getElementById("city").value = null;
+    document.getElementById("street").value = null;
+    document.getElementById("building").value = null;
+    document.getElementById("zipcode").value = null;
+    document.getElementById("apartment").value = null;
+}

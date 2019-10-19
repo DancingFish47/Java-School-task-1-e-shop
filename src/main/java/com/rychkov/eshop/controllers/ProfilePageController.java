@@ -1,6 +1,7 @@
 package com.rychkov.eshop.controllers;
 
-import com.fasterxml.jackson.databind.util.JSONPObject;
+
+import com.rychkov.eshop.entitys.Address;
 import com.rychkov.eshop.entitys.User;
 import com.rychkov.eshop.exceptions.PasswordMismatchException;
 import com.rychkov.eshop.repositorys.AddressesRepository;
@@ -13,8 +14,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.HashMap;
-import java.util.Map;
+
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/profileSettings")
@@ -75,6 +76,67 @@ public class ProfilePageController {
         } catch (PasswordMismatchException e){
             result.put("error", true);
             result.put("message", "Wrong current password!");
+        }
+        return result;
+    }
+
+    @RequestMapping(value = "/getAddressById", method = RequestMethod.POST)
+    @ResponseBody
+    public JSONObject getAddressById(@RequestBody JSONObject addressId){
+        JSONObject result = new JSONObject();
+        Optional<Address> address = addressesRepository.findById(Integer.valueOf((String) addressId.get("id")));
+        if(address.isPresent()){
+            result.put("address", address);
+        }else{
+            result.put("error", true);
+            result.put("message", "Could not retrieve address from database");
+        }
+        return result;
+    }
+
+    @RequestMapping(value = "/saveEditAddress", method = RequestMethod.POST)
+    @ResponseBody
+    public JSONObject saveEditAddress(@RequestBody JSONObject edit){
+        JSONObject result = new JSONObject();
+        Address address = userService.editAddress(edit, (Integer)edit.get("id"));
+        if(address != null){
+            result.put("error", false);
+            result.put("message", "Address edited successfully!");
+            result.put("address", address);
+        }else{
+            result.put("error", true);
+            result.put("message", "Failed to edit address!");
+        }
+        return result;
+    }
+
+    @RequestMapping(value = "/deleteAddress", method = RequestMethod.POST)
+    @ResponseBody
+    public JSONObject deleteAddress(@RequestBody JSONObject deleteId){
+        JSONObject result = new JSONObject();
+        if(userService.deleteAddressById(Integer.valueOf((String)deleteId.get("id")))){
+            result.put("error", false);
+            result.put("message", "Address deleted!");
+        }else{
+            result.put("error", true);
+            result.put("message", "Address is not deleted!");
+        }
+        return result;
+    }
+
+    @RequestMapping(value = "/saveNewAddress", method = RequestMethod.POST)
+    @ResponseBody
+    public JSONObject saveNewAddress(@RequestBody JSONObject newAddress, Principal principal){
+        JSONObject result = new JSONObject();
+        User user = userRepository.findByUsername(principal.getName());
+        Address address = userService.saveNewAddress(newAddress, user);
+        if(address != null){
+            result.put("error", false);
+            result.put("message", "New address added!");
+            result.put("address", address);
+        }else{
+            result.put("error", true);
+            result.put("message", "Failed to add new address!");
         }
         return result;
     }

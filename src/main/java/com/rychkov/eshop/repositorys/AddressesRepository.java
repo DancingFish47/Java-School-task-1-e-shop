@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface AddressesRepository extends CrudRepository<Address, Integer> {
     List<Address> findAllOrderByUser(User user);
+
 }
