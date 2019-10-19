@@ -7,6 +7,7 @@
 <div class="container">
     <h1>Your profile settings</h1>
     <div class="container bg-light">
+        <h2>Main settings</h2>
         <form>
             <div class="form-group row">
                 <label for="username" class="col-sm-2 col-form-label">Username</label>
@@ -33,16 +34,57 @@
                 </div>
             </div>
             <div class="form-group row">
+                <button type="button" class="m-2 btn btn-primary col-sm-2" id="editMainButton" onclick="editMain()">Edit</button>
+                <button type="button" class="m-2 btn btn-danger col-sm-2" style="display: none; " id="cancelMainButton" onclick="cancelMainEdit()">Cancel</button>
+                <button type="button" class="m-2 btn btn-success col-sm-2" style="display: none;" id="saveMainButton" onclick="saveMainEdit()">Save</button>
+            </div>
+        </form>
+        <div class="dropdown-divider"></div>
+        <h2>Password settings</h2>
+        <br>
+        <form>
+            <div class="form-group row">
+                <label for="currentPassword" class="col-sm-2 col-form-label" id="currentPasswordLabel" style="display: none;">Current password</label>
+                <div class="col-sm-10">
+                    <input type="password" style="display: none;" class="form-control" id="currentPassword"  placeholder="Password">
+                </div>
+                <label for="newPassword" class="col-sm-2 col-form-label" id="newPasswordLabel" style="display: none;">New password</label>
+                <div class="col-sm-10">
+                    <input type="password" style="display: none;" class="form-control" id="newPassword" placeholder="Password">
+                </div>
+            </div>
+            <div class="form-group row">
+                <button type="button" class="m-2 btn btn-primary col-sm-2" id="editPasswordButton" onclick="editPassword()">Change password</button>
+                <button type="button" class="m-2 btn btn-danger col-sm-2" style="display: none;" id="cancelPasswordButton" onclick="cancelPasswordEdit()">Cancel</button>
+                <button type="button" class="m-2 btn btn-success col-sm-2" style="display: none;" id="savePasswordButton" onclick="savePasswordEdit()">Save</button>
+            </div>
+        </form>
+        <div class="dropdown-divider"></div>
+        <h2>Email settings</h2>
+        <br>
+        <form>
+            <div class="form-group row">
                 <label for="email" class="col-sm-2 col-form-label">E-mail</label>
                 <div class="col-sm-10">
                     <input type="text" readonly class="form-control-plaintext" id="email" th:value="${user.email}">
                 </div>
             </div>
+        </form>
+        <div class="dropdown-divider"></div>
+        <h2>Addresses settings</h2>
+        <br>
+        <form>
+            <h3 th:if="${#lists.isEmpty(addresses)}">You don't have any addresses</h3>
+            <h3 th:if="${!#lists.isEmpty(addresses)}">Your addresses</h3>
             <div class="form-group row">
-                <label for="inputPassword" class="col-sm-2 col-form-label">Password</label>
-                <div class="col-sm-10">
-                    <input type="password" class="form-control" id="inputPassword" placeholder="Password">
+                <div class="col-sm-10" th:each="address : ${addresses}">
+                    <input th:value="${address.street}">
                 </div>
+            </div>
+            <div class="form-group row">
+                <button type="button" class="m-2 btn btn-primary col-sm-2">Add new address</button>
+                <button type="button" class="m-2 btn btn-danger col-sm-2">Cancel</button>
+                <button type="button" class="m-2 btn btn-success col-sm-2">Save</button>
             </div>
         </form>
     </div>
