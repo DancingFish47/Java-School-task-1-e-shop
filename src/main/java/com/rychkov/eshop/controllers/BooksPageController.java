@@ -1,10 +1,13 @@
 package com.rychkov.eshop.controllers;
 
+import com.rychkov.eshop.dtos.CartItem;
 import com.rychkov.eshop.entitys.Book;
 import com.rychkov.eshop.entitys.BookCategory;
 import com.rychkov.eshop.repositorys.BookCategoryRepository;
 import com.rychkov.eshop.repositorys.BooksRepository;
 import com.rychkov.eshop.services.BookService;
+import com.rychkov.eshop.services.CartService;
+import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +30,8 @@ public class BooksPageController {
     private BookService bookService;
     @Autowired
     private BookCategoryRepository bookCategoryRepository;
+    @Autowired
+    private CartService cartService;
 
 
     @GetMapping({"/books/{category}", "/books"})
@@ -43,6 +49,13 @@ public class BooksPageController {
         model.addAttribute("books", books);
         return "books";
     }
-    //TODO SORTING AND COMPARATORS
+
+    @RequestMapping(value = "/addToCart", method = RequestMethod.POST)
+    @ResponseBody
+    public JSONObject addToCart(@RequestBody JSONObject addItem, Principal principal, HttpSession session){
+        JSONObject result;
+        result = cartService.addItem(session, addItem);
+        return result;
+    }
 
 }

@@ -38,6 +38,19 @@
             <p class="card-text" th:text="${'Price: ' + book.price + '$'}"></p>
             <p class="card-text" th:each="category : ${book.bookCategory}" th:text="${'Categorys: ' + category.name + ' '}"></p>
             <a class="btn btn-primary" th:onclick="'javascript:addToCart(\'' + ${book.id} + '\');'">Add to cart</a>
+            <ul class="pagination mt-2">
+              <li class="page-item">
+            <button class="page-link" th:onclick="'javascript:addLess(\'' + ${book.id} + '\');'">
+              <span aria-hidden="true">&laquo;</span>
+            </button>
+            </li>
+            <li class="page-item"><a class="page-link" th:id="${'quantity'+book.id}">1</a></li>
+            <li class="page-item">
+              <button class="page-link" th:onclick="'javascript:addMore(\'' + ${book.id} + '\');'">
+                <span aria-hidden="true">&raquo;</span>
+              </button>
+            </li>
+            </ul>
           </div>
         </div>
       </div>

@@ -7,7 +7,40 @@
   <div class="container">
     <h1>Your cart</h1>
     <div class="container bg-light">
-    <p></p>
+      <h3 th:if="${#lists.isEmpty(cart)}">Your cart is empty.</h3>
+      <table th:if="${!#lists.isEmpty(cart)}" class="table">
+        <thead>
+        <tr>
+          <th scope="col">Book name</th>
+          <th scope="col">Quantity</th>
+          <th scope="col">Price</th>
+          <th scope="col"></th>
+          <th scope="col">Total</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item : ${cart}">
+          <td th:text="${item.book.name}"></td>
+          <td th:text="${item.quantity}"></td>
+          <td th:text="${item.book.price + '$'}"></td>
+          <td>(RemoveButton here)</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td th:text="${total + '$'}"></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>(Check out button here)</td>
+        </tr>
+        </tbody>
+      </table>
     </div>
   </div>
   </body>
