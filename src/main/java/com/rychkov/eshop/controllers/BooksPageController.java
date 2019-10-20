@@ -1,6 +1,8 @@
 package com.rychkov.eshop.controllers;
 
 import com.rychkov.eshop.entitys.Book;
+import com.rychkov.eshop.entitys.BookCategory;
+import com.rychkov.eshop.repositorys.BookCategoryRepository;
 import com.rychkov.eshop.repositorys.BooksRepository;
 import com.rychkov.eshop.services.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +11,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpSession;
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Controller
@@ -19,32 +24,25 @@ public class BooksPageController {
     private BooksRepository booksRepository;
     @Autowired
     private BookService bookService;
+    @Autowired
+    private BookCategoryRepository bookCategoryRepository;
 
-    @RequestMapping(value = "/books")
-    public ModelAndView bookspage(Model model, Principal principal){
-        return new ModelAndView("books","books", booksRepository.findAll());
-    }
 
-    @RequestMapping(value = "/books/sortByName")
-    public ModelAndView booksSortedByName(Model model){
-        List<Book> books;
-        books = bookService.sortByName();
+    @GetMapping({"/books/{category}", "/books"})
+    public String showBooks(@PathVariable(required = false) String category, @RequestParam(value = "sort", required = false) String sortType, Model model) {
+        model.addAttribute("BookCategory", bookCategoryRepository.findAll());
+
+        Map<String, String> params = new HashMap<>();
+        params.put("category", category);
+        params.put("sortType", sortType);
+
+        List<Book> books = bookService.prepareBooksList(params);
+
+        model.addAttribute("sort", sortType);
+        model.addAttribute("category", category);
         model.addAttribute("books", books);
-        return new ModelAndView("books", "books", books);
+        return "books";
     }
-    @RequestMapping(value = "/books/sortByPrice")
-    public ModelAndView booksSortedByPrice(Model model){
-        List<Book> books;
-        books = bookService.sortByPrice();
-        model.addAttribute("books", books);
-        return new ModelAndView("books", "books", books);
-    }
-
-    @RequestMapping(value = "books/addToCart", method = RequestMethod.POST)
-    @ResponseBody
-    public String addToCart(
-            @RequestParam("bookId") long id) {
-        return "BookId" + id;
-    }
+    //TODO SORTING AND COMPARATORS
 
 }

@@ -5,7 +5,6 @@ function editMain() {
     switchMainSettingFields(false);
     switchMainSettingButtons('none', 'block', 'block');
 }
-
 async function cancelMainEdit() {
     const firstNameField = document.getElementById("firstName");
     const lastNameField = document.getElementById("lastName");
@@ -30,7 +29,6 @@ async function cancelMainEdit() {
     switchMainSettingFields(true);
     switchMainSettingButtons('block', 'none', 'none');
 }
-
 async function saveMainEdit() {
     const firstNameField = document.getElementById("firstName");
     const lastNameField = document.getElementById("lastName");
@@ -61,7 +59,6 @@ async function saveMainEdit() {
     switchMainSettingButtons('block', 'none', 'none');
 
 }
-
 function switchMainSettingFields(readonlyBool) {
     const firstNameField = document.getElementById("firstName");
     const lastNameField = document.getElementById("lastName");
@@ -267,8 +264,6 @@ async function saveNewAddress() {
         cancelAddress();
     }
 }
-
-
 async function saveEditAddress(id) {
     const countryField = document.getElementById("country");
     const cityField = document.getElementById("city");
@@ -314,4 +309,11 @@ function clearNewAddressForm() {
     document.getElementById("building").value = null;
     document.getElementById("zipcode").value = null;
     document.getElementById("apartment").value = null;
+}
+
+/*
+Books page functions
+ */
+function sortAndFilter(sortType, filterType) {
+
 }

@@ -11,6 +11,7 @@ import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -139,5 +140,10 @@ public class ProfilePageController {
             result.put("message", "Failed to add new address!");
         }
         return result;
+    }
+    @RequestMapping(value = "/updateView", method = RequestMethod.GET)
+    public String getUpdatedView(ModelMap map, Principal principal){
+        map.addAttribute(addressesRepository.findAllOrderByUser(userRepository.findByUsername(principal.getName())));
+        return "profileSettings :: #addressesDiv";
     }
 }
