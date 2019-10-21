@@ -19,6 +19,4 @@ public class PaymentMethod extends AbstractEntity {
     @Column(name = "method")
     private String method;
 
-    @OneToMany(mappedBy = "paymentMethod")
-    private List<Order> orders;
 }

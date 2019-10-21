@@ -27,12 +27,7 @@ public class BookServiceImpl implements BookService {
         else {
             switch (params.get("sortType")){
                 case "price":
-                    preparedBooks.sort((o1, o2) -> {
-                        if (o1.getPrice()>o2.getPrice()) return 1;
-                        if (o1.getPrice().equals(o2.getPrice())) return 0;
-                        if (o1.getPrice()<o2.getPrice()) return -1;
-                        return 0;
-                    });
+                    preparedBooks.sort(Comparator.comparing(Book::getPrice));
                     break;
                 case "name":
                     preparedBooks.sort(Comparator.comparing(Book::getName));

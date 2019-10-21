@@ -46,6 +46,9 @@ public class Order extends AbstractEntity {
     @JoinColumn(name="orderStatus_id")
     private OrderStatus orderStatus;
 
+    @Column(name = "totalPrice")
+    private Float totalPrice;
+
 }
 
 

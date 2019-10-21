@@ -15,6 +15,4 @@ public class BookCategory extends AbstractEntity {
     @NotNull
     private String name;
 
-    @OneToMany(mappedBy = "bookCategory")
-    private List<Book> books;
 }

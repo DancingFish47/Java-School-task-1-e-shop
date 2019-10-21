@@ -39,7 +39,4 @@ public class Address extends AbstractEntity {
     @Column(name="apartment")
     private String apartment;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @OrderColumn
-    private List<Order> orders;
 }

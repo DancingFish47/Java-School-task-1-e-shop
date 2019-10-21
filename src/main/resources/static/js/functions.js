@@ -1,3 +1,4 @@
+
 /*
 Profile main setting editing
  */
@@ -38,7 +39,6 @@ async function saveMainEdit() {
         lastname: lastNameField.value,
         birthdate: birthdateField.value
     };
-    //save data to backend, replca fields with new data
     let call = await fetch('profileSettings/saveMainEdit', {
         method: 'POST',
         headers : {

@@ -18,6 +18,4 @@ public class PaymentStatus extends AbstractEntity {
     @NotNull
     @Column(name = "status")
     private String status;
-    @OneToMany(mappedBy = "paymentStatus")
-    private List<Order> orders;
 }

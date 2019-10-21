@@ -49,13 +49,6 @@ public class User extends AbstractEntity implements UserDetails{
     @Column(name ="role")
     private String userRole;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @OrderColumn
-    private List<Address> addresses;
-
-    @OneToMany(fetch = FetchType.EAGER)
-    @OrderColumn
-    private List<Order> orders;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -18,6 +18,4 @@ public class DeliveryMethod extends AbstractEntity {
     @NotNull
     @Column(name = "method")
     private String method;
-    @OneToMany(mappedBy = "deliveryMethod")
-    private List<Order> orders;
 }
