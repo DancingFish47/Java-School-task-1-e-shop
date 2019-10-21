@@ -6,9 +6,10 @@
   <nav th:replace="~{htmlparts/navbar.html :: navbar (cart='active') }"></nav>
   <div class="container">
     <h1>Your cart</h1>
+    <div id="div"></div>
     <div class="container bg-light">
       <h3 th:if="${#lists.isEmpty(cart)}">Your cart is empty.</h3>
-      <table th:if="${!#lists.isEmpty(cart)}" class="table">
+      <table th:if="${!#lists.isEmpty(cart)}" class="table" id="table">
         <thead>
         <tr>
           <th scope="col">Book name</th>
@@ -19,25 +20,25 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="item : ${cart}">
+        <tr th:each="item : ${cart}" th:id="${'row' + item.book.id}">
           <td th:text="${item.book.name}"></td>
           <td th:text="${item.quantity}"></td>
           <td th:text="${item.book.price + '$'}"></td>
-          <td>(RemoveButton here)</td>
+          <td><button type="button" class="row btn btn-danger" th:onclick="'javascript:deleteFromCart(\'' + ${item.book.id} + '\');'">Delete</button></td>
         </tr>
         <tr>
           <td></td>
           <td></td>
           <td></td>
           <td></td>
-          <td th:text="${total + '$'}"></td>
+          <td id="total" th:text="${total + '$'}"></td>
         </tr>
         <tr>
           <td></td>
           <td></td>
           <td></td>
           <td></td>
-          <td>(Check out button here)</td>
+          <td><button type="button" class="row btn btn-success" onclick="checkOut()">Check out!</button></td>
         </tr>
         </tbody>
       </table>

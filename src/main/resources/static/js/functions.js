@@ -191,7 +191,7 @@ async function editAddress(id) {
     }
 }
 async function deleteAddress(id) {
-    const deleteAddressDiv = document.getElementById("div" + id);
+    const deleteAddressRow = document.getElementById("row" + id);
     let deleteId = {
         id: id
     };
@@ -206,7 +206,7 @@ async function deleteAddress(id) {
     let result = await call.json();
     if (!result.error) {
         alert(result.message);
-        deleteAddressDiv.style.display = 'none';
+        deleteAddressRow.parentNode.removeChild(deleteAddressRow);
     } else {
         alert(result.message);
     }
@@ -271,7 +271,8 @@ async function saveEditAddress(id) {
     const buildingField = document.getElementById("building");
     const apartmentField = document.getElementById("apartment");
     const zipcodeField = document.getElementById("zipcode");
-    const editingAddressField = document.getElementById('input' + id);
+    const table = document.getElementById("addressTable");
+    const deleteAddressRow = document.getElementById("row" + id);
     let edit = {
         id: id,
         country: countryField.value,
@@ -293,9 +294,26 @@ async function saveEditAddress(id) {
     let result = await call.json();
 
     if (!result.error) {
-        editingAddressField.value = result.address.country + ", " + result.address.city + ", " +
-                                    result.address.street + ", " + result.address.building  + ", " +
-                                    result.address.apartment  + ", " + result.address.zip;
+        deleteAddressRow.parentNode.removeChild(deleteAddressRow);
+        var NewRow = table.insertRow(-1);
+        NewRow.id = "row" + id;
+        var Newcell1 = NewRow.insertCell(0);
+        var Newcell2 = NewRow.insertCell(1);
+        var Newcell3 = NewRow.insertCell(2);
+        var Newcell4 = NewRow.insertCell(3);
+        var Newcell5 = NewRow.insertCell(4);
+        var Newcell6 = NewRow.insertCell(5);
+        var Newcell7 = NewRow.insertCell(6);
+        var Newcell8 = NewRow.insertCell(7);
+        Newcell1.innerHTML = result.address.country;
+        Newcell2.innerHTML = result.address.city;
+        Newcell3.innerHTML = result.address.street;
+        Newcell4.innerHTML = result.address.building;
+        Newcell5.innerHTML = result.address.apartment;
+        Newcell6.innerHTML = result.address.zip;
+        Newcell7.innerHTML = "<button type=\"button\" class=\"row btn btn-primary\" onclick=\"javascript: editAddress('"+ id + "');\">Edit</button>";
+        Newcell8.innerHTML = "<button type=\"button\" class=\"row btn btn-danger\" onclick=\"javascript: deleteAddress('"+ id + "');\">Delete</button>";
+
         cancelAddress();
         alert(result.message);
     } else {
@@ -341,4 +359,42 @@ async function addToCart(id) {
     let result = await call.json();
 
     alert(result.message);
+}
+/*
+Cart page functions
+ */
+async function deleteFromCart(id){
+    const deleteRow = document.getElementById("row" + id);
+    const totalField = document.getElementById("total");
+    const table = document.getElementById("table");
+    const div = document.getElementById("div");
+    let deleteId = {
+        id: id
+    };
+    let call = await fetch("/deleteFromCart", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify(deleteId)
+    });
+
+    let result = await call.json();
+
+    if(!result.error){
+        alert(result.message);
+        deleteRow.parentNode.removeChild(deleteRow);
+        totalField.textContent = result.total + "$";
+        if (result.total === 0){
+            table.style.display = 'none';
+            div.innerHTML = "<h3>Your cart is empty.</h3>"
+        }
+    }else{
+        alert(result.message);
+    }
+
+}
+async function checkOut() {
+    alert("Check out function!");
 }

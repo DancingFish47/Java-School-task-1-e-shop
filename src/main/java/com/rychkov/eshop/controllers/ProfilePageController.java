@@ -141,9 +141,5 @@ public class ProfilePageController {
         }
         return result;
     }
-    @RequestMapping(value = "/updateView", method = RequestMethod.GET)
-    public String getUpdatedView(ModelMap map, Principal principal){
-        map.addAttribute(addressesRepository.findAllOrderByUser(userRepository.findByUsername(principal.getName())));
-        return "profileSettings :: #addressesDiv";
-    }
+
 }

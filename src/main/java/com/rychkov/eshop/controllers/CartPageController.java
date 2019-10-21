@@ -2,17 +2,23 @@ package com.rychkov.eshop.controllers;
 
 
 import com.rychkov.eshop.dtos.CartItem;
+import com.rychkov.eshop.services.CartService;
+import net.minidev.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.security.Principal;
 import java.util.List;
 
 
 @Controller
 public class CartPageController {
+    @Autowired
+    CartService cartService;
+
     @GetMapping("/cart")
     public String cartpage(HttpSession session, Model model){
         List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
@@ -25,5 +31,12 @@ public class CartPageController {
             model.addAttribute("total", total);
         }
         return "cart";
+    }
+    @RequestMapping(value = "/deleteFromCart", method = RequestMethod.POST)
+    @ResponseBody
+    public JSONObject deleteFromCart(@RequestBody JSONObject deleteId, HttpSession session){
+        JSONObject result;
+        result = cartService.deleteItem(session, deleteId);
+        return result;
     }
 }

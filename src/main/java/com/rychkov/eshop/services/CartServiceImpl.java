@@ -46,6 +46,27 @@ public class CartServiceImpl implements CartService {
         }
         return result;
     }
+
+    @Override
+    public JSONObject deleteItem(HttpSession session, JSONObject item) {
+        JSONObject result = new JSONObject();
+        Integer deleteId = Integer.valueOf((String) item.get("id"));
+        List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
+
+        if (exists(deleteId, cart) == -1) {
+            result.put("erroe", true);
+            result.put("message", "Could not find that book in your cart!");
+            result.put("total", calculateTotal(cart));
+        } else {
+            result.put("message", "Book " + cart.get(exists(deleteId,cart)).getBook().getName() + " deleted from cart!");
+            cart.remove(exists(deleteId,cart));
+            result.put("error", false);
+            result.put("total", calculateTotal(cart));
+        }
+        session.setAttribute("cart", cart);
+        return result;
+    }
+
     private int exists(Integer id, List<CartItem> cart) {
         for (int i = 0; i < cart.size(); i++) {
             if (cart.get(i).getBook().getId().equals(id)) {
@@ -53,6 +74,14 @@ public class CartServiceImpl implements CartService {
             }
         }
         return -1;
+    }
+
+    private float calculateTotal(List<CartItem> cart){
+        float total = 0;
+        for (CartItem item : cart){
+            total += item.getBook().getPrice() * item.getQuantity();
+        }
+        return total;
     }
 
 }
