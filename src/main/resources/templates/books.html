@@ -7,7 +7,14 @@
     <div class="container">
     <h1>Books</h1>
       <div class="container bg-light">
-
+        <div class="dropdown btn-group m-1">
+          <button th:text="${category} ?: 'Genre'" class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Genre
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+            <a class="dropdown-item" th:each="category : ${BookCategory}" th:text="${category.name}" th:href="${'/books/' + category.name}"></a>
+          </div>
+        </div>
         <div class="dropdown btn-group m-1">
           <button th:text="${sort} ?: 'Sort by'" class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Sort by
@@ -15,14 +22,6 @@
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
             <a class="dropdown-item" href="?sort=name">Book name</a>
             <a class="dropdown-item" href="?sort=price">Price</a>
-          </div>
-        </div>
-        <div class="dropdown btn-group m-1">
-          <button th:text="${category} ?: 'Genre'" class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Genre
-          </button>
-          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
-            <a class="dropdown-item" th:each="category : ${BookCategory}" th:text="${category.name}" th:href="${'/books/' + category.name}"></a>
           </div>
         </div>
         <div class="dropdown btn-group m-1">

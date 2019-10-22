@@ -3,6 +3,7 @@ package com.rychkov.eshop.controllers;
 import com.rychkov.eshop.dtos.UserDto;
 import com.rychkov.eshop.entitys.User;
 import com.rychkov.eshop.exceptions.EmailExistsException;
+import com.rychkov.eshop.exceptions.UsernameExistsException;
 import com.rychkov.eshop.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,33 +26,22 @@ public class RegistrationPageController {
     }
     @PostMapping
     public ModelAndView registerNewUser(
-    @ModelAttribute("user") @Valid UserDto accountDto,
-    BindingResult result,
-    Model model){
+    @ModelAttribute("user") @Valid UserDto accountDto, BindingResult result, Model model){
         User registered = new User();
             if (!result.hasErrors()) {
-                registered = createUserAccount(accountDto);
-            }
-            if (registered == null) {
-                result.rejectValue("email", "message.regError");
-            }
-            if (result.hasErrors()) {
-                    model.addAttribute("error", "This email already exists");
+                try {
+                    registered = userService.registerNewUser(accountDto);
+                } catch (EmailExistsException e){
+                   model.addAttribute("error", "This email already exists");
+                    return new ModelAndView("registration", "user", accountDto);
+                } catch (UsernameExistsException e){
+                    model.addAttribute("error", "This username already exists");
                     return new ModelAndView("registration", "user", accountDto);
                 }
-                else {
-                    return new ModelAndView("login", "user", accountDto);
-                }
+            }
+        return new ModelAndView("login", "user", accountDto);
 }
-    private User createUserAccount(UserDto accountDto) {
-        User registered = null;
-        try {
-            registered = userService.registerNewUser(accountDto);
-        } catch (EmailExistsException e) {
-            return null;
-        }
-        return registered;
-    }
+
 
 }
 

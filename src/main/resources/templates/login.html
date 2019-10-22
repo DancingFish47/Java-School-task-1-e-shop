@@ -8,11 +8,12 @@
   <link rel="stylesheet" href="css/bootstrap.css" type="text/css">
   <script src="js/jquery.js" type="text/javascript"></script>
   <script src="js/bootstrap.min.js" type="text/javascript"></script>
-    <script src="/js/functions.js" type="text/javascript"></script>
+    <script src="js/jquery.validate.min.js" type="text/javascript"></script>
+    <script src="js/functions.js" type="text/javascript"></script>
 
 </head>
 <body class="text-center" style="background-color: #f5f5f5">
-  <form class="form-signin"  action="/login" method="POST" id="loginForm" name="login">
+  <form class="form-signin" id="loginForm" name="login" method="POST" action="/login">
     <div th:if="${error}">
  Unable to login. Check your username and password.
  </div>
@@ -20,12 +21,12 @@
     <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
     <div th:if="${user != null}" th:text="${'New user ' + user.username + ' registered!'}" style="background-color: #ffccdf; font-family: 'Century Gothic';"></div>
     <label for="username" class="sr-only">Username</label>
-    <input type="text" id="username" class="form-control" placeholder="Username" required="" autofocus="" name="username">
+    <input type="text" id="username" class="form-control" placeholder="Username"  autofocus="" name="username">
 
     <label for="password" class="sr-only">Password</label>
-    <input type="password" id="password" class="form-control" placeholder="Password" required="" name="password">
+    <input type="password" id="password" class="form-control" placeholder="Password"  name="password">
 
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+    <button class="btn btn-lg btn-primary btn-block" type="submit" onclick="doLogin()">Sign in</button>
 
     <p><a href="/registration">Don't have an account? <br>Register now!</a></p>
     <p><a href="/homepage">Back to home page</a></p>

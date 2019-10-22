@@ -12,51 +12,51 @@
             <div class="form-group row">
                 <label for="username" class="col-sm-2 col-form-label">Username</label>
                 <div class="col-sm-10">
-                    <input type="text" readonly class="form-control-plaintext" id="username" required="" th:value="${user.username}">
+                    <input type="text" readonly class="form-control-plaintext" id="username" name="username"  th:value="${user.username}">
                 </div>
             </div>
             <div class="form-group row">
                 <label for="firstName" class="col-sm-2 col-form-label">First name</label>
                 <div class="col-sm-10">
-                    <input type="text" readonly class="form-control-plaintext" id="firstName" required="" th:value="${user.firstName}">
+                    <input type="text" readonly class="form-control-plaintext" id="firstName" name="firstName"  th:value="${user.firstName}">
                 </div>
             </div>
             <div class="form-group row">
                 <label for="lastName" class="col-sm-2 col-form-label">Last name</label>
                 <div class="col-sm-10">
-                    <input type="text" readonly class="form-control-plaintext" id="lastName" required=""  th:value="${user.lastName}">
+                    <input type="text" readonly class="form-control-plaintext" id="lastName" name="lastName"   th:value="${user.lastName}">
                 </div>
             </div>
             <div class="form-group row">
                 <label for="birthdate" class="col-sm-2 col-form-label">Birthday</label>
                 <div class="col-sm-10">
-                    <input type="date" readonly class="form-control-plaintext" id="birthdate" required=""  th:value="${user.birthdate}">
+                    <input type="date" readonly class="form-control-plaintext" id="birthdate" name="birthdate"   th:value="${user.birthdate}">
                 </div>
             </div>
             <div class="form-group row">
                 <button type="button" class="m-2 btn btn-primary col-sm-2" id="editMainButton" onclick="editMain()">Edit</button>
                 <button type="button" class="m-2 btn btn-danger col-sm-2" style="display: none; " id="cancelMainButton" onclick="cancelMainEdit()">Cancel</button>
-                <button type="button" class="m-2 btn btn-success col-sm-2" style="display: none;" id="saveMainButton" onclick="saveMainEdit()">Save</button>
+                <button type="submit" class="m-2 btn btn-success col-sm-2" style="display: none;" id="saveMainButton" onclick="saveMainEdit()">Save</button>
             </div>
         </form>
         <div class="dropdown-divider"></div>
         <h2>Password settings</h2>
         <br>
-        <form name="passwordForm">
+        <form id="passwordForm">
             <div class="form-group row">
                 <label for="currentPassword" class="col-sm-2 col-form-label" id="currentPasswordLabel" style="display: none;">Current password</label>
                 <div class="col-sm-10">
-                    <input type="password" style="display: none;" class="form-control" id="currentPassword"  placeholder="Password">
+                    <input type="password" style="display: none;" class="form-control" id="currentPassword" name="password" placeholder="Password">
                 </div>
                 <label for="newPassword" class="col-sm-2 col-form-label" id="newPasswordLabel" style="display: none;">New password</label>
                 <div class="col-sm-10">
-                    <input type="password" style="display: none;" class="form-control" id="newPassword" placeholder="Password">
+                    <input type="password" style="display: none;" class="form-control" id="newPassword" name="newPassword" placeholder="Password">
                 </div>
             </div>
             <div class="form-group row">
                 <button type="button" class="m-2 btn btn-primary col-sm-2" id="editPasswordButton" onclick="editPassword()">Change password</button>
                 <button type="button" class="m-2 btn btn-danger col-sm-2" style="display: none;" id="cancelPasswordButton" onclick="cancelPasswordEdit()">Cancel</button>
-                <button type="button" class="m-2 btn btn-success col-sm-2" style="display: none;" id="savePasswordButton" onclick="savePasswordEdit()">Save</button>
+                <button type="submit" class="m-2 btn btn-success col-sm-2" style="display: none;" id="savePasswordButton" onclick="savePasswordEdit()">Save</button>
             </div>
         </form>
         <div class="dropdown-divider"></div>
@@ -66,14 +66,13 @@
             <div class="form-group row">
                 <label for="email" class="col-sm-2 col-form-label">E-mail</label>
                 <div class="col-sm-10">
-                    <input type="text" readonly class="form-control-plaintext" id="email" th:value="${user.email}">
+                    <input type="text" readonly class="form-control-plaintext" id="email" name="email" th:value="${user.email}">
                 </div>
             </div>
         </form>
         <div class="dropdown-divider"></div>
         <h2>Addresses settings</h2>
         <br>
-        <form >
             <h3 th:if="${#lists.isEmpty(addresses)}">You don't have any addresses</h3>
             <h3 th:if="${!#lists.isEmpty(addresses)}">Your addresses</h3>
             <table th:if="${!#lists.isEmpty(addresses)}" class="table" id="addressTable">
@@ -98,52 +97,51 @@
                     <td th:text="${address.apartment}"></td>
                     <td th:text="${address.zip}"></td>
                     <td> <button type="button" class="row btn btn-primary" th:onclick="'javascript:editAddress(\'' + ${address.id} + '\');'">Edit</button></td>
-                    <td> <button type="button" class="row btn btn-danger" th:onclick="'javascript:deleteAddress(\'' + ${address.id} + '\');'">Delete</button></td>
+                    <td> <button type="submit" class="row btn btn-danger" th:onclick="'javascript:deleteAddress(\'' + ${address.id} + '\');'">Delete</button></td>
                 </tr>
                 </tbody>
             </table>
 
-            <form name="addressesForm">
+            <form id="addressesForm">
             <div id="newAddressForm" style="display: none">
                 <div class="form-row">
                     <div class="col">
                         <label class="col-sm-2 col-form-label" for="country">Country</label>
-                            <input class="form-control" type="text" required="" placeholder="Country" id="country">
+                            <input class="form-control" name="country" type="text" required="" placeholder="Country" id="country">
                     </div>
                     <div class="col">
                         <label class="col-sm-2 col-form-label" for="city">City</label>
-                        <input class="form-control" type="text" required="" placeholder="City" id="city">
+                        <input class="form-control" name="city" type="text" required="" placeholder="City" id="city">
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="col">
                         <label class="col-sm-2 col-form-label" for="street">Street</label>
-                        <input class="form-control" type="text" required="" placeholder="Street" id="street">
+                        <input class="form-control" type="text" required="" name="street" placeholder="Street" id="street">
                     </div>
                     <div class="col">
                         <label class="col-sm-2 col-form-label" for="building">Building</label>
-                        <input class="form-control" placeholder="Bulding" id="building">
+                        <input class="form-control" type="text" name="building" placeholder="Building"  id="building">
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="col">
                         <label class="col-sm-2 col-form-label" for="apartment">Apartment</label>
-                        <input class="form-control" type="number" required="" placeholder="Apartment" id="apartment">
+                        <input class="form-control" type="number" name="apartment" placeholder="Apartment" id="apartment">
                     </div>
                     <div class="col">
                         <label class="col-sm-2 col-form-label" for="zipcode">Zipcode</label>
-                        <input class="form-control" type="number" required="" placeholder="Zipcode" id="zipcode">
+                        <input class="form-control" type="number" required="" name="zipcode" placeholder="Zipcode" id="zipcode">
                     </div>
                 </div>
             </div>
             <div class="form-group row">
                 <button type="button" class="m-2 btn btn-primary col-sm-2" id="addNewAddressButton" onclick="addAddress()">Add new address</button>
                 <button type="button" class="m-2 btn btn-danger col-sm-2" id="cancelAddressButton" onclick="cancelAddress()" style="display: none">Cancel</button>
-                <button type="button" class="m-2 btn btn-success col-sm-2" id="saveNewAddressButton" style="display: none" onclick="saveNewAddress()">Save Address</button>
-                <button type="button" class="m-2 btn btn-success col-sm-2" id="saveEditAddressButton" style="display: none">Save Edit</button>
+                <button type="submit" class="m-2 btn btn-success col-sm-2" id="saveNewAddressButton" style="display: none" onclick="saveNewAddress()">Save Address</button>
+                <button type="submit" class="m-2 btn btn-success col-sm-2" id="saveEditAddressButton" style="display: none">Save Edit</button>
             </div>
             </form>
-        </form>
     </div>
 </div>
 </body>

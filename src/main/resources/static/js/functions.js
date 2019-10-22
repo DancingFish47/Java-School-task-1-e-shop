@@ -1,4 +1,121 @@
+$(function() {
+    $("form").submit(function(event) {
+        event.preventDefault();
+    });
 
+    jQuery.validator.addMethod("lettersOnly", function(value, element) {
+        return this.optional(element) || /^[a-z]+$/i.test(value);
+    }, "Letters only");
+    jQuery.validator.addMethod("lettersAndNumbersOnly", function(value, element) {
+        return this.optional(element) || /^[a-z0-9]+$/i.test(value);
+    }, "Letters and numbers only");
+    jQuery.validator.addMethod("password_rule", function(value, element) {
+        return this.optional(element) || /^[a-z0-9"!"#$%&'()*+,-./:;<=>?@[^_`{|}~"]+$/i.test(value);
+    }, "Password rule");
+    $( "form" ).each( function() {
+        $( this ).validate( {
+            rules: {
+                username: {
+                    required: true,
+                    minlength: 2,
+                    maxlength: 24,
+                    lettersAndNumbersOnly: true,
+                },
+                firstName: {
+                    required: true,
+                    minlength: 2,
+                    maxlength: 24,
+                    lettersOnly: true,
+                },
+                lastName: {
+                    required: true,
+                    minlength: 2,
+                    maxlength: 24,
+                    lettersOnly: true,
+                },
+                birthdate: {
+                    date: true,
+                    required: true,
+                },
+                password: {
+                    required: true,
+                    password_rule: true,
+                    minlength: 4,
+                    maxlength: 24,
+                },
+                confirmPassword:{
+                    required: true,
+                    password_rule: true,
+                    minlength: 4,
+                    maxlength: 24,
+                    equalTo: "#password",
+                },
+                newPassword: {
+                    required: true,
+                    password_rule: true,
+                    minlength: 4,
+                    maxlength: 24,
+                },
+                email: {
+                    required: true,
+                    email: true,
+                    minlength: 4,
+                },
+                country: {
+                    required: true,
+                    minlength: 4,
+                    maxlength: 24,
+                    lettersOnly: true
+                },
+                city: {
+                    required: true,
+                    minlength: 4,
+                    maxlength: 24,
+                    lettersOnly: true
+                },
+                street: {
+                    required: true,
+                    minlength: 4,
+                    maxlength: 24,
+                    lettersOnly: true
+                },
+                building: {
+                    required: true,
+                    minlength: 1,
+                    maxlength: 24,
+                    lettersAndNumbersOnly: true
+                },
+                apartment: {
+                    maxlength: 6,
+                    lettersAndNumbersOnly: true
+                },
+                zipcode: {
+                    required: true,
+                    minlength: 4,
+                    maxlength: 24,
+                    digits: true,
+                },
+            }
+        } );
+    } );
+});
+/*
+Login and registration function
+ */
+async function doLogin() {
+    if($("#loginForm").valid()) {
+        let form = document.getElementById('loginForm');
+        form.action = '/login';
+        form.method = 'POST';
+        form.submit();
+    }
+}
+async function register() {
+    if($("#registrationForm").valid()) {
+        let form = document.getElementById('registrationForm');
+        form.submit();
+    }
+}
 /*
 Profile main setting editing
  */
@@ -31,9 +148,12 @@ async function cancelMainEdit() {
     switchMainSettingButtons('block', 'none', 'none');
 }
 async function saveMainEdit() {
+
+    if($("#mainSettingsForm").valid()){
     const firstNameField = document.getElementById("firstName");
     const lastNameField = document.getElementById("lastName");
     const birthdateField = document.getElementById("birthdate");
+
     let edit = {
         firstname: firstNameField.value,
         lastname: lastNameField.value,
@@ -57,6 +177,7 @@ async function saveMainEdit() {
     }
     switchMainSettingFields(true);
     switchMainSettingButtons('block', 'none', 'none');
+    }
 
 }
 function switchMainSettingFields(readonlyBool) {
@@ -98,27 +219,29 @@ function cancelPasswordEdit() {
     switchPasswordButtons('block', 'none', 'none');
 }
 async function savePasswordEdit() {
-    const currentPassword = document.getElementById("currentPassword");
-    const newPassword = document.getElementById("newPassword");
-    let edit = {
-        currentPassword: currentPassword.value,
-        newPassword: newPassword.value
-    };
-    let call = await fetch('profileSettings/changePassword', {
-        method: 'POST',
-        headers : {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        },
-        body: JSON.stringify(edit)
-    });
-    let result = await call.json();
+    if($("#passwordForm").valid()) {
+        const currentPassword = document.getElementById("currentPassword");
+        const newPassword = document.getElementById("newPassword");
+        let edit = {
+            currentPassword: currentPassword.value,
+            newPassword: newPassword.value
+        };
+        let call = await fetch('profileSettings/changePassword', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(edit)
+        });
+        let result = await call.json();
 
-    alert(result.message);
+        alert(result.message);
 
-    switchPasswordFields('none');
-    clearPasswordFields();
-    switchPasswordButtons('block', 'none', 'none');
+        switchPasswordFields('none');
+        clearPasswordFields();
+        switchPasswordButtons('block', 'none', 'none');
+    }
 }
 function switchPasswordButtons(edit, cancel, save) {
     const editPasswordButton = document.getElementById("editPasswordButton");
@@ -228,43 +351,46 @@ function cancelAddress(){
 
 }
 async function saveNewAddress() {
-    const countryField = document.getElementById("country");
-    const cityField = document.getElementById("city");
-    const streetField = document.getElementById("street");
-    const buildingField = document.getElementById("building");
-    const apartmentField = document.getElementById("apartment");
-    const zipcodeField = document.getElementById("zipcode");
+    if($("#addressesForm").valid()) {
+        const countryField = document.getElementById("country");
+        const cityField = document.getElementById("city");
+        const streetField = document.getElementById("street");
+        const buildingField = document.getElementById("building");
+        const apartmentField = document.getElementById("apartment");
+        const zipcodeField = document.getElementById("zipcode");
 
-    let newAddress = {
-        country: countryField.value,
-        city: cityField.value,
-        street: streetField.value,
-        building: buildingField.value,
-        apartment: apartmentField.value,
-        zip: zipcodeField.value
-    };
-    let call = await fetch('profileSettings/saveNewAddress', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        },
-        body: JSON.stringify(newAddress)
-    });
+        let newAddress = {
+            country: countryField.value,
+            city: cityField.value,
+            street: streetField.value,
+            building: buildingField.value,
+            apartment: apartmentField.value,
+            zip: zipcodeField.value
+        };
+        let call = await fetch('profileSettings/saveNewAddress', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(newAddress)
+        });
 
-    let result = await call.json();
+        let result = await call.json();
 
-    if (!result.error) {
-        alert(result.message);
-        cancelAddress();
-        document.location.reload();
+        if (!result.error) {
+            alert(result.message);
+            cancelAddress();
+            document.location.reload();
 
-    } else {
-        alert(result.message);
-        cancelAddress();
+        } else {
+            alert(result.message);
+            cancelAddress();
+        }
     }
 }
 async function saveEditAddress(id) {
+    if($("#addressesForm").valid()){
     const countryField = document.getElementById("country");
     const cityField = document.getElementById("city");
     const streetField = document.getElementById("street");
@@ -318,6 +444,7 @@ async function saveEditAddress(id) {
         alert(result.message);
     } else {
         alert(result.message);
+    }
     }
 }
 function clearNewAddressForm() {

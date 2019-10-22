@@ -5,6 +5,7 @@ import com.rychkov.eshop.entitys.Address;
 import com.rychkov.eshop.entitys.User;
 import com.rychkov.eshop.exceptions.EmailExistsException;
 import com.rychkov.eshop.exceptions.PasswordMismatchException;
+import com.rychkov.eshop.exceptions.UsernameExistsException;
 import com.rychkov.eshop.repositorys.AddressesRepository;
 import com.rychkov.eshop.repositorys.UserRepository;
 import net.minidev.json.JSONObject;
@@ -26,8 +27,9 @@ public class UserServiceImpl implements UserService {
     private PasswordEncoder passwordEncoder;
     @Transactional
     @Override
-    public User registerNewUser(UserDto userDto) throws EmailExistsException {
+    public User registerNewUser(UserDto userDto) throws EmailExistsException, UsernameExistsException{
         if(emailExists(userDto.getEmail())) throw new EmailExistsException("This email is already registered");
+        if(usernameExists(userDto.getUsername())) throw new UsernameExistsException("This username is already registered");
         User user = new User();
         user.setUsername(userDto.getUsername());
         user.setBirthdate(userDto.getBirthdate());
@@ -119,6 +121,13 @@ public class UserServiceImpl implements UserService {
 
     private boolean emailExists(String email) {
         User user = userRepository.findByEmail(email.toLowerCase());
+        if (user != null) {
+            return true;
+        }
+        return false;
+    }
+    private boolean usernameExists(String username) {
+        User user = userRepository.findByUsername(username);
         if (user != null) {
             return true;
         }
