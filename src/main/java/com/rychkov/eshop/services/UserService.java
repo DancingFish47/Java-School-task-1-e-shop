@@ -11,9 +11,14 @@ import net.minidev.json.JSONObject;
 
 public interface UserService {
     User registerNewUser(UserDto userDto) throws EmailExistsException, UsernameExistsException;
+
     User changeMainSettings(JSONObject edit, Integer userId);
+
     void changePassword(JSONObject edit, Integer userId) throws PasswordMismatchException;
+
     Address editAddress(JSONObject edit, Integer id);
+
     boolean deleteAddressById(Integer addressId);
+
     Address saveNewAddress(JSONObject newAddress, User user);
 }

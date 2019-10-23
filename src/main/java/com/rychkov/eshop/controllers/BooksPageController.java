@@ -1,8 +1,6 @@
 package com.rychkov.eshop.controllers;
 
-import com.rychkov.eshop.dtos.CartItem;
 import com.rychkov.eshop.entitys.Book;
-import com.rychkov.eshop.entitys.BookCategory;
 import com.rychkov.eshop.repositorys.BookCategoryRepository;
 import com.rychkov.eshop.repositorys.BooksRepository;
 import com.rychkov.eshop.services.BookService;
@@ -12,11 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,10 +48,10 @@ public class BooksPageController {
 
     @RequestMapping(value = "/addToCart", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject addToCart(@RequestBody JSONObject addItem, Principal principal, HttpSession session){
+    public JSONObject addToCart(@RequestBody JSONObject addItem, Principal principal, HttpSession session) {
         JSONObject result;
         result = cartService.addItem(session, addItem);
         return result;
-    }
+    }//TODO Can receive DTO instead of JSONObject, rework all similiar methods.
 
 }

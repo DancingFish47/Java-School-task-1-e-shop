@@ -10,7 +10,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
-import java.security.Principal;
 import java.util.List;
 
 
@@ -20,21 +19,22 @@ public class CartPageController {
     CartService cartService;
 
     @GetMapping("/cart")
-    public String cartpage(HttpSession session, Model model){
+    public String cartpage(HttpSession session, Model model) {
         List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
         float total = 0;
         model.addAttribute("cart", cart);
-        if(cart!=null){
-            for (CartItem cartItem : cart){
-                total+= cartItem.getBook().getPrice() * cartItem.getQuantity();
+        if (cart != null) {
+            for (CartItem cartItem : cart) {
+                total += cartItem.getBook().getPrice() * cartItem.getQuantity();
             }
             model.addAttribute("total", total);
         }
         return "cart";
     }
+
     @RequestMapping(value = "/deleteFromCart", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject deleteFromCart(@RequestBody JSONObject deleteId, HttpSession session){
+    public JSONObject deleteFromCart(@RequestBody JSONObject deleteId, HttpSession session) {
         JSONObject result;
         result = cartService.deleteItem(session, deleteId);
         return result;

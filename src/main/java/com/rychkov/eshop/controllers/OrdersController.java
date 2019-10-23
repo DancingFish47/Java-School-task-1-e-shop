@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/orders")
 public class OrdersController {
     @GetMapping
-    public String ordersView(){
+    public String ordersView() {
         return "orders";
     }
 }

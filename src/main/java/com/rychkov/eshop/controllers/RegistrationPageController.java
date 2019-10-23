@@ -9,7 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
@@ -24,23 +27,24 @@ public class RegistrationPageController {
     public String showRegistrationForm() {
         return "registration";
     }
+
     @PostMapping
     public ModelAndView registerNewUser(
-    @ModelAttribute("user") @Valid UserDto accountDto, BindingResult result, Model model){
+            @ModelAttribute("user") @Valid UserDto accountDto, BindingResult result, Model model) {
         User registered = new User();
-            if (!result.hasErrors()) {
-                try {
-                    registered = userService.registerNewUser(accountDto);
-                } catch (EmailExistsException e){
-                   model.addAttribute("error", "This email already exists");
-                    return new ModelAndView("registration", "user", accountDto);
-                } catch (UsernameExistsException e){
-                    model.addAttribute("error", "This username already exists");
-                    return new ModelAndView("registration", "user", accountDto);
-                }
+        if (!result.hasErrors()) {
+            try {
+                registered = userService.registerNewUser(accountDto);
+            } catch (EmailExistsException e) {
+                model.addAttribute("error", "This email already exists");
+                return new ModelAndView("registration", "user", accountDto);
+            } catch (UsernameExistsException e) {
+                model.addAttribute("error", "This username already exists");
+                return new ModelAndView("registration", "user", accountDto);
             }
+        }
         return new ModelAndView("login", "user", accountDto);
-}
+    }
 
 
 }

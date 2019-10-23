@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:insert="htmlparts/header.html"></head>
+<body>
+<nav th:replace="~{htmlparts/navbar.html :: navbar (checkoutLink='active') }"></nav>
+<div class="container" th:if="${#lists.isEmpty(cart)}">
+    <h2>Your cart is empty.</h2>
+</div>
+<div class="container" th:if="${!#lists.isEmpty(cart)}">
+    <h1>Check out</h1>
+    <h2>Your order</h2>
+    <div id="cartDiv">
+        <table class="table" id="table">
+            <thead>
+            <tr>
+                <th scope="col">Book name</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Price</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${cart}" th:id="${'row' + item.book.id}">
+                <td th:text="${item.book.name}"></td>
+                <td th:text="${item.quantity}"></td>
+                <td th:text="${item.book.price + '$'}"></td>
+            </tr>
+            <tr>
+                <th scope="row">TOTAL</th>
+                <td></td>
+                <th scope="row" th:text="${total} + '$'"></th>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <br>
+    <div class="dropdown-divider"></div>
+    <br>
+    <div id="deliveryDiv" style="display: block">
+        <h2>Pick an address for delivery!</h2>
+        <h3 th:if="${#lists.isEmpty(addresses)}">You don't have any addresses</h3>
+        <h3 th:if="${!#lists.isEmpty(addresses)}">Your addresses</h3>
+        <table class="table" id="addressTable" th:if="${!#lists.isEmpty(addresses)}">
+            <thead>
+            <tr>
+                <th scope="col">Country</th>
+                <th scope="col">City</th>
+                <th scope="col">Street</th>
+                <th scope="col">Building</th>
+                <th scope="col">Apartment</th>
+                <th scope="col">Zip</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="address : ${addresses}" th:id="${'row' + address.id}">
+                <td th:text="${address.country}"></td>
+                <td th:text="${address.city}"></td>
+                <td th:text="${address.street}"></td>
+                <td th:text="${address.building}"></td>
+                <td th:text="${address.apartment}"></td>
+                <td th:text="${address.zip}"></td>
+                <td>
+                    <button class="row btn btn-primary" th:onclick="'javascript:chooseAddress(\'' + ${address.id} + '\');'"
+                            type="button">This one!
+                    </button>
+                </td>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
+        <form id="addressesForm">
+            <div id="newAddressForm" style="display: none">
+                <div class="form-row">
+                    <div class="col">
+                        <label class="col-sm-2 col-form-label" for="country">Country</label>
+                        <input class="form-control" id="country" name="country" placeholder="Country" required=""
+                               type="text">
+                    </div>
+                    <div class="col">
+                        <label class="col-sm-2 col-form-label" for="city">City</label>
+                        <input class="form-control" id="city" name="city" placeholder="City" required="" type="text">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col">
+                        <label class="col-sm-2 col-form-label" for="street">Street</label>
+                        <input class="form-control" id="street" name="street" placeholder="Street" required=""
+                               type="text">
+                    </div>
+                    <div class="col">
+                        <label class="col-sm-2 col-form-label" for="building">Building</label>
+                        <input class="form-control" id="building" name="building" placeholder="Building" type="text">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col">
+                        <label class="col-sm-2 col-form-label" for="apartment">Apartment</label>
+                        <input class="form-control" id="apartment" name="apartment" placeholder="Apartment"
+                               type="number">
+                    </div>
+                    <div class="col">
+                        <label class="col-sm-2 col-form-label" for="zipcode">Zipcode</label>
+                        <input class="form-control" id="zipcode" name="zipcode" placeholder="Zipcode" required=""
+                               type="number">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <button class="m-2 btn btn-primary col-sm-2" id="addNewAddressButton" onclick="addAddress()"
+                        type="button">Add new address
+                </button>
+                <button class="m-2 btn btn-danger col-sm-2" id="cancelAddressButton" onclick="cancelAddress()"
+                        style="display: none" type="button">Cancel
+                </button>
+                <button class="m-2 btn btn-success col-sm-2" id="saveNewAddressButton" onclick="saveNewAddress()"
+                        style="display: none" type="submit">Save Address
+                </button>
+                <button class="m-2 btn btn-success col-sm-2" id="saveEditAddressButton" style="display: none"
+                        type="submit">Save Edit
+                </button>
+            </div>
+        </form>
+        <br>
+
+    </div>
+    <div id="addressChosenDiv" style="display: none">
+        <h4>This is your delivery address</h4>
+        <table class="table" id="choosenAddressTable">
+            <thead>
+            <tr>
+                <th scope="col">Country</th>
+                <th scope="col">City</th>
+                <th scope="col">Street</th>
+                <th scope="col">Building</th>
+                <th scope="col">Apartment</th>
+                <th scope="col">Zip</th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        <div class="dropdown-divider"></div>
+        <button class="row btn btn-primary float-right" onclick="toPayment()" type="button">To Payment</button>
+        <button class="row btn btn-danger float-left" onclick="toDelivery()" type="button">Choose different address
+        </button>
+    </div>
+    <div id="paymentDiv" style="display: none">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <label class="input-group-text" for="deliveryMethod">Delivery Options</label>
+            </div>
+            <select class="custom-select" id="deliveryMethod">
+                <option th:each="method : ${deliveryMethods}" th:text="${method.name}"
+                        th:value="${method.name}"></option>
+            </select>
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <label class="input-group-text" for="paymentMethod">Payment Options</label>
+            </div>
+            <select class="custom-select" id="paymentMethod" onchange="onChangePayment()" onload="onChangePayment()">
+                <option th:each="method : ${paymentMethods}" th:text="${method.name}"
+                        th:value="${method.name}"></option>
+            </select>
+        </div>
+        <form class="creditCardForm" id="creditCardForm" style="margin-top: 20px; margin-bottom: 20px; display: none">
+            <div class="form-group owner">
+                <label for="owner">Owner</label>
+                <input class="form-control" id="owner" name="creditCardOwner" type="text">
+            </div>
+            <div class="form-group CVV">
+                <label for="cvv">CVV</label>
+                <input class="form-control" id="cvv" name="creditCardCvv" type="text" data-inputmask="'mask': '999'">
+            </div>
+            <div class="form-group" id="card-number-field">
+                <label for="cardNumber">Card Number</label>
+                <input class="form-control" id="cardNumber" name="cardNumber" type="text" data-inputmask="'mask': '9999999999999999'">
+            </div>
+            <div class="form-group" id="expiration-date">
+                <label>Expiration Date</label>
+                <select id="dateMonth">
+                    <option value="01">January</option>
+                    <option value="02">February</option>
+                    <option value="03">March</option>
+                    <option value="04">April</option>
+                    <option value="05">May</option>
+                    <option value="06">June</option>
+                    <option value="07">July</option>
+                    <option value="08">August</option>
+                    <option value="09">September</option>
+                    <option value="10">October</option>
+                    <option value="11">November</option>
+                    <option value="12">December</option>
+                </select>
+                <select id="dateYear">
+                    <option value="16"> 2016</option>
+                    <option value="17"> 2017</option>
+                    <option value="18"> 2018</option>
+                    <option value="19"> 2019</option>
+                    <option value="20"> 2020</option>
+                    <option value="21"> 2021</option>
+                </select>
+            </div>
+            <button class="row btn btn-success float-right" id="finishOrderCreditButton" onclick="finishOrderCredit()"
+                    type="submit">Finish Order
+            </button>
+        </form>
+        <button class="row btn btn-danger float-left" onclick="toDelivery()" type="button">Back</button>
+        <button class="row btn btn-success float-right" id="finishOrderCashButton" onclick="finishOrder()"
+                type="submit">Finish Order
+        </button>
+    </div>
+    <div id="finalDiv" style="display: none">
+        <p>You won!</p>
+        <a href="/">Get back to homepage!</a>
+    </div>
+</div>
+<div class="fixed-bottom" style="display: none">
+    <input id="hiddenAddressIdForDto">
+    <input id="hiddenCreditCardOwner">
+    <input id="hiddenCreditCardNumber">
+    <input id="hiddenCreditCardDateMonth">
+    <input id="hiddenCreditCardDateYear">
+    <input id="hiddenCreditCardCvv">
+    <input id="hiddenPaymentMethod">
+    <input id="hiddenDeliveryMethod">
+</div>
+
+</body>
+</html>

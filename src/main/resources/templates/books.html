@@ -1,59 +1,67 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
-  <head th:insert="htmlparts/header.html"></head>
-  <body class="bg-light">
-  <nav th:replace="~{htmlparts/navbar.html :: navbar (books='active') }"></nav>
-    <div class="container">
+<head th:insert="htmlparts/header.html"></head>
+<body class="bg-light">
+<nav th:replace="~{htmlparts/navbar.html :: navbar (books='active') }"></nav>
+<div class="container">
     <h1>Books</h1>
-      <div class="container bg-light">
+    <div class="container bg-light">
         <div class="dropdown btn-group m-1">
-          <button th:text="${category} ?: 'Genre'" class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Genre
-          </button>
-          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
-            <a class="dropdown-item" th:each="category : ${BookCategory}" th:text="${category.name}" th:href="${'/books/' + category.name}"></a>
-          </div>
-        </div>
-        <div class="dropdown btn-group m-1">
-          <button th:text="${sort} ?: 'Sort by'" class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Sort by
-          </button>
-          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-            <a class="dropdown-item" href="?sort=name">Book name</a>
-            <a class="dropdown-item" href="?sort=price">Price</a>
-          </div>
-        </div>
-        <div class="dropdown btn-group m-1">
-          <a class="btn btn-primary" href="/books">Reset</a>
-        </div>
-      <div class="card-columns">
-        <div th:each="book : ${books}"  class="card" style="width: 18rem;">
-          <img src="/images/placeholder.png" class="card-img-top" alt="...">
-          <div class="card-body">
-            <h5 class="card-title" th:text="${book.name + '. ' + book.author}"></h5>
-            <p class="card-text" th:text="${'Amount left: ' + book.amount}"></p>
-            <p class="card-text" th:text="${'Pages: ' + book.pages}"></p>
-            <p class="card-text" th:text="${'Price: ' + book.price + '$'}"></p>
-            <p class="card-text" th:each="category : ${book.bookCategory}" th:text="${'Categorys: ' + category.name + ' '}"></p>
-            <a class="btn btn-primary" th:onclick="'javascript:addToCart(\'' + ${book.id} + '\');'">Add to cart</a>
-            <ul class="pagination mt-2">
-              <li class="page-item">
-            <button class="page-link" th:onclick="'javascript:addLess(\'' + ${book.id} + '\');'">
-              <span aria-hidden="true">&laquo;</span>
+            <button aria-expanded="false" aria-haspopup="true" class="btn btn-secondary dropdown-toggle"
+                    data-toggle="dropdown" id="dropdownMenuButton2" th:text="${category} ?: 'Genre'" type="button">
+                Genre
             </button>
-            </li>
-            <li class="page-item"><a class="page-link" th:id="${'quantity'+book.id}">1</a></li>
-            <li class="page-item">
-              <button class="page-link" th:onclick="'javascript:addMore(\'' + ${book.id} + '\');'">
-                <span aria-hidden="true">&raquo;</span>
-              </button>
-            </li>
-            </ul>
-          </div>
+            <div aria-labelledby="dropdownMenuButton2" class="dropdown-menu">
+                <a class="dropdown-item" th:each="category : ${BookCategory}" th:href="${'/books/' + category.name}"
+                   th:text="${category.name}"></a>
+            </div>
         </div>
-      </div>
-    <br>
-  </div>
-  </body>
+        <div class="dropdown btn-group m-1">
+            <button aria-expanded="false" aria-haspopup="true" class="btn btn-secondary dropdown-toggle"
+                    data-toggle="dropdown" id="dropdownMenuButton1" th:text="${sort} ?: 'Sort by'" type="button">
+                Sort by
+            </button>
+            <div aria-labelledby="dropdownMenuButton1" class="dropdown-menu">
+                <a class="dropdown-item" href="?sort=name">Book name</a>
+                <a class="dropdown-item" href="?sort=price">Price</a>
+            </div>
+        </div>
+        <div class="dropdown btn-group m-1">
+            <a class="btn btn-primary" href="/books">Reset</a>
+        </div>
+        <div class="card-deck">
+            <div class="card border-primary" style="min-width: 225px; min-height: 400px; max-width: 225px;"
+                 th:each="book : ${books}">
+                <img alt="" class="card-img-top"
+                     onerror="this.src='/images/placeholder.png'" style="padding-left: auto; padding-right: auto;"
+                     th:src="${'/images/book' + book.id + '.png'}">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${book.name + '. ' + book.author}"></h5>
+                    <p class="card-text" th:text="${'Amount left: ' + book.amount}"></p>
+                    <p class="card-text" th:text="${'Pages: ' + book.pages}"></p>
+                    <p class="card-text" th:text="${'Price: ' + book.price + '$'}"></p>
+                    <p class="card-text" th:each="category : ${book.bookCategory}"
+                       th:text="${'Categorys: ' + category.name + ' '}"></p>
+                    <a class="btn btn-primary" th:onclick="'javascript:addToCart(\'' + ${book.id} + '\');'">Add to
+                        cart</a>
+                    <ul class="pagination mt-2">
+                        <li class="page-item">
+                            <button class="page-link" th:onclick="'javascript:addLess(\'' + ${book.id} + '\');'">
+                                <span aria-hidden="true">&laquo;</span>
+                            </button>
+                        </li>
+                        <li class="page-item"><a class="page-link" th:id="${'quantity'+book.id}">1</a></li>
+                        <li class="page-item">
+                            <button class="page-link" th:onclick="'javascript:addMore(\'' + ${book.id} + '\');'">
+                                <span aria-hidden="true">&raquo;</span>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <br>
+    </div>
+</body>
 </html>

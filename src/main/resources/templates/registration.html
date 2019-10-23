@@ -2,45 +2,50 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="utf-8">
-  <title>E-shop</title>
-  <link rel="stylesheet" href="css/signin.css" type="text/css">
-  <link rel="stylesheet" href="css/bootstrap.css" type="text/css">
-  <script src="js/jquery.js" type="text/javascript"></script>
-  <script src="js/bootstrap.min.js" type="text/javascript"></script>
-  <script src="js/jquery.validate.min.js" type="text/javascript"></script>
-  <script src="/js/functions.js" type="text/javascript"></script>
+    <meta charset="utf-8">
+    <title>E-shop</title>
+    <link href="css/signin.css" rel="stylesheet" type="text/css">
+    <link href="css/bootstrap.css" rel="stylesheet" type="text/css">
+    <script src="js/jquery.js" type="text/javascript"></script>
+    <script src="js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="js/jquery.validate.min.js" type="text/javascript"></script>
+    <script src="/js/functions.js" type="text/javascript"></script>
 </head>
 <body class="text-center" style="background-color: #f5f5f5">
-<form  class="form-signin" method="POST" th:object="${user}" id="registrationForm">
+<form class="form-signin" id="registrationForm" method="POST" th:object="${user}">
 
-  <h1 class="h3 mb-3 font-weight-normal">New account</h1>
+    <h1 class="h3 mb-3 font-weight-normal">New account</h1>
 
-  <label for="username" class="sr-only">Username</label>
-  <input type="text" id="username" class="form-control" placeholder="Username" required="" autofocus="autofocus" name="username" th:value="${user?.username}">
+    <label class="sr-only" for="username">Username</label>
+    <input autofocus="autofocus" class="form-control" id="username" name="username" placeholder="Username" required=""
+           th:value="${user?.username}" type="text">
 
-  <label for="firstname" class="sr-only">First name</label>
-  <input type="text" id="firstname" class="form-control" placeholder="First name" required="" autofocus="autofocus" name="firstName" th:value="${user?.firstName}" >
+    <label class="sr-only" for="firstname">First name</label>
+    <input autofocus="autofocus" class="form-control" id="firstname" name="firstName" placeholder="First name" required=""
+           th:value="${user?.firstName}" type="text">
 
-  <label for="lastname" class="sr-only">Last name</label>
-  <input type="text" id="lastname" class="form-control" placeholder="Last name" required="" name="lastName" th:value="${user?.lastName}">
+    <label class="sr-only" for="lastname">Last name</label>
+    <input class="form-control" id="lastname" name="lastName" placeholder="Last name" required="" th:value="${user?.lastName}"
+           type="text">
 
-  <label for="birthdate" class="sr-only">Email address</label>
-  <input type="date" id="birthdate" class="form-control" placeholder="birthday" required="" name="birthdate" th:value="${user?.birthdate}">
+    <label class="sr-only" for="birthdate">Email address</label>
+    <input class="form-control" id="birthdate" name="birthdate" placeholder="birthday" required="" th:value="${user?.birthdate}"
+           type="date">
 
-  <label for="inputEmail" class="sr-only">Email address</label>
-  <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required="" name="email" >
+    <label class="sr-only" for="inputEmail">Email address</label>
+    <input class="form-control" id="inputEmail" name="email" placeholder="Email address" required="" type="email">
 
-  <label for="inputPassword" class="sr-only">Password</label>
-  <input type="password" id="inputPassword" class="form-control" placeholder="Password" required="" name="password" >
+    <label class="sr-only" for="inputPassword">Password</label>
+    <input class="form-control" id="inputPassword" name="password" placeholder="Password" required="" type="password">
 
-  <button class="btn btn-lg btn-primary btn-block" type="submit" onclick="register()">Sign up</button>
+    <button class="btn btn-lg btn-primary btn-block" onclick="register()" type="submit">Sign up</button>
 
-  <div th:if="${error != null}" th:text="${error}" style="background-color: #ffccdf; font-family: 'Century Gothic';"></div>
+    <div style="background-color: #ffccdf; font-family: 'Century Gothic';" th:if="${error != null}"
+         th:text="${error}"></div>
 
-  <p><a href="/login">Already have an account?<br>Sign in</a></p>
-  <div id="error"></div>
-  <p><a href="/homepage">Back to home page</a></p>
+    <p><a href="/login">Already have an account?<br>Sign in</a></p>
+    <div id="error"></div>
+    <p><a href="/homepage">Back to home page</a></p>
 </form>
 </body>
 </html>

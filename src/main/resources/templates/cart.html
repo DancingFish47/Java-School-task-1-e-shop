@@ -1,48 +1,54 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
-  <head th:insert="htmlparts/header.html"></head>
-  <body>
-  <nav th:replace="~{htmlparts/navbar.html :: navbar (cart='active') }"></nav>
-  <div class="container">
+<head th:insert="htmlparts/header.html"></head>
+<body>
+<nav th:replace="~{htmlparts/navbar.html :: navbar (cartLink='active') }"></nav>
+<div class="container">
     <h1>Your cart</h1>
     <div id="div"></div>
     <div class="container bg-light">
-      <h3 th:if="${#lists.isEmpty(cart)}">Your cart is empty.</h3>
-      <table th:if="${!#lists.isEmpty(cart)}" class="table" id="table">
-        <thead>
-        <tr>
-          <th scope="col">Book name</th>
-          <th scope="col">Quantity</th>
-          <th scope="col">Price</th>
-          <th scope="col"></th>
-          <th scope="col">Total</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="item : ${cart}" th:id="${'row' + item.book.id}">
-          <td th:text="${item.book.name}"></td>
-          <td th:text="${item.quantity}"></td>
-          <td th:text="${item.book.price + '$'}"></td>
-          <td><button type="button" class="row btn btn-danger" th:onclick="'javascript:deleteFromCart(\'' + ${item.book.id} + '\');'">Delete</button></td>
-        </tr>
-        <tr>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td id="total" th:text="${total + '$'}"></td>
-        </tr>
-        <tr>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td><button type="button" class="row btn btn-success" onclick="checkOut()">Check out!</button></td>
-        </tr>
-        </tbody>
-      </table>
+        <h3 th:if="${#lists.isEmpty(cart)}">Your cart is empty.</h3>
+        <table class="table" id="table" th:if="${!#lists.isEmpty(cart)}">
+            <thead>
+            <tr>
+                <th scope="col">Book name</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Price</th>
+                <th scope="col"></th>
+                <th scope="col">Total</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${cart}" th:id="${'row' + item.book.id}">
+                <td th:text="${item.book.name}"></td>
+                <td th:text="${item.quantity}"></td>
+                <td th:text="${item.book.price + '$'}"></td>
+                <td>
+                    <button class="row btn btn-danger" th:onclick="'javascript:deleteFromCart(\'' + ${item.book.id} + '\');'"
+                            type="button">Delete
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td id="total" th:text="${total + '$'}"></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>
+                    <button class="row btn btn-success" onclick="toCheckOut()" type="button">Check out!</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
     </div>
-  </div>
-  </body>
+</div>
+</body>
 </html>

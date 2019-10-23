@@ -11,11 +11,9 @@ import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-
 import java.util.Optional;
 
 @Controller
@@ -27,8 +25,9 @@ public class ProfilePageController {
     UserService userService;
     @Autowired
     UserRepository userRepository;
+
     @GetMapping
-    public String profileSettings(Model model, Principal principal){
+    public String profileSettings(Model model, Principal principal) {
         model.addAttribute("user", userRepository.findByUsername(principal.getName()));
         model.addAttribute("addresses", addressesRepository.findAllOrderByUser(userRepository.findByUsername(principal.getName())));
         return "profileSettings";
@@ -36,14 +35,13 @@ public class ProfilePageController {
 
     @RequestMapping(value = "/cancelMainEdit", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject profileEditMainSettings(Principal principal){
+    public JSONObject profileEditMainSettings(Principal principal) {
         JSONObject result = new JSONObject();
         User user = userRepository.findByUsername(principal.getName());
-        if(user != null) {
+        if (user != null) {
             result.put("error", false);
             result.put("user", user);
-        }
-        else{
+        } else {
             result.put("error", true);
             result.put("message", "Something happened");
         }
@@ -52,14 +50,13 @@ public class ProfilePageController {
 
     @RequestMapping(value = "/saveMainEdit", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject profileSaveMainSettings(@RequestBody JSONObject edit, Principal principal){
+    public JSONObject profileSaveMainSettings(@RequestBody JSONObject edit, Principal principal) {
         JSONObject result = new JSONObject();
         User user = userService.changeMainSettings(edit, userRepository.findByUsername(principal.getName()).getId());
-        if(user != null) {
+        if (user != null) {
             result.put("error", false);
             result.put("user", user);
-        }
-        else{
+        } else {
             result.put("error", true);
             result.put("message", "Saving failed");
         }
@@ -68,13 +65,13 @@ public class ProfilePageController {
 
     @RequestMapping(value = "/changePassword", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject profileChangePassword(@RequestBody JSONObject edit, Principal principal){
+    public JSONObject profileChangePassword(@RequestBody JSONObject edit, Principal principal) {
         JSONObject result = new JSONObject();
-        try{
+        try {
             userService.changePassword(edit, userRepository.findByUsername(principal.getName()).getId());
             result.put("error", false);
             result.put("message", "Password changed!");
-        } catch (PasswordMismatchException e){
+        } catch (PasswordMismatchException e) {
             result.put("error", true);
             result.put("message", "Wrong current password!");
         }
@@ -83,12 +80,12 @@ public class ProfilePageController {
 
     @RequestMapping(value = "/getAddressById", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject getAddressById(@RequestBody JSONObject addressId){
+    public JSONObject getAddressById(@RequestBody JSONObject addressId) {
         JSONObject result = new JSONObject();
         Optional<Address> address = addressesRepository.findById(Integer.valueOf((String) addressId.get("id")));
-        if(address.isPresent()){
+        if (address.isPresent()) {
             result.put("address", address);
-        }else{
+        } else {
             result.put("error", true);
             result.put("message", "Could not retrieve address from database");
         }
@@ -97,14 +94,14 @@ public class ProfilePageController {
 
     @RequestMapping(value = "/saveEditAddress", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject saveEditAddress(@RequestBody JSONObject edit){
+    public JSONObject saveEditAddress(@RequestBody JSONObject edit) {
         JSONObject result = new JSONObject();
-        Address address = userService.editAddress(edit, (Integer)edit.get("id"));
-        if(address != null){
+        Address address = userService.editAddress(edit, (Integer) edit.get("id"));
+        if (address != null) {
             result.put("error", false);
             result.put("message", "Address edited successfully!");
             result.put("address", address);
-        }else{
+        } else {
             result.put("error", true);
             result.put("message", "Failed to edit address!");
         }
@@ -113,12 +110,12 @@ public class ProfilePageController {
 
     @RequestMapping(value = "/deleteAddress", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject deleteAddress(@RequestBody JSONObject deleteId){
+    public JSONObject deleteAddress(@RequestBody JSONObject deleteId) {
         JSONObject result = new JSONObject();
-        if(userService.deleteAddressById(Integer.valueOf((String)deleteId.get("id")))){
+        if (userService.deleteAddressById(Integer.valueOf((String) deleteId.get("id")))) {
             result.put("error", false);
             result.put("message", "Address deleted!");
-        }else{
+        } else {
             result.put("error", true);
             result.put("message", "Address is not deleted!");
         }
@@ -127,15 +124,15 @@ public class ProfilePageController {
 
     @RequestMapping(value = "/saveNewAddress", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject saveNewAddress(@RequestBody JSONObject newAddress, Principal principal){
+    public JSONObject saveNewAddress(@RequestBody JSONObject newAddress, Principal principal) {
         JSONObject result = new JSONObject();
         User user = userRepository.findByUsername(principal.getName());
         Address address = userService.saveNewAddress(newAddress, user);
-        if(address != null){
+        if (address != null) {
             result.put("error", false);
             result.put("message", "New address added!");
             result.put("address", address);
-        }else{
+        } else {
             result.put("error", true);
             result.put("message", "Failed to add new address!");
         }

@@ -1,18 +1,20 @@
 package com.rychkov.eshop.entitys;
 
-import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.transaction.Transactional;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 
 @Entity
 @Data
@@ -20,7 +22,7 @@ import java.util.List;
 @Setter
 @Transactional
 @Table(name = "User")
-public class User extends AbstractEntity implements UserDetails{
+public class User extends AbstractEntity implements UserDetails {
     @NotNull
     @Column(name = "username", unique = true)
     private String username;
@@ -46,7 +48,7 @@ public class User extends AbstractEntity implements UserDetails{
     private String password;
 
     @NotNull
-    @Column(name ="role")
+    @Column(name = "role")
     private String userRole;
 
 

@@ -11,7 +11,7 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
-@Table(name="Book")
+@Table(name = "Book")
 public class Book extends AbstractEntity {
     @NotNull
     @Column(name = "name")
@@ -25,8 +25,8 @@ public class Book extends AbstractEntity {
     @Column(name = "price")
     private Float price;
 
-    @ManyToOne(fetch=FetchType.EAGER)
-    @JoinColumn(name="category_id")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "category_id")
     private BookCategory bookCategory;
 
     @NotNull

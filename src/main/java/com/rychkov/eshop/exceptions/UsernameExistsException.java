@@ -1,7 +1,7 @@
 package com.rychkov.eshop.exceptions;
 
 public class UsernameExistsException extends Throwable {
-    public UsernameExistsException (final String message) {
+    public UsernameExistsException(final String message) {
         super(message);
     }
 }

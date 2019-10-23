@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org">
+<html xmlns:sec="http://www.thymeleaf.org" xmlns:th="http://www.thymeleaf.org">
 <body>
-<nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" th:fragment="navbar">
     <a class="navbar-brand" href="/homepage">E-Shop</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"
+            data-target="#navbarSupportedContent" data-toggle="collapse" type="button">
         <span class="navbar-toggler-icon"></span>
     </button>
 
@@ -13,43 +14,49 @@
                 <a class="nav-link" href="/books">Books</a>
             </li>
 
-            <li th:class="${cart + ' nav-item'}">
+            <li th:class="${cartLink + ' nav-item'}">
                 <a class="nav-link" href="/cart">Cart</a>
             </li>
 
             <li class="nav-item">
                 <div sec:authorize="hasAuthority('Admin')">
-                    <a th:class="${admin + ' nav-link'}" href="/adminPage">Admin page</a>
-                 </div>
+                    <a href="/adminPage" th:class="${admin + ' nav-link'}">Admin page</a>
+                </div>
+            </li>
+            <li claa="nav-item">
+                <div sec:authorize="hasAuthority('User')">
+                    <a href="/checkout" th:class="${checkoutLink + ' nav-link'}">Check out</a>
+                </div>
             </li>
         </ul>
         <ul class="navbar-nav float-right">
-        <li class="nav-item dropdown">
-            <div sec:authorize="isAuthenticated()">
-            <a th:class="${profile + ' nav-link dropdown-toggle'}" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" sec:authentication="name">
+            <li class="nav-item dropdown">
+                <div sec:authorize="isAuthenticated()">
+                    <a aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" href="#"
+                       id="navbarDropdown" role="button" sec:authentication="name" th:class="${profile + ' nav-link dropdown-toggle'}">
 
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="/orders">Orders</a>
-                <a class="dropdown-item" href="/profileSettings">Settings</a>
-            </div>
-            </div>
-        </li>
-        <li class="nav-item">
-            <div sec:authorize="!isAuthenticated()" >
-                <a class="nav-link" href="/login">Log in</a>
-            </div>
-        </li>
-        <li class="nav-item">
-            <div sec:authorize="!isAuthenticated()">
-            <a class="nav-link" href="/registration">Sign up</a>
-            </div>
-        </li>
-        <li class="nav-item">
-            <div sec:authorize="isAuthenticated()">
-            <a class="nav-link" href="/logout">Log out</a>
-            </div>
-        </li>
+                    </a>
+                    <div aria-labelledby="navbarDropdown" class="dropdown-menu">
+                        <a class="dropdown-item" href="/orders">Orders</a>
+                        <a class="dropdown-item" href="/profileSettings">Settings</a>
+                    </div>
+                </div>
+            </li>
+            <li class="nav-item">
+                <div sec:authorize="!isAuthenticated()">
+                    <a class="nav-link" href="/login">Log in</a>
+                </div>
+            </li>
+            <li class="nav-item">
+                <div sec:authorize="!isAuthenticated()">
+                    <a class="nav-link" href="/registration">Sign up</a>
+                </div>
+            </li>
+            <li class="nav-item">
+                <div sec:authorize="isAuthenticated()">
+                    <a class="nav-link" href="/logout">Log out</a>
+                </div>
+            </li>
         </ul>
     </div>
 </nav>

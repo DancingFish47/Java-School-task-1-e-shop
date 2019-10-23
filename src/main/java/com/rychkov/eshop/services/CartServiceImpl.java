@@ -16,13 +16,14 @@ import java.util.Optional;
 public class CartServiceImpl implements CartService {
     @Autowired
     BooksRepository booksRepository;
+
     @Override
     public JSONObject addItem(HttpSession session, JSONObject item) {
         JSONObject result = new JSONObject();
         Integer addBookId = Integer.valueOf((String) item.get("id"));
         Integer quantity = Integer.valueOf((String) item.get("quantity"));
         Optional<Book> optionalBook = booksRepository.findById(addBookId);
-        if(optionalBook.isPresent()) {
+        if (optionalBook.isPresent()) {
             Book book = optionalBook.get();
             CartItem cartItem = new CartItem(book, quantity);
             if (session.getAttribute("cart") == null) {
@@ -34,7 +35,7 @@ public class CartServiceImpl implements CartService {
                 if (exists(addBookId, cart) == -1) {
                     cart.add(cartItem);
                 } else {
-                    cart.get(exists(addBookId,cart)).addQuantity(quantity);
+                    cart.get(exists(addBookId, cart)).addQuantity(quantity);
                 }
                 session.setAttribute("cart", cart);
             }
@@ -58,8 +59,8 @@ public class CartServiceImpl implements CartService {
             result.put("message", "Could not find that book in your cart!");
             result.put("total", calculateTotal(cart));
         } else {
-            result.put("message", "Book " + cart.get(exists(deleteId,cart)).getBook().getName() + " deleted from cart!");
-            cart.remove(exists(deleteId,cart));
+            result.put("message", "Book " + cart.get(exists(deleteId, cart)).getBook().getName() + " deleted from cart!");
+            cart.remove(exists(deleteId, cart));
             result.put("error", false);
             result.put("total", calculateTotal(cart));
         }
@@ -76,9 +77,9 @@ public class CartServiceImpl implements CartService {
         return -1;
     }
 
-    private float calculateTotal(List<CartItem> cart){
+    private float calculateTotal(List<CartItem> cart) {
         float total = 0;
-        for (CartItem item : cart){
+        for (CartItem item : cart) {
             total += item.getBook().getPrice() * item.getQuantity();
         }
         return total;

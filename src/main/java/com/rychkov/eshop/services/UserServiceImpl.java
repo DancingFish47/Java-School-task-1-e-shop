@@ -25,11 +25,13 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+
     @Transactional
     @Override
-    public User registerNewUser(UserDto userDto) throws EmailExistsException, UsernameExistsException{
-        if(emailExists(userDto.getEmail())) throw new EmailExistsException("This email is already registered");
-        if(usernameExists(userDto.getUsername())) throw new UsernameExistsException("This username is already registered");
+    public User registerNewUser(UserDto userDto) throws EmailExistsException, UsernameExistsException {
+        if (emailExists(userDto.getEmail())) throw new EmailExistsException("This email is already registered");
+        if (usernameExists(userDto.getUsername()))
+            throw new UsernameExistsException("This username is already registered");
         User user = new User();
         user.setUsername(userDto.getUsername());
         user.setBirthdate(userDto.getBirthdate());
@@ -46,9 +48,9 @@ public class UserServiceImpl implements UserService {
         Optional<User> optionalUser = userRepository.findById(userId);
 
         User user;
-        if(optionalUser.isPresent()){
+        if (optionalUser.isPresent()) {
             user = optionalUser.get();
-        }else{
+        } else {
             return null;
         }
         user.setFirstName((String) edit.get("firstname"));
@@ -67,7 +69,7 @@ public class UserServiceImpl implements UserService {
         if (optionalUser.isPresent()) user = optionalUser.get();
         else throw new UsernameNotFoundException("User not found");
 
-        if (passwordEncoder.matches(currentPassword, user.getPassword())){
+        if (passwordEncoder.matches(currentPassword, user.getPassword())) {
             user.setPassword(passwordEncoder.encode((String) edit.get("newPassword")));
         } else throw new PasswordMismatchException("Wrong current password!");
 
@@ -78,7 +80,7 @@ public class UserServiceImpl implements UserService {
     public Address editAddress(JSONObject edit, Integer id) {
         Optional<Address> optionalAddress = addressesRepository.findById(id);
         Address address;
-        if (optionalAddress.isPresent()){
+        if (optionalAddress.isPresent()) {
             address = optionalAddress.get();
             address.setCountry((String) edit.get("country"));
             address.setCity((String) edit.get("city"));
@@ -87,7 +89,7 @@ public class UserServiceImpl implements UserService {
             address.setApartment((String) edit.get("apartment"));
             address.setZip((String) edit.get("zip"));
             addressesRepository.save(address);
-        }else {
+        } else {
             return null;
         }
         return address;
@@ -97,7 +99,7 @@ public class UserServiceImpl implements UserService {
     public boolean deleteAddressById(Integer addressId) {
         Optional<Address> deleteAddress = addressesRepository.findById(addressId);
 
-        if(deleteAddress.isPresent()){
+        if (deleteAddress.isPresent()) {
             addressesRepository.delete(deleteAddress.get());
         } else return false;
 
@@ -121,16 +123,11 @@ public class UserServiceImpl implements UserService {
 
     private boolean emailExists(String email) {
         User user = userRepository.findByEmail(email.toLowerCase());
-        if (user != null) {
-            return true;
-        }
-        return false;
+        return user != null;
     }
+
     private boolean usernameExists(String username) {
         User user = userRepository.findByUsername(username);
-        if (user != null) {
-            return true;
-        }
-        return false;
+        return user != null;
     }
 }
