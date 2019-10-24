@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:insert="htmlparts/header.html"></head>
+<body>
+<nav th:replace="~{htmlparts/navbar.html :: navbar (admin='active') }"></nav>
+
+<div class="container">
+    <h1 th:if="${#lists.isEmpty(ordersAndBooks)}">No orders found</h1>
+    <h1 th:if="${!#lists.isEmpty(ordersAndBooks)}">Orders</h1>
+    <div class="container bg-light">
+        <table class="table" id="addressTable" th:if="${!#lists.isEmpty(ordersAndBooks)}">
+            <thead>
+            <tr>
+                <th scope="col">Order Id</th>
+                <th scope="col">User</th>
+                <th scope="col">Address</th>
+                <th scope="col">Payment Status</th>
+                <th scope="col">Order Status</th>
+                <th scope="col">Books</th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="orderAndBook : ${ordersAndBooks}">
+                <td th:text="${orderAndBook.order.id}"></td>
+                <td th:text="${orderAndBook.order.user.username}"></td>
+                <td>
+                    <p th:text="${orderAndBook.order.address.country}"></p>
+                    <p th:text="${orderAndBook.order.address.city}"></p>
+                    <p th:text="${orderAndBook.order.address.street +', '+ orderAndBook.order.address.building}"></p>
+                    <p th:text="${orderAndBook.order.address.apartment}"></p>
+                    <p th:text="${orderAndBook.order.address.zip}"></p>
+                </td>
+                <td>
+                    <select class="custom-select" th:id="${'paymentStatus' + orderAndBook.order.id}" th:onchange="'javascript:onChangePaymentStatus(\'' + ${orderAndBook.order.id} + '\');'">
+                        <option th:each="status : ${paymentStatus}" th:text="${status.name}"
+                                th:value="${status.name}" th:selected="${status.name == orderAndBook.order.paymentStatus.name}"></option>
+                    </select>
+                </td>
+                <td>
+                    <select class="custom-select" th:id="${'orderStatus' + orderAndBook.order.id}" th:onchange="'javascript:onChangeOrderStatus(\'' + ${orderAndBook.order.id} + '\');'">
+                        <option th:each="status : ${orderStatus}" th:text="${status.name}"
+                                th:value="${status.name}" th:selected="${status.name == orderAndBook.order.orderStatus.name}"></option>
+                    </select>
+                </td>
+                <td>
+                    <p th:each="book : ${orderAndBook.books}" th:text="${book.book.name + ' x ' + book.quantity}"></p>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `address` (
   KEY `FKtrot3fhihthq0l9koef094xwr` (`user_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
--- Dumping data for table eshopdb.address: 6 rows
+-- Dumping data for table eshopdb.address: 7 rows
 /*!40000 ALTER TABLE `address` DISABLE KEYS */;
 INSERT IGNORE INTO `address` (`id`, `created_date`, `version`, `apartment`, `building`, `city`, `country`, `street`, `zip`, `user_id`) VALUES
 	(15, '2019-10-20', 5, '20', '99', 'City', 'Usa', '1st Avenue', '400004', 3),
@@ -40,7 +40,9 @@ INSERT IGNORE INTO `address` (`id`, `created_date`, `version`, `apartment`, `bui
 	(22, '2019-10-22', 0, '324', '123', 'Moscow', 'Russia', 'River', '455044', 3),
 	(23, '2019-10-22', 0, '345', '234', 'NewYork', 'United', 'Buckinghem', '4563', 3),
 	(24, '2019-10-22', 0, '23', '123', 'Warsawa', 'Poland', 'PolskyStreet', '455055', 3),
-	(25, '2019-10-22', 0, '123', '123', 'Los-Santos', 'Usa', 'GrooveStreet', '1232', 3);
+	(25, '2019-10-22', 0, '123', '123', 'Los-Santos', 'Usa', 'GrooveStreet', '1232', 3),
+	(34, '2019-10-23', 0, '234', '123', 'New-Yrk', 'Usa', '2ndAvenue', '455555', 33),
+	(44, '2019-10-24', 0, '38', '99', 'Magnitogorsk', 'Russia', 'Marksa', '455044', 21);
 /*!40000 ALTER TABLE `address` ENABLE KEYS */;
 
 -- Dumping structure for table eshopdb.book
@@ -59,15 +61,16 @@ CREATE TABLE IF NOT EXISTS `book` (
   KEY `FKj7aaobjge68fn1owlrob2twyg` (`category_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
--- Dumping data for table eshopdb.book: 6 rows
+-- Dumping data for table eshopdb.book: 7 rows
 /*!40000 ALTER TABLE `book` DISABLE KEYS */;
 INSERT IGNORE INTO `book` (`id`, `created_date`, `version`, `amount`, `author`, `name`, `pages`, `price`, `sold`, `category_id`) VALUES
-	(1, '2019-10-17', 0, 20, 'Herman Melvill', 'Moby Dick', 600, 20, 10, 1),
-	(2, '2019-10-17', 0, 20, 'A.S.Pushkin', 'Captain\'s daughter', 400, 10, 5, 1),
-	(3, '2019-10-17', 0, 30, 'V.Nabokov', 'Pale Fire', 200, 5, 2, 1),
-	(4, '2019-10-20', 0, 40, 'A.C.Doyle', 'Sherlock Holmes', 500, 40, 20, 2),
+	(1, '2019-10-17', 7, 12, 'Herman Melvill', 'Moby Dick', 600, 20, 11, 1),
+	(2, '2019-10-17', 4, 9, 'A.S.Pushkin', 'Captain\'s daughter', 400, 10, 5, 1),
+	(3, '2019-10-17', 3, 25, 'V.Nabokov', 'Pale Fire', 200, 5, 5, 1),
+	(4, '2019-10-20', 1, 39, 'A.C.Doyle', 'Sherlock Holmes', 500, 40, 21, 2),
 	(5, '2019-10-20', 0, 50, 'Stieg Larsson', 'The Girl with the Dragon Tattoo', 250, 25, 60, 2),
-	(6, '2019-10-20', 0, 60, 'Gillian Flynn', 'Gone Girl', 700, 30, 30, 2);
+	(6, '2019-10-20', 1, 58, 'Gillian Flynn', 'Gone Girl', 700, 30, 32, 2),
+	(7, '2019-10-23', 5, 0, 'Sun Tzu', 'The Art of War', 400, 100, 0, 1);
 /*!40000 ALTER TABLE `book` ENABLE KEYS */;
 
 -- Dumping structure for table eshopdb.book_category
@@ -110,15 +113,15 @@ CREATE TABLE IF NOT EXISTS `hibernate_sequence` (
 -- Dumping data for table eshopdb.hibernate_sequence: 9 rows
 /*!40000 ALTER TABLE `hibernate_sequence` DISABLE KEYS */;
 INSERT IGNORE INTO `hibernate_sequence` (`next_val`) VALUES
-	(26),
-	(26),
-	(26),
-	(26),
-	(26),
-	(26),
-	(26),
-	(26),
-	(26);
+	(47),
+	(47),
+	(47),
+	(47),
+	(47),
+	(47),
+	(47),
+	(47),
+	(47);
 /*!40000 ALTER TABLE `hibernate_sequence` ENABLE KEYS */;
 
 -- Dumping structure for table eshopdb.orders
@@ -126,13 +129,13 @@ CREATE TABLE IF NOT EXISTS `orders` (
   `id` int(11) NOT NULL,
   `created_date` date DEFAULT NULL,
   `version` int(11) DEFAULT NULL,
+  `totalPrice` float DEFAULT NULL,
   `address_id` int(11) DEFAULT NULL,
   `deliveryMethod_id` int(11) DEFAULT NULL,
   `orderStatus_id` int(11) DEFAULT NULL,
   `paymentMethod_id` int(11) DEFAULT NULL,
   `paymentStatus_id` int(11) DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL,
-  `totalPrice` float DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FKky1pbb8qo6fa1hg5m5tmcb962` (`address_id`),
   KEY `FKc3773rir9odyf3fsytc7mr4mn` (`deliveryMethod_id`),
@@ -142,20 +145,44 @@ CREATE TABLE IF NOT EXISTS `orders` (
   KEY `FKsgwj42spshwc3eestq5vk520j` (`user_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
--- Dumping data for table eshopdb.orders: 0 rows
+-- Dumping data for table eshopdb.orders: 3 rows
 /*!40000 ALTER TABLE `orders` DISABLE KEYS */;
+INSERT IGNORE INTO `orders` (`id`, `created_date`, `version`, `totalPrice`, `address_id`, `deliveryMethod_id`, `orderStatus_id`, `paymentMethod_id`, `paymentStatus_id`, `user_id`) VALUES
+	(41, '2019-10-23', 9, 300, 25, 1, 2, 1, 2, 3),
+	(42, '2019-10-23', 0, 20, 15, 1, 2, 1, 2, 3),
+	(43, '2019-10-24', 1, 75, 23, 1, 1, 1, 2, 3),
+	(45, '2019-10-24', 0, 115, 44, 1, 4, 1, 2, 21),
+	(46, '2019-10-24', 0, 20, 15, 1, 4, 1, 2, 3);
 /*!40000 ALTER TABLE `orders` ENABLE KEYS */;
 
 -- Dumping structure for table eshopdb.order_books
 CREATE TABLE IF NOT EXISTS `order_books` (
   `order_id` int(11) NOT NULL,
   `book_id` int(11) NOT NULL,
-  PRIMARY KEY (`order_id`,`book_id`),
-  KEY `FKdrsa96ij2kw3sxsy7wsnua8ac` (`book_id`)
+  KEY `FKdrsa96ij2kw3sxsy7wsnua8ac` (`book_id`),
+  KEY `FKfo05ca9bxto7jnhw9nsdmlhjq` (`order_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
--- Dumping data for table eshopdb.order_books: 0 rows
+-- Dumping data for table eshopdb.order_books: 10 rows
 /*!40000 ALTER TABLE `order_books` DISABLE KEYS */;
+INSERT IGNORE INTO `order_books` (`order_id`, `book_id`) VALUES
+	(41, 7),
+	(41, 7),
+	(41, 7),
+	(42, 1),
+	(43, 1),
+	(43, 1),
+	(43, 2),
+	(43, 2),
+	(43, 2),
+	(43, 3),
+	(45, 6),
+	(45, 6),
+	(45, 3),
+	(45, 3),
+	(45, 3),
+	(45, 4),
+	(46, 1);
 /*!40000 ALTER TABLE `order_books` ENABLE KEYS */;
 
 -- Dumping structure for table eshopdb.order_status
@@ -167,12 +194,13 @@ CREATE TABLE IF NOT EXISTS `order_status` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
--- Dumping data for table eshopdb.order_status: 0 rows
+-- Dumping data for table eshopdb.order_status: 4 rows
 /*!40000 ALTER TABLE `order_status` DISABLE KEYS */;
 INSERT IGNORE INTO `order_status` (`id`, `created_date`, `version`, `name`) VALUES
 	(1, '2019-10-23', 0, 'PACKING'),
 	(2, '2019-10-23', 0, 'SENT'),
-	(3, '2019-10-23', 0, 'RECEIVED');
+	(3, '2019-10-23', 0, 'RECEIVED'),
+	(4, '2019-10-24', 0, 'REGISTERED');
 /*!40000 ALTER TABLE `order_status` ENABLE KEYS */;
 
 -- Dumping structure for table eshopdb.payment_method
@@ -224,13 +252,14 @@ CREATE TABLE IF NOT EXISTS `user` (
   UNIQUE KEY `UK_jreodf78a7pl5qidfh43axdfb` (`username`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
--- Dumping data for table eshopdb.user: 4 rows
+-- Dumping data for table eshopdb.user: 5 rows
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
 INSERT IGNORE INTO `user` (`id`, `created_date`, `version`, `birthdate`, `email`, `first_name`, `last_name`, `password`, `role`, `username`) VALUES
 	(3, '2019-10-17', 31, '1996-06-19', 'roman@mail.ru', 'Roma', 'Rychkov', '$2a$10$Xb4yh4FCuwJvkZgkDm9pqebMg1eBjgkLrNUHBI2uKeJ67U8Hv2y7G', 'User', 'Roman'),
 	(4, '2019-10-17', 1, '1996-06-19', 'snake@mail.ru', 'Snake', 'Snake', '$2a$10$5XB3.98JOePhoStYeXbxCuLmHNZF3/0lTp4ERo9K.GIPPn11qsGte', 'User', 'Snake'),
 	(21, '2019-10-22', 0, '1996-06-11', 'admin@mail.ru', 'Admin', 'Adminovich', '$2a$10$mxKxcqHc8LRGMz29UaYFeesDDuYSz6hGVWgLPD6rpaydF4mfy5XLe', 'Admin', 'Admin'),
-	(5, '2019-10-18', 0, '1998-03-19', 'john@mail.ru', 'Snow', 'Jack', '$2a$10$UDUxdZqWesFTgyLe2aI3bOsLpor9E1s7VIF0GRXn3hO7nf4kgppvq', 'User', 'John');
+	(5, '2019-10-18', 0, '1998-03-19', 'john@mail.ru', 'Snow', 'Jack', '$2a$10$UDUxdZqWesFTgyLe2aI3bOsLpor9E1s7VIF0GRXn3hO7nf4kgppvq', 'User', 'John'),
+	(33, '2019-10-23', 0, '1995-12-12', 'jackdoe@mail.ru', 'Doe', 'Jack', '$2a$10$.EhWsTbGjVUikslyzzqYb.mwlguJX0wlCBtMfR2DKAqQbn5PEgcsS', 'User', 'Jack');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

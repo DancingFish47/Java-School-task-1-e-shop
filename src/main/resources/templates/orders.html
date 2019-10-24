@@ -12,6 +12,7 @@
             <thead>
             <tr>
                 <th scope="col">Order Id</th>
+                <th scope="col">Status</th>
                 <th scope="col">Books</th>
                 <th scope="col"></th>
             </tr>
@@ -19,6 +20,7 @@
             <tbody>
             <tr th:each="orderAndBook : ${orderAndBooks}">
                 <td th:text="${orderAndBook.order.id}"></td>
+                <td th:text="${orderAndBook.order.orderStatus.name}"></td>
                 <td>
                     <p th:each="book : ${orderAndBook.books}" th:text="${book.book.name + ' x ' + book.quantity}"></p>
                 </td>

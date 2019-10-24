@@ -52,6 +52,6 @@ public class BooksPageController {
         JSONObject result;
         result = cartService.addItem(session, addItem);
         return result;
-    }//TODO Can receive DTO instead of JSONObject, rework all similiar methods.
+    }
 
 }

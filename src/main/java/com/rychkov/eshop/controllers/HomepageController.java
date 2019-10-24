@@ -10,4 +10,14 @@ public class HomepageController {
         return "redirect:/books";
     }
 }
-//TODO DDL auto validate
+/*
+TODO
+  1) Ddd autovalidate
+  2) Exception handling through controller advice
+   3) 2 more functions for admin page
+    4) Custom error pages
+     5) Figure out "Docker"
+      6) Sonar?
+       7)Wildfly or Flyway something like that for sql
+*/
+

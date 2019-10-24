@@ -1,3 +1,21 @@
+toastr.options = {
+    "closeButton": true,
+    "debug": false,
+    "newestOnTop": true,
+    "progressBar": true,
+    "positionClass": "toast-top-center",
+    "preventDuplicates": false,
+    "onclick": null,
+    "showDuration": "300",
+    "hideDuration": "1000",
+    "timeOut": "5000",
+    "extendedTimeOut": "1000",
+    "showEasing": "swing",
+    "hideEasing": "linear",
+    "showMethod": "fadeIn",
+    "hideMethod": "fadeOut"
+}
+
 $(function () {
     $("form").submit(function (event) {
         event.preventDefault();
@@ -164,7 +182,7 @@ async function cancelMainEdit() {
         lastNameField.value = result.user.lastName;
         birthdateField.value = result.user.birthdate;
     } else {
-        alert(result.message);
+        toastr.error(result.message);
     }
     switchMainSettingFields(true);
     switchMainSettingButtons('block', 'none', 'none');
@@ -196,7 +214,7 @@ async function saveMainEdit() {
             lastNameField.value = result.user.lastName;
             birthdateField.value = result.user.birthdate;
         } else {
-            alert(result.message);
+            toastr.error(result.message);
         }
         switchMainSettingFields(true);
         switchMainSettingButtons('block', 'none', 'none');
@@ -263,7 +281,9 @@ async function savePasswordEdit() {
         });
         let result = await call.json();
 
-        alert(result.message);
+        if(!result.error) toastr.success(result.message);
+        else toastr.error(result.message);
+
 
         switchPasswordFields('none');
         clearPasswordFields();
@@ -340,7 +360,7 @@ async function editAddress(id) {
         apartmentField.value = result.address.apartment;
         zipcodeField.value = result.address.zip;
     } else {
-        alert(result.message);
+        toastr.error(result.message);
     }
 }
 
@@ -359,10 +379,10 @@ async function deleteAddress(id) {
     });
     let result = await call.json();
     if (!result.error) {
-        alert(result.message);
+        toastr.success(result.message);
         deleteAddressRow.parentNode.removeChild(deleteAddressRow);
     } else {
-        alert(result.message);
+        toastr.error(result.message);
     }
 }
 
@@ -413,12 +433,12 @@ async function saveNewAddress() {
         let result = await call.json();
 
         if (!result.error) {
-            alert(result.message);
+            toastr.success(result.message);
             cancelAddress();
             document.location.reload();
 
         } else {
-            alert(result.message);
+            toastr.error(result.message);
             cancelAddress();
         }
     }
@@ -476,9 +496,9 @@ async function saveEditAddress(id) {
             Newcell8.innerHTML = "<button type=\"button\" class=\"row btn btn-danger\" onclick=\"deleteAddress('" + id + "');\">Delete</button>";
 
             cancelAddress();
-            alert(result.message);
+            toastr.success(result.message);
         } else {
-            alert(result.message);
+            toastr.error(result.message);
         }
     }
 }
@@ -522,8 +542,7 @@ async function addToCart(id) {
     });
 
     let result = await call.json();
-
-    alert(result.message);
+    toastr.success(result.message);
 }
 
 /*
@@ -549,7 +568,7 @@ async function deleteFromCart(id) {
     let result = await call.json();
 
     if (!result.error) {
-        alert(result.message);
+        toastr.success(result.message);
         deleteRow.parentNode.removeChild(deleteRow);
         totalField.textContent = result.total + "$";
         if (result.total === 0) {
@@ -557,7 +576,7 @@ async function deleteFromCart(id) {
             div.innerHTML = "<h3>Your cart is empty.</h3>"
         }
     } else {
-        alert(result.message);
+        toastr.error(result.message);
     }
 
 }
@@ -573,7 +592,7 @@ async function toCheckOut() {
     if(!result.error){
         document.location.href = '/checkout';
     }else{
-        alert (result.message);
+        toastr.error (result.message);
     }
 }
 
@@ -620,7 +639,6 @@ function showDivs(cartDiv, deliveryDiv, chosenAddressDiv, paymentDiv, finalDiv) 
 }
 
 function chooseAddress(addressId) {
-    alert('Address chosen ' + addressId);
     showDivs('block', 'none', 'block', 'none', 'none');
     document.getElementById("hiddenAddressIdForDto").value = addressId;
     let chosenTable = document.getElementById("choosenAddressTable");
@@ -671,10 +689,10 @@ async function finishOrder() {
     let result = await call.json();
 
     if(!result.error){
-        alert(result.message);
+        toastr.success(result.message);
         showDivs('block', 'none', 'none', 'none', 'block');
     }else{
-        alert(result.message);
+        toastr.error(result.message);
     }
 }
 
@@ -692,6 +710,185 @@ async function repeatOrder(orderId){
     });
 
     let result = await call.json();
+    if(!result.error) toastr.success(result.message);
+    else toastr.error(result.message);
 
-    alert(result.message);
+}
+/*
+Admins page functions
+ */
+async function onChangePaymentStatus(orderId){
+    let paymentStatusSelector = document.getElementById("paymentStatus" + orderId);
+    let newStatus = paymentStatusSelector.options[paymentStatusSelector.selectedIndex].text;
+
+    let paymentStatusDto = {
+        orderId: orderId,
+        newStatusName: newStatus,
+    };
+
+    let call = await fetch("/adminPage/changePaymentStatus", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify(paymentStatusDto)
+    });
+
+    let result = await call.json();
+
+    if(!result.error){
+        toastr.success(result.message);
+    }else{
+        toastr.error(result.message);
+    }
+}
+async function onChangeOrderStatus(orderId){
+    let orderStatusSelector = document.getElementById("orderStatus" + orderId);
+    let newStatus = orderStatusSelector.options[orderStatusSelector.selectedIndex].text;
+
+    let orderStatusDto = {
+        orderId: orderId,
+        newStatusName: newStatus,
+    };
+
+    let call = await fetch("/adminPage/changeOrderStatus", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify(orderStatusDto)
+    });
+
+    let result = await call.json();
+
+    if(!result.error){
+        toastr.success(result.message);
+    }else{
+        toastr.error(result.message);
+    }
+}
+function changeStats(){
+    let usersTable = document.getElementById("topUsers");
+    let booksTable = document.getElementById("topBooks");
+    let button = document.getElementById("switchButton");
+    if(usersTable.style.display === 'block'){
+        usersTable.style.display = 'none';
+        booksTable.style.display = 'block';
+        button.textContent = 'To top users';
+    }
+    else{
+        usersTable.style.display = 'block';
+        booksTable.style.display = 'none';
+        button.textContent = 'To top books';
+    }
+}
+function sortByName(tableColumn, tableId) {
+    let table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+    table = document.getElementById(tableId);
+    switching = true;
+    // Set the sorting direction to ascending:
+    dir = "asc";
+    /* Make a loop that will continue until
+    no switching has been done: */
+    while (switching) {
+        // Start by saying: no switching is done:
+        switching = false;
+        rows = table.rows;
+        /* Loop through all table rows (except the
+        first, which contains table headers): */
+        for (i = 1; i < (rows.length - 1); i++) {
+            // Start by saying there should be no switching:
+            shouldSwitch = false;
+            /* Get the two elements you want to compare,
+            one from current row and one from the next: */
+            x = rows[i].getElementsByTagName("TD")[tableColumn];
+            y = rows[i + 1].getElementsByTagName("TD")[tableColumn];
+            /* Check if the two rows should switch place,
+            based on the direction, asc or desc: */
+            if (dir == "asc") {
+                if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                    // If so, mark as a switch and break the loop:
+                    shouldSwitch = true;
+                    break;
+                }
+            } else if (dir == "desc") {
+                if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                    // If so, mark as a switch and break the loop:
+                    shouldSwitch = true;
+                    break;
+                }
+            }
+        }
+        if (shouldSwitch) {
+            /* If a switch has been marked, make the switch
+            and mark that a switch has been done: */
+            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+            switching = true;
+            // Each time a switch is done, increase this count by 1:
+            switchcount ++;
+        } else {
+            /* If no switching has been done AND the direction is "asc",
+            set the direction to "desc" and run the while loop again. */
+            if (switchcount == 0 && dir == "asc") {
+                dir = "desc";
+                switching = true;
+            }
+        }
+    }
+}
+function sortByValue(tableColumn, tableId){
+    let table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+    table = document.getElementById(tableId);
+    switching = true;
+    // Set the sorting direction to ascending:
+    dir = "asc";
+    /* Make a loop that will continue until
+    no switching has been done: */
+    while (switching) {
+        // Start by saying: no switching is done:
+        switching = false;
+        rows = table.rows;
+        /* Loop through all table rows (except the
+        first, which contains table headers): */
+        for (i = 1; i < (rows.length - 1); i++) {
+            // Start by saying there should be no switching:
+            shouldSwitch = false;
+            /* Get the two elements you want to compare,
+            one from current row and one from the next: */
+            x = rows[i].getElementsByTagName("TD")[tableColumn];
+            y = rows[i + 1].getElementsByTagName("TD")[tableColumn];
+            /* Check if the two rows should switch place,
+            based on the direction, asc or desc: */
+            if (dir == "asc") {
+                if (parseFloat(x.textContent) > parseFloat(y.textContent)) {
+                    // If so, mark as a switch and break the loop:
+                    shouldSwitch = true;
+                    break;
+                }
+            } else if (dir == "desc") {
+                if (parseFloat(x.textContent) < parseFloat(y.textContent)) {
+                    // If so, mark as a switch and break the loop:
+                    shouldSwitch = true;
+                    break;
+                }
+            }
+        }
+        if (shouldSwitch) {
+            /* If a switch has been marked, make the switch
+            and mark that a switch has been done: */
+            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+            switching = true;
+            // Each time a switch is done, increase this count by 1:
+            switchcount ++;
+        } else {
+            /* If no switching has been done AND the direction is "asc",
+            set the direction to "desc" and run the while loop again. */
+            if (switchcount == 0 && dir == "asc") {
+                dir = "desc";
+                switching = true;
+            }
+        }
+    }
 }

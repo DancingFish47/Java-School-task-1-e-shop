@@ -18,9 +18,16 @@
                 <a class="nav-link" href="/cart">Cart</a>
             </li>
 
-            <li class="nav-item">
+            <li class="nav-item dropdown">
                 <div sec:authorize="hasAuthority('Admin')">
-                    <a href="/adminPage" th:class="${admin + ' nav-link'}">Admin page</a>
+                    <a aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" href="#"
+                       id="navbarDropdown2" role="button" th:class="${admin + ' nav-link dropdown-toggle'}">Admin page</a>
+                    <div aria-labelledby="navbarDropdown2" class="dropdown-menu">
+                        <a class="dropdown-item" href="/adminPage/adminOrders">Orders</a>
+                        <a class="dropdown-item" href="/adminPage/adminStats">Statistics</a>
+                        <a class="dropdown-item" href="/adminPage/adminNewBook">Add a new book</a>
+                        <a class="dropdown-item" href="/adminPage/adminNewCategory">Add a new category</a>
+                    </div>
                 </div>
             </li>
             <li claa="nav-item">
