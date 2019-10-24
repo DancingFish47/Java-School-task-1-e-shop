@@ -5,9 +5,30 @@
 <body>
 <nav th:replace="~{htmlparts/navbar.html :: navbar (profile='active') }"></nav>
 <div class="container">
-    <h1>Your orders</h1>
+    <h1 th:if="${#lists.isEmpty(orderAndBooks)}">You don't have any orders</h1>
+    <h1 th:if="${!#lists.isEmpty(orderAndBooks)}">Your orders</h1>
     <div class="container bg-light">
-        <p></p>
+        <table class="table" id="addressTable" th:if="${!#lists.isEmpty(orderAndBooks)}">
+            <thead>
+            <tr>
+                <th scope="col">Order Id</th>
+                <th scope="col">Books</th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="orderAndBook : ${orderAndBooks}">
+                <td th:text="${orderAndBook.order.id}"></td>
+                <td>
+                    <p th:each="book : ${orderAndBook.books}" th:text="${book.book.name + ' x ' + book.quantity}"></p>
+                </td>
+                <td>
+                    <button class="row btn btn-info" th:onclick="'javascript:repeatOrder(\'' + ${orderAndBook.order.id} + '\');'"
+                            type="submit">Repeat order</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 </div>
 </body>

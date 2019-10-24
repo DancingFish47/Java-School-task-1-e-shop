@@ -2,6 +2,7 @@ package com.rychkov.eshop.controllers;
 
 
 import com.rychkov.eshop.dtos.CartItem;
+import com.rychkov.eshop.exceptions.OutOfStockException;
 import com.rychkov.eshop.services.CartService;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,18 @@ public class CartPageController {
     public JSONObject deleteFromCart(@RequestBody JSONObject deleteId, HttpSession session) {
         JSONObject result;
         result = cartService.deleteItem(session, deleteId);
+        return result;
+    }
+    @RequestMapping(value = "/checkStocks", method = RequestMethod.POST)
+    @ResponseBody
+    public JSONObject checkStocks(HttpSession session)  {
+        JSONObject result = new JSONObject();
+        try {
+            cartService.checkStocks((List<CartItem>) session.getAttribute("cart"));
+        } catch (OutOfStockException e){
+            result.put("error", true);
+            result.put("message", e.getMessage());
+        }
         return result;
     }
 }

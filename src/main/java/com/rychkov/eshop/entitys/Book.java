@@ -41,6 +41,4 @@ public class Book extends AbstractEntity {
     @Column(name = "sold")
     private Integer sold;
 
-    @ManyToMany(mappedBy = "books")
-    private Set<Order> orders = new HashSet<>();
 }

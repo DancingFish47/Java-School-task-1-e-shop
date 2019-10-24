@@ -563,8 +563,18 @@ async function deleteFromCart(id) {
 }
 
 async function toCheckOut() {
-    //TODO CHECK STOCKS THEN REDIRECT, ELSE ERROR AND SOMETHING
-    document.location.href = '/checkout';
+    let call = await fetch("/checkStocks", {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json'
+        },
+    });
+    let result = await call.json();
+    if(!result.error){
+        document.location.href = '/checkout';
+    }else{
+        alert (result.message);
+    }
 }
 
 /*
@@ -658,8 +668,30 @@ async function finishOrder() {
         body: JSON.stringify(orderInfo)
     });
 
-    let result = call.json();
+    let result = await call.json();
 
-    showDivs('block', 'none', 'none', 'none', 'block');
+    if(!result.error){
+        alert(result.message);
+        showDivs('block', 'none', 'none', 'none', 'block');
+    }else{
+        alert(result.message);
+    }
+}
 
+/*
+Orders Page functions
+ */
+async function repeatOrder(orderId){
+    let call = await fetch("/repeatOrder", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify(orderId)
+    });
+
+    let result = await call.json();
+
+    alert(result.message);
 }

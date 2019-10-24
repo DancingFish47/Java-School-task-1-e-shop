@@ -2,6 +2,7 @@ package com.rychkov.eshop.services;
 
 import com.rychkov.eshop.dtos.CartItem;
 import com.rychkov.eshop.entitys.Book;
+import com.rychkov.eshop.exceptions.OutOfStockException;
 import com.rychkov.eshop.repositorys.BooksRepository;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,6 +84,16 @@ public class CartServiceImpl implements CartService {
             total += item.getBook().getPrice() * item.getQuantity();
         }
         return total;
+    }
+
+    @Override
+    public void checkStocks(List<CartItem> cart) throws OutOfStockException {
+        for (CartItem item : cart){
+            Optional<Book> book = booksRepository.findById(item.getBook().getId());
+            if(book.isPresent()){
+                if(book.get().getAmount()<item.getQuantity()) throw new OutOfStockException("Book " + item.getBook().getName() + " is out of stock");
+            }else throw new OutOfStockException("Book " + item.getBook().getName() + " is out of stock");
+        }
     }
 
 }

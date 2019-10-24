@@ -3,6 +3,9 @@ package com.rychkov.eshop.controllers;
 import com.rychkov.eshop.dtos.CartItem;
 import com.rychkov.eshop.dtos.OrderInfoDto;
 import com.rychkov.eshop.dtos.OrderInfoDtoMapper;
+import com.rychkov.eshop.entitys.Order;
+import com.rychkov.eshop.exceptions.OutOfStockException;
+import com.rychkov.eshop.exceptions.ProcessOrderException;
 import com.rychkov.eshop.repositorys.AddressesRepository;
 import com.rychkov.eshop.repositorys.DeliveryMethodsRepository;
 import com.rychkov.eshop.repositorys.PaymentMethodsRepository;
@@ -55,10 +58,25 @@ public class CheckoutPageController {
     @RequestMapping(method = RequestMethod.POST, value = "/checkout/processOrder")
     @ResponseBody
     public JSONObject processOrder(@RequestBody OrderInfoDto orderInfo, Principal principal, HttpSession session){
+        JSONObject result = new JSONObject();
         orderInfo.setUser(userRepository.findByUsername(principal.getName()));
         orderInfo.setCartItems((List<CartItem>) session.getAttribute("cart"));
-        orderService.newOrder(orderInfo);
-        JSONObject result = new JSONObject();
+
+        try {
+            Order order = orderService.newOrder(orderInfo);
+            if(order == null){
+                result.put("error", true);
+                result.put("message", "Failed to register new order");
+                return result;
+            }
+        } catch (ProcessOrderException e){
+            result.put("error", true);
+            result.put("message", e.getMessage());
+            return result;
+        }
+        result.put("message", "Your order registered!");
+        result.put("error", false);
+        ((List<CartItem>) session.getAttribute("cart")).clear();
         return result;
     }
 }
