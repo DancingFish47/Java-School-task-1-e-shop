@@ -2,9 +2,7 @@ package com.rychkov.eshop.controllers;
 
 import com.rychkov.eshop.dtos.CartItem;
 import com.rychkov.eshop.dtos.OrderInfoDto;
-import com.rychkov.eshop.dtos.OrderInfoDtoMapper;
 import com.rychkov.eshop.entitys.Order;
-import com.rychkov.eshop.exceptions.OutOfStockException;
 import com.rychkov.eshop.exceptions.ProcessOrderException;
 import com.rychkov.eshop.repositorys.AddressesRepository;
 import com.rychkov.eshop.repositorys.DeliveryMethodsRepository;
@@ -31,8 +29,6 @@ public class CheckoutPageController {
     AddressesRepository addressesRepository;
     @Autowired
     UserRepository userRepository;
-    @Autowired
-    OrderInfoDtoMapper orderInfoDtoMapper;
     @Autowired
     OrderService orderService;
 

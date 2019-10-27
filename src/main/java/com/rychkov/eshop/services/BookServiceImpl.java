@@ -1,20 +1,23 @@
 package com.rychkov.eshop.services;
 
+import com.rychkov.eshop.dtos.BookDto;
 import com.rychkov.eshop.dtos.TopBookDto;
 import com.rychkov.eshop.entitys.Book;
+import com.rychkov.eshop.entitys.BookCategory;
+import com.rychkov.eshop.exceptions.BookException;
+import com.rychkov.eshop.repositorys.BookCategoryRepository;
 import com.rychkov.eshop.repositorys.BooksRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class BookServiceImpl implements BookService {
     @Autowired
     private BooksRepository booksRepository;
+    @Autowired
+    private BookCategoryRepository bookCategoryRepository;
 
 
     @Override
@@ -38,6 +41,42 @@ public class BookServiceImpl implements BookService {
 
         }
         return preparedBooks;
+    }
+
+    @Override
+    public void deleteBookById(Integer bookId) throws BookException {
+        booksRepository.deleteById(bookId);
+        if(booksRepository.findById(bookId).isPresent()) throw new BookException("Failed to delete book");
+    }
+
+    @Override
+    public void addNewBook(BookDto bookDto) throws BookException {
+        Book book = new Book();
+        BookDtoToBook(bookDto, book);
+        //Could use Mapper here, but whatever.
+        if (booksRepository.save(book) == null) throw new BookException("Failed to add new book");
+    }
+
+    @Override
+    public void editBook(BookDto bookDto) throws BookException {
+        Optional<Book> optionalBook = booksRepository.findById(bookDto.getId());
+        if(optionalBook.isPresent()){
+            Book book = optionalBook.get();
+            BookDtoToBook(bookDto, book);
+            //Could use Mapper here, but whatever.
+            if (booksRepository.save(book) == null) throw new BookException("Failed to edit book details");
+        } else throw new BookException("Failed to edit book details");
+    }
+
+    private void BookDtoToBook(BookDto bookDto, Book book) {
+        if(bookDto.getId()!=null) book.setId(bookDto.getId());
+        book.setName(bookDto.getName());
+        book.setAuthor(bookDto.getAuthor());
+        book.setSold(bookDto.getSold());
+        book.setAmount(bookDto.getAmount());
+        book.setPages(bookDto.getPages());
+        book.setPrice(bookDto.getPrice());
+        if (!bookDto.getGenre().isEmpty()) book.setBookCategory(bookCategoryRepository.findByName(bookDto.getGenre()));
     }
 
 

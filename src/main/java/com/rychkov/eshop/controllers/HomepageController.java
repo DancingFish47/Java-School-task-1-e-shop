@@ -14,7 +14,6 @@ public class HomepageController {
 TODO
   1) Ddd autovalidate
   2) Exception handling through controller advice
-   3) 1 more functions for admin page
     4) Custom error pages
      5) Figure out "Docker"
       6) Sonar?

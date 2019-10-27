@@ -7,7 +7,108 @@
 <div class="container">
     <h1>Admin page manage books</h1>
     <div class="container bg-light">
-        <p></p>
+        <br>
+        <h3 th:if="${#lists.isEmpty(allBooks)}">There are no books in the store</h3>
+        <h3 th:if="${!#lists.isEmpty(allBooks)}">Books</h3>
+        <table class="table" id="booksTable" th:if="${!#lists.isEmpty(allBooks)}">
+            <thead>
+            <tr>
+                <th scope="col" onclick="sortByValue(0, 'booksTable')">ID</th>
+                <th scope="col" onclick="sortByName(1, 'booksTable')">Book</th>
+                <th scope="col" onclick="sortByName(2, 'booksTable')">Author</th>
+                <th scope="col" onclick="sortByValue(3, 'booksTable')">Amount left</th>
+                <th scope="col" onclick="sortByValue(4, 'booksTable')">Pages</th>
+                <th scope="col" onclick="sortByName(5, 'booksTable')">Genre</th>
+                <th scope="col" onclick="sortByValue(6, 'booksTable')">Price</th>
+                <th scope="col" onclick="sortByValue(7, 'booksTable')">Sold</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="book : ${allBooks}" th:id="${'row' + book.id}">
+                <td th:text="${book.id}"></td>
+                <td th:text="${book.name}"></td>
+                <td th:text="${book.author}"></td>
+                <td th:text="${book.amount}"></td>
+                <td th:text="${book.pages}"></td>
+                <td th:if="${book.bookCategory == null}" th:text="'No genre'"></td>
+                <td th:if="${book.bookCategory != null}" th:text="${book.bookCategory.name}"></td>
+                <td th:text="${book.price}"></td>
+                <td th:text="${book.sold}"></td>
+                <td>
+                    <button class="row btn btn-primary" th:onclick="'javascript:editBook(\'' + ${book.id} + '\');'"
+                            type="button">Edit
+                    </button>
+                </td>
+                <td>
+                    <button class="row btn btn-danger" th:onclick="'javascript:deleteBook(\'' + ${book.id} + '\');'"
+                            type="submit">Delete
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <form id="booksForm">
+            <div id="newBookForm" style="display: none">
+                <div class="form-row">
+                    <div class="col">
+                        <label class="col-sm-2 col-form-label" for="bookName">Name</label>
+                        <input class="form-control" id="bookName" name="bookName" placeholder="Book name" required=""
+                               type="text">
+                    </div>
+                    <div class="col">
+                        <label class="col-sm-2 col-form-label" for="bookAuthor">Author</label>
+                        <input class="form-control" id="bookAuthor" name="bookAuthor" placeholder="Author" required="" type="text">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col">
+                        <label class="col-sm-2 col-form-label" for="bookAmount">Amount</label>
+                        <input class="form-control" id="bookAmount" name="bookAmount" placeholder="Amount left" required=""
+                               type="number">
+                    </div>
+                    <div class="col">
+                        <label class="col-sm-2 col-form-label" for="bookPrice">Price</label>
+                        <input class="form-control" id="bookPrice" name="bookPrice" placeholder="Book price" type="number">
+                    </div>
+                    <div class="col">
+                        <label class="col-sm-2 col-form-label" for="bookPages">Pages</label>
+                        <input class="form-control" id="bookPages" name="bookPages" placeholder="Book pages" type="number">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col">
+                        <label class="col-sm-2 col-form-label" for="bookGenre">Genre</label>
+                        <select class="custom-select" id="bookGenre">
+                            <option value="" disabled selected>Select genre</option>
+                            <option th:each="genre : ${genres}" th:text="${genre.name}"
+                                    th:value="${genre.name}"></option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label class="col-sm-2 col-form-label" for="bookSold">Sold</label>
+                        <input class="form-control" id="bookSold" name="bookSold" placeholder="Sold copies" required=""
+                               type="number">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <button class="m-2 btn btn-primary col-sm-2" id="addNewBookButton" onclick="addBook()"
+                        type="button">Add new book
+                </button>
+                <button class="m-2 btn btn-danger col-sm-2" id="cancelBookButton" onclick="cancelBook()"
+                        style="display: none" type="button">Cancel
+                </button>
+                <button class="m-2 btn btn-success col-sm-2" id="saveNewBookButton" onclick="saveNewBook()"
+                        style="display: none" type="submit">Save book
+                </button>
+                <button class="m-2 btn btn-success col-sm-2" id="saveEditBookButton" style="display: none"
+                        type="submit">Save Edit
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 </body>

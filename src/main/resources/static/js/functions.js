@@ -131,6 +131,27 @@ $(function () {
                 cardNumber: {
                     required: true,
                 },
+                bookName:{
+                    required: true,
+                },
+                bookAuthor:{
+                    required: true,
+                },
+                bookPrice:{
+                    required:true,
+                    digits: true
+                },
+                bookAmount:{
+                    required:true,
+                    digits: true,
+                },
+                bookSold:{
+                    required: true,
+                    digits: true,
+                },
+                bookGenre:{
+                    lettersOnly: true,
+                }
             }
         });
     });
@@ -1035,4 +1056,196 @@ async function saveEditGenre(id) {
 
 function clearNewGenreForm() {
     document.getElementById("genreName").value = null;
+}
+/*
+Books manage function
+ */
+async function editBook(id) {
+    clearNewBookForm();
+    document.getElementById("newBookForm").style.display = 'block';
+    document.getElementById("addNewBookButton").style.display = 'none';
+    document.getElementById("saveEditBookButton").style.display = 'block';
+    document.getElementById("cancelBookButton").style.display = 'block';
+    document.getElementById("saveEditBookButton").setAttribute("onClick", "javascript: saveEditBook(" + id + ");");
+    const bookNameField = document.getElementById("bookName");
+    const bookAuthorField = document.getElementById("bookAuthor");
+    const bookPriceField = document.getElementById("bookPrice");
+    const bookAmountField = document.getElementById("bookAmount");
+    const bookSoldField = document.getElementById("bookSold");
+    const bookGenreField = document.getElementById("bookGenre");
+    const bookPagesField = document.getElementById("bookPages");
+
+
+    let call = await fetch('/adminPage/adminManageCategories/getBookById', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+        },
+        body: JSON.stringify(id)
+    });
+
+    let result = await call.json();
+
+    if (!result.error) {
+        bookNameField.value = result.book.name;
+        bookAuthorField.value = result.book.author;
+        bookAmountField.value = result.book.amount;
+        if(result.book.bookCategory!=null) bookGenreField.value = result.book.bookCategory.name;
+        else bookGenreField.value = null;
+        bookPriceField.value = result.book.price;
+        bookSoldField.value = result.book.sold;
+        bookPagesField.value = result.book.pages;
+    } else {
+        toastr.error(result.message);
+    }
+}
+async function deleteBook(id){
+    const deleteBookRow = document.getElementById("row" + id);
+
+    let call = await fetch('/adminPage/adminManageCategories/deleteBook', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify(id)
+    });
+    let result = await call.json();
+    if (!result.error) {
+        toastr.success(result.message);
+        deleteBookRow.parentNode.removeChild(deleteBookRow);
+    } else {
+        toastr.error(result.message);
+    }
+}
+function addBook(){
+    clearNewBookForm();
+    document.getElementById("newBookForm").style.display = 'block';
+    document.getElementById("addNewBookButton").style.display = 'none';
+    document.getElementById("saveNewBookButton").style.display = 'block';
+    document.getElementById("cancelBookButton").style.display = 'block';
+}
+function cancelBook(){
+    clearNewBookForm();
+    document.getElementById("newBookForm").style.display = 'none';
+    document.getElementById("addNewBookButton").style.display = 'block';
+    document.getElementById("cancelBookButton").style.display = 'none';
+    document.getElementById("saveEditBookButton").style.display = 'none';
+    document.getElementById("saveNewBookButton").style.display = 'none';
+}
+async function saveNewBook(){
+    if ($("#booksForm").valid()) {
+        const bookNameField = document.getElementById("bookName");
+        const bookAuthorField = document.getElementById("bookAuthor");
+        const bookPriceField = document.getElementById("bookPrice");
+        const bookAmountField = document.getElementById("bookAmount");
+        const bookSoldField = document.getElementById("bookSold");
+        const bookGenreField = document.getElementById("bookGenre");
+        const bookPagesField = document.getElementById("bookPages");
+
+        let newBook = {
+            name: bookNameField.value,
+            author: bookAuthorField.value,
+            price: bookPriceField.value,
+            amount: bookAmountField.value,
+            sold: bookSoldField.value,
+            genre: bookGenreField.value,
+            pages: bookPagesField.value,
+        };
+        let call = await fetch('/adminPage/adminManageCategories/saveNewBook', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(newBook)
+        });
+
+        let result = await call.json();
+
+        if (!result.error) {
+            document.location.reload();
+            toastr.success(result.message);
+        } else {
+            toastr.error(result.message);
+            cancelBook();
+        }
+    }
+}
+async function saveEditBook(id){
+    if ($("#booksForm").valid()) {
+        const bookNameField = document.getElementById("bookName");
+        const bookAuthorField = document.getElementById("bookAuthor");
+        const bookPriceField = document.getElementById("bookPrice");
+        const bookAmountField = document.getElementById("bookAmount");
+        const bookSoldField = document.getElementById("bookSold");
+        const bookPagesField = document.getElementById("bookPages");
+        const bookGenreField = document.getElementById("bookGenre");
+        const deleteBookRow = document.getElementById("row" + id);
+        const table = document.getElementById("booksTable");
+        let edit = {
+            id: id,
+            name: bookNameField.value,
+            author: bookAuthorField.value,
+            price: bookPriceField.value,
+            amount: bookAmountField.value,
+            sold: bookSoldField.value,
+            genre: bookGenreField.value,
+            pages: bookPagesField.value,
+        };
+        let call = await fetch('/adminPage/adminManageCategories/saveEditBook', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+
+            },
+            body: JSON.stringify(edit)
+        });
+
+        let result = await call.json();
+
+        if (!result.error) {
+            deleteBookRow.parentNode.removeChild(deleteBookRow);
+            let NewRow = table.insertRow(-1);
+            NewRow.id = "row" + id;
+            let Newcell1 = NewRow.insertCell(0);
+            let Newcell2 = NewRow.insertCell(1);
+            let Newcell3 = NewRow.insertCell(2);
+            let Newcell4= NewRow.insertCell(3);
+            let Newcell5= NewRow.insertCell(4);
+            let Newcell6= NewRow.insertCell(5);
+            let Newcell7= NewRow.insertCell(6);
+            let Newcell8= NewRow.insertCell(7);
+            let Newcell9= NewRow.insertCell(8);
+            let Newcell10= NewRow.insertCell(9);
+            let Newcell11= NewRow.insertCell(10);
+            Newcell1.innerHTML = id;
+            Newcell2.innerHTML = bookNameField.value;
+            Newcell3.innerHTML = bookAuthorField.value;
+            Newcell4.innerHTML = bookAmountField.value;
+            Newcell5.innerHTML = bookPagesField.value;
+            if(bookGenreField.value == null) Newcell6.innerHTML = 'No genre';
+            else Newcell6.innerHTML = bookGenreField.value;
+            Newcell7.innerHTML = bookPriceField.value;
+            Newcell8.innerHTML = bookSoldField.value;
+            Newcell9.innerHTML = "<button type=\"button\" class=\"row btn btn-primary\" onclick=\"editBook('" + id + "');\">Edit</button>";
+            Newcell10.innerHTML = "<button type=\"button\" class=\"row btn btn-danger\" onclick=\"deleteBook('" + id + "');\">Delete</button>";
+
+            cancelBook();
+            toastr.success(result.message);
+        } else {
+            toastr.error(result.message);
+        }
+    }
+}
+function clearNewBookForm(){
+    document.getElementById("bookName").value = null;
+    document.getElementById("bookAuthor").value = null;
+    document.getElementById("bookPrice").value = null;
+    document.getElementById("bookAmount").value = null;
+    document.getElementById("bookPages").value = null;
+    document.getElementById("bookSold").value = null;
+    document.getElementById("bookGenre").value = "";
 }
