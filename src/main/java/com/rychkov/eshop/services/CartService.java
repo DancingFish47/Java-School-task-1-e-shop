@@ -8,7 +8,7 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 
 public interface CartService {
-    JSONObject addItem(HttpSession session, JSONObject item);
+    JSONObject addItem(HttpSession session, JSONObject item) throws OutOfStockException;
     JSONObject deleteItem(HttpSession session, JSONObject item);
     void checkStocks(List<CartItem> cart) throws OutOfStockException;
 }

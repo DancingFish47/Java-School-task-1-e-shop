@@ -8,10 +8,10 @@
     <h1 th:if="${#lists.isEmpty(orderAndBooks)}">You don't have any orders</h1>
     <h1 th:if="${!#lists.isEmpty(orderAndBooks)}">Your orders</h1>
     <div class="container bg-light">
-        <table class="table" id="addressTable" th:if="${!#lists.isEmpty(orderAndBooks)}">
+        <table class="table" id="ordersTable" th:if="${!#lists.isEmpty(orderAndBooks)}">
             <thead>
             <tr>
-                <th scope="col">Order Id</th>
+                <th scope="col" onclick="sortByValue(0, 'ordersTable')">Order Id</th>
                 <th scope="col">Status</th>
                 <th scope="col">Books</th>
                 <th scope="col"></th>

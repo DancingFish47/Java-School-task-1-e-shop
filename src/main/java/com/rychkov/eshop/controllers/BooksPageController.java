@@ -1,6 +1,7 @@
 package com.rychkov.eshop.controllers;
 
 import com.rychkov.eshop.entitys.Book;
+import com.rychkov.eshop.exceptions.OutOfStockException;
 import com.rychkov.eshop.repositorys.BookCategoryRepository;
 import com.rychkov.eshop.repositorys.BooksRepository;
 import com.rychkov.eshop.services.BookService;
@@ -49,8 +50,14 @@ public class BooksPageController {
     @RequestMapping(value = "/addToCart", method = RequestMethod.POST)
     @ResponseBody
     public JSONObject addToCart(@RequestBody JSONObject addItem, Principal principal, HttpSession session) {
-        JSONObject result;
-        result = cartService.addItem(session, addItem);
+        JSONObject result = new JSONObject();
+        try {
+            result = cartService.addItem(session, addItem);
+        } catch (OutOfStockException e) {
+            result.put("error", true);
+            result.put("message", e.getMessage());
+            return result;
+        }
         return result;
     }
 

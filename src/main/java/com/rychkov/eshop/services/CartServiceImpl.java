@@ -19,13 +19,15 @@ public class CartServiceImpl implements CartService {
     BooksRepository booksRepository;
 
     @Override
-    public JSONObject addItem(HttpSession session, JSONObject item) {
+    public JSONObject addItem(HttpSession session, JSONObject item) throws OutOfStockException {
         JSONObject result = new JSONObject();
         Integer addBookId = Integer.valueOf((String) item.get("id"));
         Integer quantity = Integer.valueOf((String) item.get("quantity"));
         Optional<Book> optionalBook = booksRepository.findById(addBookId);
         if (optionalBook.isPresent()) {
             Book book = optionalBook.get();
+            if(quantity>book.getAmount()) throw new OutOfStockException("There are only " + book.getAmount() + " copies of " + book.getName() +
+                                                                        "left, while you are trying to add " + quantity);
             CartItem cartItem = new CartItem(book, quantity);
             if (session.getAttribute("cart") == null) {
                 List<CartItem> cart = new ArrayList<>();

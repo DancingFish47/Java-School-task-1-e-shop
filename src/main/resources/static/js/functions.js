@@ -531,7 +531,6 @@ async function addToCart(id) {
         id: id,
         quantity: quantity.textContent
     };
-
     let call = await fetch("/addToCart", {
         method: 'POST',
         headers: {
@@ -542,7 +541,10 @@ async function addToCart(id) {
     });
 
     let result = await call.json();
-    toastr.success(result.message);
+    if (result.error){
+        toastr.error(result.message);
+    } else toastr.success(result.message);
+
 }
 
 /*
@@ -891,4 +893,146 @@ function sortByValue(tableColumn, tableId){
             }
         }
     }
+}
+
+/*
+Admin page Genres function
+*/
+async function editGenre(id) {
+    clearNewGenreForm();
+    document.getElementById("newGenreForm").style.display = 'block';
+    document.getElementById("addNewGenreButton").style.display = 'none';
+    document.getElementById("saveEditGenreButton").style.display = 'block';
+    document.getElementById("cancelGenreButton").style.display = 'block';
+    document.getElementById("saveEditGenreButton").setAttribute("onClick", "javascript: saveEditGenre(" + id + ");");
+    const genreNameField = document.getElementById("genreName");
+
+
+    let call = await fetch('/adminPage/adminManageCategories/getGenreById', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+        },
+        body: JSON.stringify(id)
+    });
+
+    let result = await call.json();
+
+    if (!result.error) {
+        genreNameField.value = result.genre.name;
+    } else {
+        toastr.error(result.message);
+    }
+}
+
+async function deleteGenre(id) {
+    const deleteGenreRow = document.getElementById("row" + id);
+
+    let call = await fetch('/adminPage/adminManageCategories/deleteGenre', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify(id)
+    });
+    let result = await call.json();
+    if (!result.error) {
+        toastr.success(result.message);
+        deleteGenreRow.parentNode.removeChild(deleteGenreRow);
+    } else {
+        toastr.error(result.message);
+    }
+}
+
+function addGenre() {
+    clearNewGenreForm();
+    document.getElementById("newGenreForm").style.display = 'block';
+    document.getElementById("addNewGenreButton").style.display = 'none';
+    document.getElementById("saveNewGenreButton").style.display = 'block';
+    document.getElementById("cancelGenreButton").style.display = 'block';
+}
+
+function cancelGenre() {
+    clearNewGenreForm();
+    document.getElementById("newGenreForm").style.display = 'none';
+    document.getElementById("addNewGenreButton").style.display = 'block';
+    document.getElementById("cancelGenreButton").style.display = 'none';
+    document.getElementById("saveEditGenreButton").style.display = 'none';
+    document.getElementById("saveNewGenreButton").style.display = 'none';
+
+}
+
+async function saveNewGenre() {
+    if ($("#genresForm").valid()) {
+        const genreNameField = document.getElementById("genreName");
+
+        let call = await fetch('/adminPage/adminManageCategories/saveNewGenre', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(genreNameField.value)
+        });
+
+        let result = await call.json();
+
+        if (!result.error) {
+            document.location.reload();
+            toastr.success(result.message);
+
+        } else {
+            toastr.error(result.message);
+            cancelGenre();
+        }
+    }
+}
+
+async function saveEditGenre(id) {
+    if ($("#genresForm").valid()) {
+        const genreField = document.getElementById("genreName");
+        const deleteGenreRow = document.getElementById("row" + id);
+        const table = document.getElementById("genresTable");
+        let edit = {
+            id: id,
+            genre: genreField.value,
+
+        };
+        let call = await fetch('/adminPage/adminManageCategories/saveEditGenre', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+
+            },
+            body: JSON.stringify(edit)
+        });
+
+        let result = await call.json();
+
+        if (!result.error) {
+            deleteGenreRow.parentNode.removeChild(deleteGenreRow);
+            let NewRow = table.insertRow(-1);
+            NewRow.id = "row" + id;
+            let Newcell1 = NewRow.insertCell(0);
+            let Newcell2 = NewRow.insertCell(1);
+            let Newcell3 = NewRow.insertCell(2);
+            let Newcell4= NewRow.insertCell(3);
+            Newcell1.innerHTML = id;
+            Newcell2.innerHTML = genreField.value;
+            Newcell3.innerHTML = "<button type=\"button\" class=\"row btn btn-primary\" onclick=\"editGenre('" + id + "');\">Edit</button>";
+            Newcell4.innerHTML = "<button type=\"button\" class=\"row btn btn-danger\" onclick=\"deleteGenre('" + id + "');\">Delete</button>";
+
+            cancelGenre();
+            toastr.success(result.message);
+        } else {
+            toastr.error(result.message);
+        }
+    }
+}
+
+function clearNewGenreForm() {
+    document.getElementById("genreName").value = null;
 }

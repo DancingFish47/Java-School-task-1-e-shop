@@ -31,7 +31,8 @@
         <div class="dropdown btn-group m-1">
             <a class="btn btn-primary" href="/books">Reset</a>
         </div>
-        <div class="card-deck">
+        <h3 th:if="${#lists.isEmpty(books)}">There are no books in this genre, yet.</h3>
+        <div class="card-deck" th:if="${!#lists.isEmpty(books)}">
             <div class="card border-primary" style="min-width: 225px; min-height: 400px; max-width: 225px;"
                  th:each="book : ${books}">
                 <img alt="" class="card-img-top"
@@ -42,8 +43,9 @@
                     <p class="card-text" th:text="${'Amount left: ' + book.amount}"></p>
                     <p class="card-text" th:text="${'Pages: ' + book.pages}"></p>
                     <p class="card-text" th:text="${'Price: ' + book.price + '$'}"></p>
-                    <p class="card-text" th:each="category : ${book.bookCategory}"
-                       th:text="${'Categorys: ' + category.name + ' '}"></p>
+                    <p class="card-text" th:if="${book.bookCategory != null}" th:text="${'Genre: ' + book.bookCategory.name}"></p>
+                    <p class="card-text" th:if="${book.bookCategory == null}" th:text="${'Genre: No genre'}"></p>
+
                     <a class="btn btn-primary" th:onclick="'javascript:addToCart(\'' + ${book.id} + '\');'">Add to
                         cart</a>
                     <ul class="pagination mt-2">

@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BookCategoryRepository extends CrudRepository<BookCategory, Integer> {
-
+    BookCategory findByName(String name);
 }

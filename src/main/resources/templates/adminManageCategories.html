@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:insert="htmlparts/header.html"></head>
+<body>
+<nav th:replace="~{htmlparts/navbar.html :: navbar (admin='active') }"></nav>
+<div class="container">
+    <h1>Admin page manage categories</h1>
+    <div class="container bg-light">
+        <h2>Categories settings</h2>
+        <br>
+        <h3 th:if="${#lists.isEmpty(genres)}">No genres found</h3>
+        <h3 th:if="${!#lists.isEmpty(genres)}">Genres</h3>
+        <table class="table" id="genresTable" th:if="${!#lists.isEmpty(genres)}">
+            <thead>
+            <tr>
+                <th scope="col">Genre ID</th>
+                <th scope="col">Name</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="genre : ${genres}" th:id="${'row' + genre.id}">
+                <td th:text="${genre.id}"></td>
+                <td th:text="${genre.name}"></td>
+                <td>
+                    <button class="row btn btn-primary" th:onclick="'javascript:editGenre(\'' + ${genre.id} + '\');'"
+                            type="button">Edit
+                    </button>
+                </td>
+                <td>
+                    <button class="row btn btn-danger" th:onclick="'javascript:deleteGenre(\'' + ${genre.id} + '\');'"
+                            type="submit">Delete
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <form id="genresForm">
+            <div id="newGenreForm" style="display: none">
+                <div class="form-row">
+                    <div class="col">
+                        <label class="col-sm-2 col-form-label" for="genreName">Genre name</label>
+                        <input class="form-control" id="genreName" name="genreName" placeholder="Genre name" required=""
+                               type="text">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <button class="m-2 btn btn-primary col-sm-2" id="addNewGenreButton" onclick="addGenre()"
+                        type="button">Add new Genre
+                </button>
+                <button class="m-2 btn btn-danger col-sm-2" id="cancelGenreButton" onclick="cancelGenre()"
+                        style="display: none" type="button">Cancel
+                </button>
+                <button class="m-2 btn btn-success col-sm-2" id="saveNewGenreButton" onclick="saveNewGenre()"
+                        style="display: none" type="submit">Save Genre
+                </button>
+                <button class="m-2 btn btn-success col-sm-2" id="saveEditGenreButton" style="display: none"
+                        type="submit">Save Edit
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>
