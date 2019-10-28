@@ -30,8 +30,8 @@
                     </div>
                 </div>
             </li>
-            <li claa="nav-item">
-                <div sec:authorize="hasAuthority('User')">
+            <li class="nav-item">
+                <div th:if="${session.processingCart != null && session.cart == null }">
                     <a href="/checkout" th:class="${checkoutLink + ' nav-link'}">Check out</a>
                 </div>
             </li>

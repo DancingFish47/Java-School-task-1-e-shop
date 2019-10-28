@@ -3,6 +3,7 @@ package com.rychkov.eshop.controllers;
 
 import com.rychkov.eshop.dtos.CartItem;
 import com.rychkov.eshop.exceptions.OutOfStockException;
+import com.rychkov.eshop.exceptions.ProcessOrderException;
 import com.rychkov.eshop.services.CartService;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,7 @@ public class CartPageController {
             }
             model.addAttribute("total", total);
         }
+
         return "cart";
     }
 
@@ -45,8 +47,8 @@ public class CartPageController {
     public JSONObject checkStocks(HttpSession session)  {
         JSONObject result = new JSONObject();
         try {
-            cartService.checkStocks((List<CartItem>) session.getAttribute("cart"));
-        } catch (OutOfStockException e){
+            cartService.checkStocksAndCreateTempOrder(session);
+        } catch (OutOfStockException | ProcessOrderException e){
             result.put("error", true);
             result.put("message", e.getMessage());
         }

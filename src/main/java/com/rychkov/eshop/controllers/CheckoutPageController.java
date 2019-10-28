@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -35,7 +36,17 @@ public class CheckoutPageController {
 
     @GetMapping("/checkout")
     public String checkoutPage(HttpSession session, Model model, Principal principal) {
-        List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
+        List<CartItem> cart = new ArrayList<>();
+        if(session.getAttribute("cart") != null){
+            cart = (List<CartItem>) session.getAttribute("cart");
+            session.setAttribute("processingCart", cart);
+            session.setAttribute("cart", null);
+        }
+        else {
+            if (session.getAttribute("processingCart") != null) {
+                cart = (List<CartItem>) session.getAttribute("processingCart");
+            }
+        }
         float total = 0;
         model.addAttribute("cart", cart);
         if (cart != null) {
@@ -56,10 +67,10 @@ public class CheckoutPageController {
     public JSONObject processOrder(@RequestBody OrderInfoDto orderInfo, Principal principal, HttpSession session){
         JSONObject result = new JSONObject();
         orderInfo.setUser(userRepository.findByUsername(principal.getName()));
-        orderInfo.setCartItems((List<CartItem>) session.getAttribute("cart"));
+        orderInfo.setCartItems((List<CartItem>) session.getAttribute("processingCart"));
 
         try {
-            Order order = orderService.newOrder(orderInfo);
+            Order order = orderService.newOrder(orderInfo, session);
             if(order == null){
                 result.put("error", true);
                 result.put("message", "Failed to register new order");
@@ -70,9 +81,9 @@ public class CheckoutPageController {
             result.put("message", e.getMessage());
             return result;
         }
+        session.setAttribute("processingCart", null);
         result.put("message", "Your order registered!");
         result.put("error", false);
-        ((List<CartItem>) session.getAttribute("cart")).clear();
         return result;
     }
 }

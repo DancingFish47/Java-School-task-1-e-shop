@@ -8,10 +8,12 @@ import com.rychkov.eshop.entitys.*;
 import com.rychkov.eshop.exceptions.FailedToChangeStatusException;
 import com.rychkov.eshop.exceptions.FailedToRepeatOrderException;
 import com.rychkov.eshop.exceptions.ProcessOrderException;
+import com.rychkov.eshop.exceptions.ReturnBooksToStockException;
 import com.rychkov.eshop.repositorys.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,31 +44,24 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public Order newOrder(OrderInfoDto orderInfoDto) throws ProcessOrderException {
-        Order order = new Order();
+    public Order newOrder(OrderInfoDto orderInfoDto, HttpSession session) throws ProcessOrderException {
+        Optional<Order> optionalOrder = ordersRepository.findById((Integer)session.getAttribute("orderId"));
+        if (!optionalOrder.isPresent()) throw new ProcessOrderException("Failed to process order");
+        Order order = optionalOrder.get();
         float totalPrice = 0;
-        List<Book> orderBooks = new ArrayList<>();
+
         for (CartItem item : orderInfoDto.getCartItems()){
             Optional<Book> optionalBook = booksRepository.findById(item.getBook().getId());
             if(optionalBook.isPresent()){
                 Book book = optionalBook.get();
-                if (book.getAmount()<item.getQuantity()) throw new ProcessOrderException("Book " + item.getBook().getName() + " is out of stock");
-                else {
-                    int newAmount = book.getAmount() - item.getQuantity();
-                    int newSold = book.getSold() + item.getQuantity();
-                    book.setAmount(newAmount);
-                    book.setSold(newSold);
-                    booksRepository.save(book);
-                    for(int i = 0; i<item.getQuantity(); i++){
-                        orderBooks.add(item.getBook());
-                    }
-                    totalPrice+= item.getBook().getPrice()*item.getQuantity();
-                }
+                int newSold = book.getSold() + item.getQuantity();
+                book.setSold(newSold);
+                booksRepository.save(book);
+                totalPrice+= item.getBook().getPrice()*item.getQuantity();
             }else{
                 throw new ProcessOrderException("Book " + item.getBook().getName() + " is not found");
             }
         }
-        order.setBooks(orderBooks);
 
         Optional<Address> optionalAddress = addressesRepository.findById(orderInfoDto.getAddressId());
         if(optionalAddress.isPresent()) order.setAddress(optionalAddress.get());
@@ -91,6 +86,7 @@ public class OrderServiceImpl implements OrderService {
 
         order.setUser(orderInfoDto.getUser());
         order.setTotalPrice(totalPrice);
+
         return ordersRepository.save(order);
     }
 
@@ -149,6 +145,18 @@ public class OrderServiceImpl implements OrderService {
             ordersRepository.save(order);
         }else{
             throw new FailedToChangeStatusException("Order with that id is not found");
+        }
+    }
+
+    @Transactional
+    @Override
+    public void returnBooks(Order order) throws ReturnBooksToStockException {
+        for (Book book : order.getBooks()){
+            Optional<Book> optionalBook = booksRepository.findById(book.getId());
+            if(optionalBook.isPresent()){
+                Book b = optionalBook.get();
+                b.setAmount(b.getAmount()+1);
+            }else throw new ReturnBooksToStockException("Failed to return books to stocks");
         }
     }
 

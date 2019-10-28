@@ -32,7 +32,10 @@ public class BooksPageController {
 
 
     @GetMapping({"/books/{category}", "/books"})
-    public String showBooks(@PathVariable(required = false) String category, @RequestParam(value = "sort", required = false) String sortType, Model model) {
+    public String showBooks(@PathVariable(required = false) String category,
+                            @RequestParam(value = "sort", required = false) String sortType,
+                            Model model,
+                            HttpSession session) {
         model.addAttribute("BookCategory", bookCategoryRepository.findAll());
 
         Map<String, String> params = new HashMap<>();
