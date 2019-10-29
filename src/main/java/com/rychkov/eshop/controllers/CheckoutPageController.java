@@ -36,17 +36,8 @@ public class CheckoutPageController {
 
     @GetMapping("/checkout")
     public String checkoutPage(HttpSession session, Model model, Principal principal) {
-        List<CartItem> cart = new ArrayList<>();
-        if(session.getAttribute("cart") != null){
-            cart = (List<CartItem>) session.getAttribute("cart");
-            session.setAttribute("processingCart", cart);
-            session.setAttribute("cart", null);
-        }
-        else {
-            if (session.getAttribute("processingCart") != null) {
-                cart = (List<CartItem>) session.getAttribute("processingCart");
-            }
-        }
+        List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
+
         float total = 0;
         model.addAttribute("cart", cart);
         if (cart != null) {
@@ -64,24 +55,25 @@ public class CheckoutPageController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/checkout/processOrder")
     @ResponseBody
-    public JSONObject processOrder(@RequestBody OrderInfoDto orderInfo, Principal principal, HttpSession session){
+    public JSONObject processOrder(@RequestBody OrderInfoDto orderInfo, Principal principal, HttpSession session) {
         JSONObject result = new JSONObject();
         orderInfo.setUser(userRepository.findByUsername(principal.getName()));
-        orderInfo.setCartItems((List<CartItem>) session.getAttribute("processingCart"));
+        orderInfo.setCartItems((List<CartItem>) session.getAttribute("cart"));
 
         try {
             Order order = orderService.newOrder(orderInfo, session);
-            if(order == null){
+            if (order == null) {
                 result.put("error", true);
                 result.put("message", "Failed to register new order");
                 return result;
             }
-        } catch (ProcessOrderException e){
+        } catch (ProcessOrderException e) {
             result.put("error", true);
             result.put("message", e.getMessage());
             return result;
         }
-        session.setAttribute("processingCart", null);
+        session.setAttribute("cart", null);
+        session.setAttribute("orderId", null);
         result.put("message", "Your order registered!");
         result.put("error", false);
         return result;

@@ -1,24 +1,20 @@
 package com.rychkov.eshop.controllers;
 
 import com.rychkov.eshop.dtos.CartItem;
-import com.rychkov.eshop.dtos.OrderAndBooks;
-import com.rychkov.eshop.entitys.Book;
-import com.rychkov.eshop.entitys.Order;
 import com.rychkov.eshop.exceptions.FailedToRepeatOrderException;
-import com.rychkov.eshop.repositorys.OrdersRepository;
-import com.rychkov.eshop.repositorys.UserRepository;
 import com.rychkov.eshop.services.OrderService;
-import lombok.Getter;
-import lombok.Setter;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
-import java.util.*;
+import java.util.List;
 
 @Controller
 public class OrdersPageController {
@@ -33,12 +29,12 @@ public class OrdersPageController {
 
     @RequestMapping(value = "/repeatOrder", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject repeatOrder(@RequestBody Integer orderId, HttpSession session){
+    public JSONObject repeatOrder(@RequestBody Integer orderId, HttpSession session) {
         JSONObject result = new JSONObject();
         List<CartItem> repeatCart;
-        try{
+        try {
             repeatCart = orderService.repeatCartFromOrder(orderId);
-        } catch (FailedToRepeatOrderException e){
+        } catch (FailedToRepeatOrderException e) {
             result.put("error", true);
             result.put("message", e.getMessage());
             return result;
@@ -48,8 +44,6 @@ public class OrdersPageController {
         result.put("message", "Chosen order was copied to your cart!");
         return result;
     }
-
-
 
 
 }

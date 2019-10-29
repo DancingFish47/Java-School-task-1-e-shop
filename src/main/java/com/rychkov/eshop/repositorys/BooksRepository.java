@@ -12,5 +12,6 @@ import java.util.List;
 @Repository
 public interface BooksRepository extends CrudRepository<Book, Integer> {
     List<Book> findAllByBookCategory_Name(@NotNull String bookCategory_name);
+
     List<Book> findAllByBookCategory(BookCategory bookCategory);
 }

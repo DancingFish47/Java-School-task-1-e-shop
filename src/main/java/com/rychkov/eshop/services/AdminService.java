@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface AdminService {
     List<TopBookDto> getTopBooksList();
+
     List<TopUserDto> getTopUsersList();
 }

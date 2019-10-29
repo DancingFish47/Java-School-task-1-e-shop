@@ -21,15 +21,15 @@ public class GenreServiceImpl implements GenreService {
     @Override
     public void deleteGenre(Integer id) throws GenreException {
         Optional<BookCategory> optionalBookCategory = bookCategoryRepository.findById(id);
-        if(optionalBookCategory.isPresent()){
+        if (optionalBookCategory.isPresent()) {
             BookCategory bookCategory = optionalBookCategory.get();
-        List<Book> books = booksRepository.findAllByBookCategory(bookCategory);
-        for (Book book : books){
-            book.setBookCategory(null);
-            booksRepository.save(book);
-        }
-        bookCategoryRepository.deleteById(id);
-        if(bookCategoryRepository.findById(id).isPresent()) throw new GenreException("Failed to delete Genre");
+            List<Book> books = booksRepository.findAllByBookCategory(bookCategory);
+            for (Book book : books) {
+                book.setBookCategory(null);
+                booksRepository.save(book);
+            }
+            bookCategoryRepository.deleteById(id);
+            if (bookCategoryRepository.findById(id).isPresent()) throw new GenreException("Failed to delete Genre");
         } else throw new GenreException("Failed to delete Genre");
     }
 
@@ -37,18 +37,18 @@ public class GenreServiceImpl implements GenreService {
     public void addGenre(String name) throws GenreException {
         BookCategory bookCategory = new BookCategory();
         bookCategory.setName(name);
-        if(bookCategoryRepository.findByName(name) != null) throw new GenreException("This category already exists!");
-        if(bookCategoryRepository.save(bookCategory) == null) throw new GenreException("Failed to create new Genre");
+        if (bookCategoryRepository.findByName(name) != null) throw new GenreException("This category already exists!");
+        if (bookCategoryRepository.save(bookCategory) == null) throw new GenreException("Failed to create new Genre");
     }
 
     @Override
     public void editGenre(Integer genreId, String newName) throws GenreException {
         Optional<BookCategory> optionalBookCategory = bookCategoryRepository.findById(genreId);
-        if(optionalBookCategory.isPresent()){
+        if (optionalBookCategory.isPresent()) {
             BookCategory bookCategory = optionalBookCategory.get();
             bookCategory.setName(newName);
-            if(bookCategoryRepository.save(bookCategory) == null) throw new GenreException("Failed to edit Genre");
-        }else{
+            if (bookCategoryRepository.save(bookCategory) == null) throw new GenreException("Failed to edit Genre");
+        } else {
             throw new GenreException("Failed to find Genre with that ID");
         }
     }

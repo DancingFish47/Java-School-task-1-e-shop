@@ -8,11 +8,11 @@ import java.util.List;
 
 @Getter
 @Setter
-public class OrderAndBooks{
+public class OrderAndBooks {
     private Order order;
     private List<CartItem> books;
 
-    public OrderAndBooks(Order order, List<CartItem> books){
+    public OrderAndBooks(Order order, List<CartItem> books) {
         this.order = order;
         this.books = books;
     }

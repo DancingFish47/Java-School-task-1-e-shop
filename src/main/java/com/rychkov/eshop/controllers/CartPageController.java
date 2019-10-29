@@ -2,9 +2,13 @@ package com.rychkov.eshop.controllers;
 
 
 import com.rychkov.eshop.dtos.CartItem;
+import com.rychkov.eshop.entitys.Order;
 import com.rychkov.eshop.exceptions.OutOfStockException;
 import com.rychkov.eshop.exceptions.ProcessOrderException;
+import com.rychkov.eshop.exceptions.ReturnBooksToStockException;
+import com.rychkov.eshop.repositorys.OrdersRepository;
 import com.rychkov.eshop.services.CartService;
+import com.rychkov.eshop.services.OrderService;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,16 +17,31 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Optional;
 
 
 @Controller
 public class CartPageController {
     @Autowired
     CartService cartService;
+    @Autowired
+    OrdersRepository ordersRepository;
+    @Autowired
+    OrderService orderService;
 
     @GetMapping("/cart")
-    public String cartpage(HttpSession session, Model model) {
+    public String cartpage(HttpSession session, Model model) throws ReturnBooksToStockException {
         List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
+        if(session.getAttribute("orderId") != null){
+            Integer orderId = (Integer) session.getAttribute("orderId");
+            Optional<Order> optionalOrder = ordersRepository.findById(orderId);
+            if (optionalOrder.isPresent()){
+                Order order = optionalOrder.get();
+                orderService.returnBooks(order);
+                ordersRepository.delete(order);
+                session.setAttribute("orderId", null);
+            }
+        }
         float total = 0;
         model.addAttribute("cart", cart);
         if (cart != null) {
@@ -42,13 +61,14 @@ public class CartPageController {
         result = cartService.deleteItem(session, deleteId);
         return result;
     }
+
     @RequestMapping(value = "/checkStocks", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject checkStocks(HttpSession session)  {
+    public JSONObject checkStocks(HttpSession session) {
         JSONObject result = new JSONObject();
         try {
             cartService.checkStocksAndCreateTempOrder(session);
-        } catch (OutOfStockException | ProcessOrderException e){
+        } catch (OutOfStockException | ProcessOrderException e) {
             result.put("error", true);
             result.put("message", e.getMessage());
         }

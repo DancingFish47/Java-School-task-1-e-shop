@@ -28,8 +28,8 @@ public class AdminServiceImpl implements AdminService {
     public List<TopBookDto> getTopBooksList() {
         List<TopBookDto> topBookDtos = new ArrayList<>();
         List<Book> allBooks = (List<Book>) booksRepository.findAll();
-        for (Book book : allBooks){
-            topBookDtos.add(new TopBookDto(book.getName(), book.getSold(), book.getPrice()*book.getSold()));
+        for (Book book : allBooks) {
+            topBookDtos.add(new TopBookDto(book.getName(), book.getSold(), book.getPrice() * book.getSold()));
         }
         topBookDtos.sort(Comparator.comparing(TopBookDto::getTotalValue).reversed());
         return topBookDtos;
@@ -39,12 +39,12 @@ public class AdminServiceImpl implements AdminService {
     public List<TopUserDto> getTopUsersList() {
         List<TopUserDto> topUserDtos = new ArrayList<>();
         List<User> allUsers = (List<User>) userRepository.findAll();
-        for (User user: allUsers){
+        for (User user : allUsers) {
             TopUserDto topUser = new TopUserDto(user.getUsername(), (float) 0, 0);
             List<Order> orders = ordersRepository.findAllByUser(user);
-            for(Order order : orders){
+            for (Order order : orders) {
                 List<Book> books = order.getBooks();
-                for (Book book : books){
+                for (Book book : books) {
                     topUser.addBookCount(1);
                 }
                 topUser.addValue(order.getTotalPrice());

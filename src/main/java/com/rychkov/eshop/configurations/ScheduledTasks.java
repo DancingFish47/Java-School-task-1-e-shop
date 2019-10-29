@@ -10,23 +10,21 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 
-
 @Component
 public class ScheduledTasks {
+    private static final Integer ORDER_WINDOW_TIME = 30000;
     @Autowired
     OrdersRepository ordersRepository;
     @Autowired
     OrderService orderService;
 
-    private static final Integer ORDER_WINDOW_TIME = 30000;
-
     @Async
     @Scheduled(initialDelay = 1, fixedDelay = 60000)
-    public void orderWindow(){
+    public void orderWindow() {
         Order order = ordersRepository.findFirstByOrderStatus_Name("TEMPORDER");
         try {
             Thread.sleep(ORDER_WINDOW_TIME);
-            if(order.getOrderStatus().getName().equals("TEMPORDER")){
+            if (order.getOrderStatus().getName().equals("TEMPORDER")) {
                 orderService.returnBooks(order);
                 ordersRepository.delete(order);
             }

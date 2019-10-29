@@ -45,26 +45,26 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public Order newOrder(OrderInfoDto orderInfoDto, HttpSession session) throws ProcessOrderException {
-        Optional<Order> optionalOrder = ordersRepository.findById((Integer)session.getAttribute("orderId"));
+        Optional<Order> optionalOrder = ordersRepository.findById((Integer) session.getAttribute("orderId"));
         if (!optionalOrder.isPresent()) throw new ProcessOrderException("Failed to process order");
         Order order = optionalOrder.get();
         float totalPrice = 0;
 
-        for (CartItem item : orderInfoDto.getCartItems()){
+        for (CartItem item : orderInfoDto.getCartItems()) {
             Optional<Book> optionalBook = booksRepository.findById(item.getBook().getId());
-            if(optionalBook.isPresent()){
+            if (optionalBook.isPresent()) {
                 Book book = optionalBook.get();
                 int newSold = book.getSold() + item.getQuantity();
                 book.setSold(newSold);
                 booksRepository.save(book);
-                totalPrice+= item.getBook().getPrice()*item.getQuantity();
-            }else{
+                totalPrice += item.getBook().getPrice() * item.getQuantity();
+            } else {
                 throw new ProcessOrderException("Book " + item.getBook().getName() + " is not found");
             }
         }
 
         Optional<Address> optionalAddress = addressesRepository.findById(orderInfoDto.getAddressId());
-        if(optionalAddress.isPresent()) order.setAddress(optionalAddress.get());
+        if (optionalAddress.isPresent()) order.setAddress(optionalAddress.get());
         else throw new ProcessOrderException("Address not found");
 
         DeliveryMethod deliveryMethod = deliveryMethodsRepository.findByName(orderInfoDto.getDeliveryMethod());
@@ -76,13 +76,12 @@ public class OrderServiceImpl implements OrderService {
         else throw new ProcessOrderException("Payment method not found");
 
         OrderStatus orderStatus = orderStatusRepository.findByName(INITIAL_ORDER_STATUS);
-        if(orderStatus != null) order.setOrderStatus(orderStatus);
+        if (orderStatus != null) order.setOrderStatus(orderStatus);
         else throw new ProcessOrderException("Order status error");
 
         PaymentStatus paymentStatus = paymentStatusRepository.findByName(INITIAL_PAYMENT_STATUS);
-        if(paymentStatus != null) order.setPaymentStatus(paymentStatus);
+        if (paymentStatus != null) order.setPaymentStatus(paymentStatus);
         else throw new ProcessOrderException("Payment status error");
-
 
         order.setUser(orderInfoDto.getUser());
         order.setTotalPrice(totalPrice);
@@ -110,16 +109,16 @@ public class OrderServiceImpl implements OrderService {
 
         Optional<Order> optionalOrder = ordersRepository.findById(orderId);
 
-        if(optionalOrder.isPresent()){
+        if (optionalOrder.isPresent()) {
             Order order = optionalOrder.get();
-            for(Book book : order.getBooks()) {
-                if (exists(book.getId(), repeatCart) == -1){
+            for (Book book : order.getBooks()) {
+                if (exists(book.getId(), repeatCart) == -1) {
                     repeatCart.add(new CartItem(book, 1));
                 } else {
                     repeatCart.get(exists(book.getId(), repeatCart)).addQuantity(1);
                 }
             }
-        }else throw new FailedToRepeatOrderException("Cant find that order in DB");
+        } else throw new FailedToRepeatOrderException("Cant find that order in DB");
 
         return repeatCart;
     }
@@ -127,11 +126,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void changeOrderStatus(NewStatusDto newStatusDto) throws FailedToChangeStatusException {
         Optional<Order> optionalOrder = ordersRepository.findById(newStatusDto.getOrderId());
-        if (optionalOrder.isPresent()){
+        if (optionalOrder.isPresent()) {
             Order order = optionalOrder.get();
             order.setOrderStatus(orderStatusRepository.findByName(newStatusDto.getNewStatusName()));
             ordersRepository.save(order);
-        }else{
+        } else {
             throw new FailedToChangeStatusException("Order with that id is not found");
         }
     }
@@ -139,11 +138,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void changePaymentStatus(NewStatusDto newStatusDto) throws FailedToChangeStatusException {
         Optional<Order> optionalOrder = ordersRepository.findById(newStatusDto.getOrderId());
-        if (optionalOrder.isPresent()){
+        if (optionalOrder.isPresent()) {
             Order order = optionalOrder.get();
             order.setPaymentStatus(paymentStatusRepository.findByName(newStatusDto.getNewStatusName()));
             ordersRepository.save(order);
-        }else{
+        } else {
             throw new FailedToChangeStatusException("Order with that id is not found");
         }
     }
@@ -151,20 +150,20 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     @Override
     public void returnBooks(Order order) throws ReturnBooksToStockException {
-        for (Book book : order.getBooks()){
+        for (Book book : order.getBooks()) {
             Optional<Book> optionalBook = booksRepository.findById(book.getId());
-            if(optionalBook.isPresent()){
+            if (optionalBook.isPresent()) {
                 Book b = optionalBook.get();
-                b.setAmount(b.getAmount()+1);
-            }else throw new ReturnBooksToStockException("Failed to return books to stocks");
+                b.setAmount(b.getAmount() + 1);
+            } else throw new ReturnBooksToStockException("Failed to return books to stocks");
         }
     }
 
     private List<OrderAndBooks> getOrderAndBooks(List<OrderAndBooks> orderAndBooks, List<Order> orderList) {
-        for (Order order : orderList){
+        for (Order order : orderList) {
             List<CartItem> bookList = new ArrayList<>();
-            for(Book book : order.getBooks()) {
-                if (exists(book.getId(), bookList) == -1){
+            for (Book book : order.getBooks()) {
+                if (exists(book.getId(), bookList) == -1) {
                     bookList.add(new CartItem(book, 1));
                 } else {
                     bookList.get(exists(book.getId(), bookList)).addQuantity(1);

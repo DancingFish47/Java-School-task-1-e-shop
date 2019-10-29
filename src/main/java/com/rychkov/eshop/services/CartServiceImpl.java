@@ -4,7 +4,6 @@ import com.rychkov.eshop.configurations.ScheduledTasks;
 import com.rychkov.eshop.dtos.CartItem;
 import com.rychkov.eshop.entitys.Book;
 import com.rychkov.eshop.entitys.Order;
-import com.rychkov.eshop.entitys.OrderStatus;
 import com.rychkov.eshop.exceptions.OutOfStockException;
 import com.rychkov.eshop.exceptions.ProcessOrderException;
 import com.rychkov.eshop.repositorys.BooksRepository;
@@ -12,7 +11,6 @@ import com.rychkov.eshop.repositorys.OrderStatusRepository;
 import com.rychkov.eshop.repositorys.OrdersRepository;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
@@ -40,8 +38,9 @@ public class CartServiceImpl implements CartService {
         Optional<Book> optionalBook = booksRepository.findById(addBookId);
         if (optionalBook.isPresent()) {
             Book book = optionalBook.get();
-            if(quantity>book.getAmount()) throw new OutOfStockException("There are only " + book.getAmount() + " copies of " + book.getName() +
-                                                                        "left, while you are trying to add " + quantity);
+            if (quantity > book.getAmount())
+                throw new OutOfStockException("There are only " + book.getAmount() + " copies of " + book.getName() +
+                        "left, while you are trying to add " + quantity);
             CartItem cartItem = new CartItem(book, quantity);
             if (session.getAttribute("cart") == null) {
                 List<CartItem> cart = new ArrayList<>();
@@ -103,18 +102,19 @@ public class CartServiceImpl implements CartService {
 
     @Transactional
     @Override
-    public void checkStocksAndCreateTempOrder(HttpSession session) throws OutOfStockException, ProcessOrderException {
+    public void checkStocksAndCreateTempOrder(HttpSession session) throws OutOfStockException {
         List<Book> orderBooks = new ArrayList<>();
         List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
-        for (CartItem item : cart){
+        for (CartItem item : cart) {
             Optional<Book> optionalBook = booksRepository.findById(item.getBook().getId());
-            if(optionalBook.isPresent()){
+            if (optionalBook.isPresent()) {
                 Book book = optionalBook.get();
-                if(book.getAmount()<item.getQuantity()) throw new OutOfStockException("Book " + item.getBook().getName() + " is out of stock");
-                book.setAmount(book.getAmount()-item.getQuantity());
-                for(int i = 0; i<item.getQuantity(); i++) orderBooks.add(item.getBook());
+                if (book.getAmount() < item.getQuantity())
+                    throw new OutOfStockException("Book " + item.getBook().getName() + " is out of stock");
+                book.setAmount(book.getAmount() - item.getQuantity());
+                for (int i = 0; i < item.getQuantity(); i++) orderBooks.add(item.getBook());
                 booksRepository.save(book);
-            }else throw new OutOfStockException("Book " + item.getBook().getName() + " is out of stock");
+            } else throw new OutOfStockException("Book " + item.getBook().getName() + " is out of stock");
         }
 
         Order order = new Order();
@@ -122,7 +122,6 @@ public class CartServiceImpl implements CartService {
 
         order.setBooks(orderBooks);
         session.setAttribute("orderId", ordersRepository.save(order).getId());
-        scheduledTasks.orderWindow();
     }
 
 

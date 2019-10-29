@@ -12,7 +12,7 @@ public class TopBookDto {
     private Integer sold;
     private Float totalValue;
 
-    public TopBookDto(String name, Integer sold, Float totalValue){
+    public TopBookDto(String name, Integer sold, Float totalValue) {
         this.name = name;
         this.sold = sold;
         this.totalValue = totalValue;
