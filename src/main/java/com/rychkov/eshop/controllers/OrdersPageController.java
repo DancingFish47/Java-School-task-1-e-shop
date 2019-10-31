@@ -29,18 +29,10 @@ public class OrdersPageController {
 
     @RequestMapping(value = "/repeatOrder", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject repeatOrder(@RequestBody Integer orderId, HttpSession session) {
+    public JSONObject repeatOrder(@RequestBody Integer orderId, HttpSession session) throws FailedToRepeatOrderException {
         JSONObject result = new JSONObject();
-        List<CartItem> repeatCart;
-        try {
-            repeatCart = orderService.repeatCartFromOrder(orderId);
-        } catch (FailedToRepeatOrderException e) {
-            result.put("error", true);
-            result.put("message", e.getMessage());
-            return result;
-        }
+        List<CartItem> repeatCart = orderService.repeatCartFromOrder(orderId);
         session.setAttribute("cart", repeatCart);
-        result.put("error", false);
         result.put("message", "Chosen order was copied to your cart!");
         return result;
     }

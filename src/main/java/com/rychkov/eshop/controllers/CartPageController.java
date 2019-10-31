@@ -64,14 +64,8 @@ public class CartPageController {
 
     @RequestMapping(value = "/checkStocks", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject checkStocks(HttpSession session) {
-        JSONObject result = new JSONObject();
-        try {
-            cartService.checkStocksAndCreateTempOrder(session);
-        } catch (OutOfStockException | ProcessOrderException e) {
-            result.put("error", true);
-            result.put("message", e.getMessage());
-        }
-        return result;
+    public JSONObject checkStocks(HttpSession session) throws ProcessOrderException, OutOfStockException {
+        cartService.checkStocksAndCreateTempOrder(session);
+        return new JSONObject();
     }
 }

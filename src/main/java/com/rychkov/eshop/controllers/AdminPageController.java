@@ -72,32 +72,18 @@ public class AdminPageController {
 
     @RequestMapping(value = "/adminPage/changeOrderStatus", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject changeOrderStatus(@RequestBody NewStatusDto newStatusDto) {
+    public JSONObject changeOrderStatus(@RequestBody NewStatusDto newStatusDto) throws FailedToChangeStatusException {
         JSONObject result = new JSONObject();
-        try {
-            orderService.changeOrderStatus(newStatusDto);
-        } catch (FailedToChangeStatusException e) {
-            result.put("error", true);
-            result.put("message", e.getMessage());
-            return result;
-        }
-        result.put("error", false);
+        orderService.changeOrderStatus(newStatusDto);
         result.put("message", "Order status for order with id " + newStatusDto.getOrderId() + " changed!");
         return result;
     }
 
     @RequestMapping(value = "/adminPage/changePaymentStatus", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject changePaymentStatus(@RequestBody NewStatusDto newStatusDto) {
+    public JSONObject changePaymentStatus(@RequestBody NewStatusDto newStatusDto) throws FailedToChangeStatusException {
         JSONObject result = new JSONObject();
-        try {
-            orderService.changePaymentStatus(newStatusDto);
-        } catch (FailedToChangeStatusException e) {
-            result.put("error", true);
-            result.put("message", e.getMessage());
-            return result;
-        }
-        result.put("error", false);
+        orderService.changePaymentStatus(newStatusDto);
         result.put("message", "Payment status for order with id " + newStatusDto.getOrderId() + " changed!");
         return result;
     }
@@ -112,16 +98,9 @@ public class AdminPageController {
 
     @RequestMapping(value = "adminPage/adminManageCategories/deleteGenre", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject deleteGenreById(@RequestBody Integer deleteId) {
+    public JSONObject deleteGenreById(@RequestBody Integer deleteId) throws GenreException {
         JSONObject result = new JSONObject();
-        try {
-            genreService.deleteGenre(deleteId);
-        } catch (GenreException e) {
-            result.put("error", true);
-            result.put("message", e.getMessage());
-            return result;
-        }
-        result.put("error", false);
+        genreService.deleteGenre(deleteId);
         result.put("message", "Genre deleted!");
         return result;
     }
@@ -129,48 +108,36 @@ public class AdminPageController {
 
     @RequestMapping(value = "adminPage/adminManageCategories/saveEditGenre", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject saveEditGenre(@RequestBody JSONObject edit) {
+    public JSONObject saveEditGenre(@RequestBody JSONObject edit) throws GenreException {
         JSONObject result = new JSONObject();
-        try {
-            genreService.editGenre((Integer) edit.get("id"), (String) edit.get("genre"));
-        } catch (GenreException e) {
-            result.put("error", true);
-            result.put("message", e.getMessage());
-            return result;
-        }
-        result.put("error", false);
+        genreService.editGenre((Integer) edit.get("id"), (String) edit.get("genre"));
+        result.put("message", "Genre edited!");
+        return result;
+    }
+
+    @RequestMapping(value = "adminPage/adminManageCategories/saveNewGenre", method = RequestMethod.POST)
+    @ResponseBody
+    public JSONObject saveNewGenre(@RequestBody String genre) throws GenreException {
+        JSONObject result = new JSONObject();
+        genreService.addGenre(genre);
         result.put("message", "Genre edited!");
         return result;
     }
 
     @RequestMapping(value = "adminPage/adminManageCategories/saveNewBook", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject saveNewBook(@RequestBody BookDto bookDto) {
+    public JSONObject saveNewBook(@RequestBody BookDto bookDto) throws BookException {
         JSONObject result = new JSONObject();
-        try {
-            bookService.addNewBook(bookDto);
-        } catch (BookException e) {
-            result.put("error", true);
-            result.put("message", e.getMessage());
-            return result;
-        }
-        result.put("error", false);
+        bookService.addNewBook(bookDto);
         result.put("message", "New book " + bookDto.getName() + " added!");
         return result;
     }
 
     @RequestMapping(value = "adminPage/adminManageCategories/saveEditBook", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject saveEditBook(@RequestBody BookDto bookDto) {
+    public JSONObject saveEditBook(@RequestBody BookDto bookDto) throws BookException {
         JSONObject result = new JSONObject();
-        try {
-            bookService.editBook(bookDto);
-        } catch (BookException e) {
-            result.put("error", true);
-            result.put("message", e.getMessage());
-            return result;
-        }
-        result.put("error", false);
+        bookService.editBook(bookDto);
         result.put("message", "Book details for " + bookDto.getName() + " saved!");
         return result;
     }
@@ -185,16 +152,9 @@ public class AdminPageController {
 
     @RequestMapping(value = "adminPage/adminManageCategories/deleteBook", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject deleteBookById(@RequestBody Integer deleteId) {
+    public JSONObject deleteBookById(@RequestBody Integer deleteId) throws BookException {
         JSONObject result = new JSONObject();
-        try {
-            bookService.deleteBookById(deleteId);
-        } catch (BookException e) {
-            result.put("error", true);
-            result.put("message", e.getMessage());
-            return result;
-        }
-        result.put("error", false);
+        bookService.deleteBookById(deleteId);
         result.put("message", "Book deleted!");
         return result;
     }

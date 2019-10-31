@@ -3,6 +3,7 @@ package com.rychkov.eshop.controllers;
 
 import com.rychkov.eshop.entitys.Address;
 import com.rychkov.eshop.entitys.User;
+import com.rychkov.eshop.exceptions.FailedToDeleteAddressException;
 import com.rychkov.eshop.exceptions.PasswordMismatchException;
 import com.rychkov.eshop.repositorys.AddressesRepository;
 import com.rychkov.eshop.repositorys.UserRepository;
@@ -65,16 +66,10 @@ public class ProfilePageController {
 
     @RequestMapping(value = "/changePassword", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject profileChangePassword(@RequestBody JSONObject edit, Principal principal) {
+    public JSONObject profileChangePassword(@RequestBody JSONObject edit, Principal principal) throws PasswordMismatchException {
         JSONObject result = new JSONObject();
-        try {
-            userService.changePassword(edit, userRepository.findByUsername(principal.getName()).getId());
-            result.put("error", false);
-            result.put("message", "Password changed!");
-        } catch (PasswordMismatchException e) {
-            result.put("error", true);
-            result.put("message", "Wrong current password!");
-        }
+        userService.changePassword(edit, userRepository.findByUsername(principal.getName()).getId());
+        result.put("message", "Password changed!");
         return result;
     }
 
@@ -110,15 +105,10 @@ public class ProfilePageController {
 
     @RequestMapping(value = "/deleteAddress", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject deleteAddress(@RequestBody JSONObject deleteId) {
+    public JSONObject deleteAddress(@RequestBody JSONObject deleteId) throws FailedToDeleteAddressException {
         JSONObject result = new JSONObject();
-        if (userService.deleteAddressById(Integer.valueOf((String) deleteId.get("id")))) {
-            result.put("error", false);
-            result.put("message", "Address deleted!");
-        } else {
-            result.put("error", true);
-            result.put("message", "Address is not deleted!");
-        }
+        userService.deleteAddressById(Integer.valueOf((String) deleteId.get("id")));
+        result.put("message", "Address deleted!");
         return result;
     }
 

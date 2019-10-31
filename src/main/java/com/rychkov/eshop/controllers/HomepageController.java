@@ -12,7 +12,6 @@ public class HomepageController {
 }
 /*
 TODO
-    0) Figure out how to stop @Scheduled threads.
   1) Ddd autovalidate
   2) Exception handling through controller advice
     4) Custom error pages

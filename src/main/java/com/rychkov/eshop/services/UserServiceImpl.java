@@ -2,11 +2,14 @@ package com.rychkov.eshop.services;
 
 import com.rychkov.eshop.dtos.UserDto;
 import com.rychkov.eshop.entitys.Address;
+import com.rychkov.eshop.entitys.Order;
 import com.rychkov.eshop.entitys.User;
 import com.rychkov.eshop.exceptions.EmailExistsException;
+import com.rychkov.eshop.exceptions.FailedToDeleteAddressException;
 import com.rychkov.eshop.exceptions.PasswordMismatchException;
 import com.rychkov.eshop.exceptions.UsernameExistsException;
 import com.rychkov.eshop.repositorys.AddressesRepository;
+import com.rychkov.eshop.repositorys.OrdersRepository;
 import com.rychkov.eshop.repositorys.UserRepository;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -25,6 +29,8 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private OrdersRepository ordersRepository;
 
     @Transactional
     @Override
@@ -96,10 +102,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean deleteAddressById(Integer addressId) {
+    public boolean deleteAddressById(Integer addressId) throws FailedToDeleteAddressException {
         Optional<Address> deleteAddress = addressesRepository.findById(addressId);
 
         if (deleteAddress.isPresent()) {
+            List<Order> orders = ordersRepository.findAllByAddress_Id(addressId);
+            for (Order order : orders){
+                Optional<Address> address = addressesRepository.findById(1);
+                if(address.isPresent()) {
+                    order.setAddress(address.get());
+                    ordersRepository.save(order);
+                } else throw new FailedToDeleteAddressException("Failed to delete address");
+            }
             addressesRepository.delete(deleteAddress.get());
         } else return false;
 

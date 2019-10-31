@@ -302,13 +302,18 @@ async function savePasswordEdit() {
         });
         let result = await call.json();
 
-        if(!result.error) toastr.success(result.message);
-        else toastr.error(result.message);
+        if(!result.error){
+            toastr.success(result.message)
+            switchPasswordFields('none');
+            clearPasswordFields();
+            switchPasswordButtons('block', 'none', 'none');
+        }
+        else {
+            clearPasswordFields();
+            toastr.error(result.message);
+        }
 
 
-        switchPasswordFields('none');
-        clearPasswordFields();
-        switchPasswordButtons('block', 'none', 'none');
     }
 }
 

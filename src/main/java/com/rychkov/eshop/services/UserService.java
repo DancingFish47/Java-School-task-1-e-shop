@@ -4,6 +4,7 @@ import com.rychkov.eshop.dtos.UserDto;
 import com.rychkov.eshop.entitys.Address;
 import com.rychkov.eshop.entitys.User;
 import com.rychkov.eshop.exceptions.EmailExistsException;
+import com.rychkov.eshop.exceptions.FailedToDeleteAddressException;
 import com.rychkov.eshop.exceptions.PasswordMismatchException;
 import com.rychkov.eshop.exceptions.UsernameExistsException;
 import net.minidev.json.JSONObject;
@@ -18,7 +19,7 @@ public interface UserService {
 
     Address editAddress(JSONObject edit, Integer id);
 
-    boolean deleteAddressById(Integer addressId);
+    boolean deleteAddressById(Integer addressId) throws FailedToDeleteAddressException;
 
     Address saveNewAddress(JSONObject newAddress, User user);
 }

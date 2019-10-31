@@ -55,23 +55,11 @@ public class CheckoutPageController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/checkout/processOrder")
     @ResponseBody
-    public JSONObject processOrder(@RequestBody OrderInfoDto orderInfo, Principal principal, HttpSession session) {
+    public JSONObject processOrder(@RequestBody OrderInfoDto orderInfo, Principal principal, HttpSession session) throws ProcessOrderException {
         JSONObject result = new JSONObject();
         orderInfo.setUser(userRepository.findByUsername(principal.getName()));
         orderInfo.setCartItems((List<CartItem>) session.getAttribute("cart"));
-
-        try {
-            Order order = orderService.newOrder(orderInfo, session);
-            if (order == null) {
-                result.put("error", true);
-                result.put("message", "Failed to register new order");
-                return result;
-            }
-        } catch (ProcessOrderException e) {
-            result.put("error", true);
-            result.put("message", e.getMessage());
-            return result;
-        }
+        orderService.newOrder(orderInfo, session);
         session.setAttribute("cart", null);
         session.setAttribute("orderId", null);
         result.put("message", "Your order registered!");

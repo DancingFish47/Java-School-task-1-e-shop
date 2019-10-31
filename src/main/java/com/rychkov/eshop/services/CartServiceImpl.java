@@ -72,15 +72,18 @@ public class CartServiceImpl implements CartService {
         List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
 
         if (exists(deleteId, cart) == -1) {
-            result.put("erroe", true);
+            result.put("error", true);
             result.put("message", "Could not find that book in your cart!");
             result.put("total", calculateTotal(cart));
             return result;
         } else {
+            result.put("error", false);
             result.put("message", "Book " + cart.get(exists(deleteId, cart)).getBook().getName() + " deleted from cart!");
+            cart.remove(exists(deleteId, cart));
+            result.put("total", calculateTotal(cart));
+            session.setAttribute("cart", cart);
+            return result;
         }
-        session.setAttribute("cart", cart);
-        return result;
     }
 
     private int exists(Integer id, List<CartItem> cart) {

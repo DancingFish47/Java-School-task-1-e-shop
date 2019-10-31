@@ -9,6 +9,8 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 
 @Component
 public class ScheduledTasks {
@@ -21,15 +23,17 @@ public class ScheduledTasks {
     @Async
     @Scheduled(initialDelay = 1, fixedDelay = 60000)
     public void orderWindow() {
-        Order order = ordersRepository.findFirstByOrderStatus_Name("TEMPORDER");
-        try {
-            Thread.sleep(ORDER_WINDOW_TIME);
-            if (order.getOrderStatus().getName().equals("TEMPORDER")) {
-                orderService.returnBooks(order);
-                ordersRepository.delete(order);
+        List<Order> orders = ordersRepository.findAllByOrderStatus_Name("TEMPORDER");
+        for (Order order : orders) {
+            try {
+                Thread.sleep(ORDER_WINDOW_TIME);
+                if (order.getOrderStatus().getName().equals("TEMPORDER")) {
+                    orderService.returnBooks(order);
+                    ordersRepository.delete(order);
+                }
+            } catch (InterruptedException | ReturnBooksToStockException e) {
+                e.printStackTrace();
             }
-        } catch (InterruptedException | ReturnBooksToStockException e) {
-            e.printStackTrace();
         }
     }
 }
