@@ -1,4 +1,4 @@
-package com.rychkov.eshop.services;
+package com.rychkov.eshop.services.implementations;
 
 import com.rychkov.eshop.dtos.UserDto;
 import com.rychkov.eshop.entitys.Address;
@@ -11,6 +11,7 @@ import com.rychkov.eshop.exceptions.UsernameExistsException;
 import com.rychkov.eshop.repositorys.AddressesRepository;
 import com.rychkov.eshop.repositorys.OrdersRepository;
 import com.rychkov.eshop.repositorys.UserRepository;
+import com.rychkov.eshop.services.UserService;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

@@ -14,7 +14,7 @@ import java.util.List;
 
 @Component
 public class ScheduledTasks {
-    private static final Integer ORDER_WINDOW_TIME = 30000;
+    private static final Integer ORDER_WINDOW_TIME = 120000;
     @Autowired
     OrdersRepository ordersRepository;
     @Autowired
@@ -32,7 +32,7 @@ public class ScheduledTasks {
                     ordersRepository.delete(order);
                 }
             } catch (InterruptedException | ReturnBooksToStockException e) {
-                e.printStackTrace();
+                Thread.currentThread().interrupt();
             }
         }
     }

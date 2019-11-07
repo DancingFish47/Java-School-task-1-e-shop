@@ -1,4 +1,4 @@
-package com.rychkov.eshop.services;
+package com.rychkov.eshop.services.implementations;
 
 import com.rychkov.eshop.dtos.TopBookDto;
 import com.rychkov.eshop.dtos.TopUserDto;
@@ -8,6 +8,7 @@ import com.rychkov.eshop.entitys.User;
 import com.rychkov.eshop.repositorys.BooksRepository;
 import com.rychkov.eshop.repositorys.OrdersRepository;
 import com.rychkov.eshop.repositorys.UserRepository;
+import com.rychkov.eshop.services.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

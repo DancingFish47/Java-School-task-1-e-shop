@@ -1,5 +1,6 @@
 package com.rychkov.eshop.configurations;
 
+import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -19,6 +20,7 @@ import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 
 
 @Configuration
+@EnableRabbit
 @EnableScheduling
 @EnableAsync
 @EnableWebMvc
@@ -62,5 +64,7 @@ public class AppConfiguration implements WebMvcConfigurer {
         registry.addResourceHandler("/images/**").addResourceLocations("classpath:/static/images/");
         registry.addResourceHandler("/fonts/**").addResourceLocations("classpath:/static/fonts/");
     }
+
+
 
 }

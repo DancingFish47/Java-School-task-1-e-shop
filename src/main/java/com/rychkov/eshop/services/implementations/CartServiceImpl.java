@@ -1,4 +1,4 @@
-package com.rychkov.eshop.services;
+package com.rychkov.eshop.services.implementations;
 
 import com.rychkov.eshop.configurations.ScheduledTasks;
 import com.rychkov.eshop.dtos.CartItem;
@@ -9,6 +9,7 @@ import com.rychkov.eshop.exceptions.ProcessOrderException;
 import com.rychkov.eshop.repositorys.BooksRepository;
 import com.rychkov.eshop.repositorys.OrderStatusRepository;
 import com.rychkov.eshop.repositorys.OrdersRepository;
+import com.rychkov.eshop.services.CartService;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

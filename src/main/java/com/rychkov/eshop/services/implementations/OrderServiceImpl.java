@@ -1,4 +1,4 @@
-package com.rychkov.eshop.services;
+package com.rychkov.eshop.services.implementations;
 
 import com.rychkov.eshop.dtos.CartItem;
 import com.rychkov.eshop.dtos.NewStatusDto;
@@ -10,6 +10,7 @@ import com.rychkov.eshop.exceptions.FailedToRepeatOrderException;
 import com.rychkov.eshop.exceptions.ProcessOrderException;
 import com.rychkov.eshop.exceptions.ReturnBooksToStockException;
 import com.rychkov.eshop.repositorys.*;
+import com.rychkov.eshop.services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

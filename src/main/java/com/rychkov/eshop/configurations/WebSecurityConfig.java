@@ -1,7 +1,7 @@
 package com.rychkov.eshop.configurations;
 
 
-import com.rychkov.eshop.services.UserDetailsServiceImpl;
+import com.rychkov.eshop.services.implementations.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;

@@ -1,22 +1,35 @@
 package com.rychkov.eshop.controllers;
 
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class HomepageController {
+    @Autowired
+    RabbitTemplate template;
+
     @GetMapping({"/", "/homepage"})
     public String homepage() {
         return "redirect:/books";
+    }
+
+    @GetMapping("/emit")
+    @ResponseBody
+    public String emit() {
+        template.setExchange("books_fanout");
+        template.convertAndSend("Fanout message");
+        return "Emit to exchange-example-3";
     }
 }
 /*
 TODO
   1) Ddd autovalidate
-  2) Exception handling through controller advice
     4) Custom error pages
      5) Figure out "Docker"
-      6) Sonar?
-       7)Wildfly or Flyway something like that for sql
+       7)Flyway for sql
+       8) soft delete for addresses
+       9) fix scheduled task?
 */
-

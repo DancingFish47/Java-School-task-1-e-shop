@@ -1,4 +1,4 @@
-package com.rychkov.eshop.services;
+package com.rychkov.eshop.services.implementations;
 
 import com.rychkov.eshop.entitys.User;
 import com.rychkov.eshop.repositorys.UserRepository;

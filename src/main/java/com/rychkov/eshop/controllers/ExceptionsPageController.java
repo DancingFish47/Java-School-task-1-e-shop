@@ -17,7 +17,7 @@ import java.sql.SQLException;
 public class ExceptionsPageController {
     @RequestMapping(value = "/403", method = RequestMethod.GET)
     public String accessDenied(Model model){
-        model.addAttribute("accessdenied", "ACCESS DENIED!!!");
+        model.addAttribute("accessdenied", "access denied!");
         return "error";
     }
 

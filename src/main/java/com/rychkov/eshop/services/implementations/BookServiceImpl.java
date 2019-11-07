@@ -1,10 +1,13 @@
-package com.rychkov.eshop.services;
+package com.rychkov.eshop.services.implementations;
 
 import com.rychkov.eshop.dtos.BookDto;
 import com.rychkov.eshop.entitys.Book;
 import com.rychkov.eshop.exceptions.BookException;
 import com.rychkov.eshop.repositorys.BookCategoryRepository;
 import com.rychkov.eshop.repositorys.BooksRepository;
+import com.rychkov.eshop.services.BookService;
+import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +22,8 @@ public class BookServiceImpl implements BookService {
     private BooksRepository booksRepository;
     @Autowired
     private BookCategoryRepository bookCategoryRepository;
+    @Autowired
+    RabbitTemplate template;
 
 
     @Override
@@ -55,7 +60,7 @@ public class BookServiceImpl implements BookService {
         Book book = new Book();
         BookDtoToBook(bookDto, book);
         //Could use Mapper here
-        if (booksRepository.save(book) == null) throw new BookException("Failed to add new book");
+        booksRepository.save(book);
     }
 
     @Override
