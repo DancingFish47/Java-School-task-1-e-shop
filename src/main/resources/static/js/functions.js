@@ -14,7 +14,7 @@ toastr.options = {
     "hideEasing": "linear",
     "showMethod": "fadeIn",
     "hideMethod": "fadeOut"
-}
+};
 
 $(function () {
     $("form").submit(function (event) {
@@ -1170,8 +1170,10 @@ async function saveNewBook(){
         let result = await call.json();
 
         if (!result.error) {
-            document.location.reload();
             toastr.success(result.message);
+            setTimeout(function(){
+                document.location.reload();
+            }, 2000);
         } else {
             toastr.error(result.message);
             cancelBook();

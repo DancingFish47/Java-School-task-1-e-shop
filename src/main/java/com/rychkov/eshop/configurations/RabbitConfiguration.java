@@ -7,6 +7,7 @@ import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -15,7 +16,9 @@ public class RabbitConfiguration {
     //настраиваем соединение с RabbitMQ
     @Bean
     public ConnectionFactory connectionFactory() {
-        return new CachingConnectionFactory("localhost");
+        CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory("localhost");
+        cachingConnectionFactory.setPublisherConfirmType(CachingConnectionFactory.ConfirmType.SIMPLE);
+        return cachingConnectionFactory;
     }
 
     @Bean
@@ -25,36 +28,57 @@ public class RabbitConfiguration {
 
     @Bean
     public RabbitTemplate rabbitTemplate() {
-        return new RabbitTemplate(connectionFactory());
-    }
-    @Bean
-    public Queue myQueue1() {
-        return new Queue("newBooks");
+        RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory());
+        rabbitTemplate.setMessageConverter(producerJackson2MessageConverter());
+        return rabbitTemplate;
     }
     @Bean
     public Queue myQueue2() {
-        return new Queue("onSale");
+        return new Queue("newBooks");
     }
     @Bean
     public Queue myQueue3() {
+        return new Queue("editBook");
+    }
+
+    @Bean
+    public Queue myQueue1() {
         return new Queue("topSellers");
     }
+
     @Bean
-    public FanoutExchange fanoutExchangeA(){
-        return new FanoutExchange("books_fanout");
+    public Queue myQueue4() {
+        return new Queue("deleteBook");
+    }
+
+    @Bean
+    public DirectExchange directExchange(){
+        return new DirectExchange("books_exchange");
     }
 
     @Bean
     public Binding binding1(){
-        return BindingBuilder.bind(myQueue1()).to(fanoutExchangeA());
+        return BindingBuilder.bind(myQueue2()).to(directExchange()).with("newBooks");
     }
+
     @Bean
-    public Binding binding2(){
-        return BindingBuilder.bind(myQueue2()).to(fanoutExchangeA());
+    public Binding binding2() {
+        return BindingBuilder.bind(myQueue1()).to(directExchange()).with("topSellers");
     }
+
     @Bean
     public Binding binding3(){
-        return BindingBuilder.bind(myQueue3()).to(fanoutExchangeA());
+        return BindingBuilder.bind(myQueue3()).to(directExchange()).with("editBook");
+    }
+
+    @Bean
+    public Binding binding4(){
+        return BindingBuilder.bind(myQueue4()).to(directExchange()).with("deleteBook");
+    }
+
+    @Bean
+    public Jackson2JsonMessageConverter producerJackson2MessageConverter() {
+        return new Jackson2JsonMessageConverter();
     }
 
 

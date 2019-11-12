@@ -1,9 +1,12 @@
 package com.rychkov.eshop.configurations;
 
+import com.rychkov.eshop.entitys.Book;
 import com.rychkov.eshop.entitys.Order;
 import com.rychkov.eshop.exceptions.ReturnBooksToStockException;
+import com.rychkov.eshop.repositorys.BooksRepository;
 import com.rychkov.eshop.repositorys.OrdersRepository;
 import com.rychkov.eshop.services.OrderService;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -19,6 +22,10 @@ public class ScheduledTasks {
     OrdersRepository ordersRepository;
     @Autowired
     OrderService orderService;
+    @Autowired
+    RabbitTemplate rabbitTemplate;
+    @Autowired
+    BooksRepository booksRepository;
 
     @Async
     @Scheduled(initialDelay = 1, fixedDelay = 60000)
@@ -35,5 +42,14 @@ public class ScheduledTasks {
                 Thread.currentThread().interrupt();
             }
         }
+    }
+    @Async
+    @Scheduled(initialDelay = 10000, fixedDelay = 10000)
+    public void sendTopLists(){
+        List<Book> topBooks = booksRepository.findTop10ByOrderBySoldDesc();
+        rabbitTemplate.convertAndSend("topSellers", topBooks);
+        List<Book> newBooks = booksRepository.findTop10ByOrderByDateDesc();
+        rabbitTemplate.convertAndSend("newBooks", newBooks);
+
     }
 }

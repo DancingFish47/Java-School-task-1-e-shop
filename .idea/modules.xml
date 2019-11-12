@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/../java-school-task-2-e-ads/e-ads.iml" filepath="$PROJECT_DIR$/../java-school-task-2-e-ads/e-ads.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../java-school-task-2-advertisements-application/e-ads.iml" filepath="$PROJECT_DIR$/../java-school-task-2-advertisements-application/e-ads.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/java-school-task-1-e-shop.iml" filepath="$PROJECT_DIR$/.idea/java-school-task-1-e-shop.iml" />
     </modules>
   </component>

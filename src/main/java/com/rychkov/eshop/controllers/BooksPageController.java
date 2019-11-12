@@ -10,7 +10,12 @@ import com.rychkov.eshop.repositorys.OrdersRepository;
 import com.rychkov.eshop.services.BookService;
 import com.rychkov.eshop.services.CartService;
 import com.rychkov.eshop.services.OrderService;
+
 import net.minidev.json.JSONObject;
+
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -38,12 +43,15 @@ public class BooksPageController {
     OrderService orderService;
 
 
+
     @GetMapping({"/books/{category}", "/books"})
     public String showBooks(@PathVariable(required = false) String category,
                             @RequestParam(value = "sort", required = false) String sortType,
                             Model model,
                             HttpSession session) throws ReturnBooksToStockException {
         if(session.getAttribute("orderId") != null){
+
+
             Integer orderId = (Integer) session.getAttribute("orderId");
             Optional<Order> optionalOrder = ordersRepository.findById(orderId);
             if (optionalOrder.isPresent()){
