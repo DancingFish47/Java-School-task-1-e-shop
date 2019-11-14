@@ -28,20 +28,20 @@ public class HomepageController {
   TODO
      1) Ddd autovalidate
      4) Custom error pages
-     5) Figure out "Docker"
+                                               5) Docker/Docker Compose
      7) Flyway for sql*
      8) soft delete for addresses
-     9) Logger
+                                               9) Logger
      10) backend validation
      11) pagination?
-     12) Junit tests
-     13) Technical solution doc
-     14) java doc?
-     15) jenkinks, teamcity, ci*
+                                               12) Junit tests
+                                               13) Technical solution doc
+                                               14) java doc?
+                         15) jenkinks, teamcity, ci*
      16) JMeter
      17) mockito?
      18) Selenium + CI*
-     19) LIGHT THEME FOR REVIEW
-     20) logging = custom log format, savesession
+                         19) LIGHT THEME FOR REVIEW
+
 
 */

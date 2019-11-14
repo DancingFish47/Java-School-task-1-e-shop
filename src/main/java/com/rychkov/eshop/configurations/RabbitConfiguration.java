@@ -52,6 +52,9 @@ public class RabbitConfiguration {
     }
 
     @Bean
+    public Queue myQueue5() {return new Queue("addBook");}
+
+    @Bean
     public DirectExchange directExchange(){
         return new DirectExchange("books_exchange");
     }
@@ -74,6 +77,11 @@ public class RabbitConfiguration {
     @Bean
     public Binding binding4(){
         return BindingBuilder.bind(myQueue4()).to(directExchange()).with("deleteBook");
+    }
+
+    @Bean
+    public Binding binding5(){
+        return BindingBuilder.bind(myQueue5()).to(directExchange()).with("addBook");
     }
 
     @Bean

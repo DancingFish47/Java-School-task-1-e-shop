@@ -52,7 +52,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public void deleteBookById(Integer bookId) throws BookException {
         booksRepository.deleteById(bookId);
-        template.convertAndSend(bookId);
+        template.convertAndSend("deleteBook", bookId);
         if (booksRepository.findById(bookId).isPresent()) throw new BookException("Failed to delete book");
     }
 
@@ -62,7 +62,7 @@ public class BookServiceImpl implements BookService {
         BookDtoToBook(bookDto, book);
         //Could use Mapper here
         booksRepository.save(book);
-        template.convertAndSend("newBooks", book);
+        template.convertAndSend("addBook", book);
     }
 
     @Override
