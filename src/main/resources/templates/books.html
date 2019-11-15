@@ -6,10 +6,11 @@
 <nav th:replace="~{htmlparts/navbar.html :: navbar (books='active') }"></nav>
 
 <div class="container bg-light">
-    <h1>Books</h1>
     <div class="container bg-light">
+        <h1 style="text-align: center">Books</h1>
+        <div style="text-align: center; padding-top: 5px; padding-bottom: 5px">
         <div class="dropdown btn-group m-1">
-            <button aria-expanded="false" aria-haspopup="true" class="btn btn-secondary dropdown-toggle"
+            <button aria-expanded="false" aria-haspopup="true" class="btn btn-info dropdown-toggle"
                     data-toggle="dropdown" id="dropdownMenuButton2" th:text="${category} ?: 'Genre'" type="button">
                 Genre
             </button>
@@ -19,7 +20,7 @@
             </div>
         </div>
         <div class="dropdown btn-group m-1">
-            <button aria-expanded="false" aria-haspopup="true" class="btn btn-secondary dropdown-toggle"
+            <button aria-expanded="false" aria-haspopup="true" class="btn btn-info dropdown-toggle"
                     data-toggle="dropdown" id="dropdownMenuButton1" th:text="${sort} ?: 'Sort by'" type="button">
                 Sort by
             </button>
@@ -31,6 +32,26 @@
         <div class="dropdown btn-group m-1">
             <a class="btn btn-primary" href="/books">Reset</a>
         </div>
+        </div>
+
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                <li class="page-item disabled" th:if="${prevpage == 0}">
+                    <a class="page-link" th:if="${prevpage != null}"  th:href="${'?page=' + prevpage}" tabindex="-1" aria-disabled="true">Previous</a>
+                    <a class="page-link" th:if="${prevpage == null}"  tabindex="-1" aria-disabled="true">Previous</a>
+                </li>
+                <li class="page-item" th:if="${prevpage != 0}">
+                    <a class="page-link" th:if="${prevpage != null}"  th:href="${'?page=' + prevpage}" tabindex="-1" aria-disabled="true">Previous</a>
+                    <a class="page-link" th:if="${prevpage == null}"  tabindex="-1" aria-disabled="true">Previous</a>
+                </li>
+                <li class="page-item"><a class="page-link" th:text="${page}" th:default="1"></a></li>
+                <li class="page-item">
+                    <a class="page-link" th:if="${nextpage != null}" th:href="${'?page=' + nextpage}">Next</a>
+                    <a class="page-link" th:if="${nextpage == null}" aria-disabled="true">Next</a>
+                </li>
+            </ul>
+        </nav>
+
         <h3 th:if="${#lists.isEmpty(books)}">There are no books in this genre, yet.</h3>
         <div class="card-deck" th:if="${!#lists.isEmpty(books)}">
             <div class="card border-primary" style="min-width: 225px; min-height: 400px; max-width: 225px;"

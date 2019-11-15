@@ -11,6 +11,7 @@ import com.rychkov.eshop.services.BookService;
 import com.rychkov.eshop.services.CartService;
 import com.rychkov.eshop.services.OrderService;
 
+import net.bytebuddy.implementation.bind.annotation.Default;
 import net.minidev.json.JSONObject;
 
 
@@ -47,11 +48,11 @@ public class BooksPageController {
     @GetMapping({"/books/{category}", "/books"})
     public String showBooks(@PathVariable(required = false) String category,
                             @RequestParam(value = "sort", required = false) String sortType,
+                            @RequestParam(value = "page", required = false, defaultValue = "1") String page,
                             Model model,
                             HttpSession session) throws ReturnBooksToStockException {
+
         if(session.getAttribute("orderId") != null){
-
-
             Integer orderId = (Integer) session.getAttribute("orderId");
             Optional<Order> optionalOrder = ordersRepository.findById(orderId);
             if (optionalOrder.isPresent()){
@@ -62,17 +63,24 @@ public class BooksPageController {
             }
         }
 
-        model.addAttribute("BookCategory", bookCategoryRepository.findAll());
-
         Map<String, String> params = new HashMap<>();
         params.put("category", category);
         params.put("sortType", sortType);
+        params.put("page", page);
 
         List<Book> books = bookService.prepareBooksList(params);
 
+
+        int nextpage = Integer.parseInt(page) + 1;
+        int prevpage = Integer.parseInt(page) - 1;
+
+        model.addAttribute("BookCategory", bookCategoryRepository.findAll());
         model.addAttribute("sort", sortType);
         model.addAttribute("category", category);
         model.addAttribute("books", books);
+        model.addAttribute("page", page);
+        model.addAttribute("nextpage", nextpage);
+        model.addAttribute("prevpage", prevpage);
         return "books";
     }
 
