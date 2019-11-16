@@ -18,6 +18,7 @@ import net.minidev.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -68,11 +69,14 @@ public class BooksPageController {
         params.put("sortType", sortType);
         params.put("page", page);
 
-        List<Book> books = bookService.prepareBooksList(params);
+        Page<Book> books = bookService.prepareBooksList(params);
 
+        int maxpage = books.getTotalPages();
+        int nextpage = 0;
+        int prevpage = 0;
 
-        int nextpage = Integer.parseInt(page) + 1;
-        int prevpage = Integer.parseInt(page) - 1;
+        if(Integer.parseInt(page)+1 <= maxpage) nextpage = Integer.parseInt(page) + 1;
+        if(Integer.parseInt(page)-1 > 0) prevpage = Integer.parseInt(page) - 1;
 
         model.addAttribute("BookCategory", bookCategoryRepository.findAll());
         model.addAttribute("sort", sortType);

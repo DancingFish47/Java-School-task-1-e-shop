@@ -9,6 +9,9 @@ import com.rychkov.eshop.services.BookService;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -25,26 +28,22 @@ public class BookServiceImpl implements BookService {
     @Autowired
     RabbitTemplate template;
 
+    private final static Integer BOOKS_BY_PAGE = 5;
+
 
     @Override
-    public List<Book> prepareBooksList(Map<String, String> params) {
-        List<Book> preparedBooks;
-        if (params.get("category") == null) preparedBooks = (List<Book>) booksRepository.findAll();
-        else preparedBooks = booksRepository.findAllByBookCategory_Name(params.get("category"));
+    public Page<Book> prepareBooksList(Map<String, String> params) {
+        Page<Book> preparedBooks;
 
-        if (params.get("sortType") == null) return preparedBooks;
+        if (params.get("sortType") == null) {
+            if (params.get("category") == null) preparedBooks = booksRepository.findAll(PageRequest.of(Integer.parseInt(params.get("page"))-1, BOOKS_BY_PAGE));
+            else preparedBooks = booksRepository.findAllByBookCategory_Name(params.get("category"), PageRequest.of(Integer.parseInt(params.get("page"))-1, BOOKS_BY_PAGE));
+        }
         else {
-            switch (params.get("sortType")) {
-                case "price":
-                    preparedBooks.sort(Comparator.comparing(Book::getPrice));
-                    break;
-                case "name":
-                    preparedBooks.sort(Comparator.comparing(Book::getName));
-                    break;
-                default:
-                    break;
+            if (params.get("category") == null) preparedBooks = booksRepository.findAll(PageRequest.of(Integer.parseInt(params.get("page"))-1, BOOKS_BY_PAGE, Sort.by(Sort.Direction.ASC, params.get("sortType"))));
+            else{
+                preparedBooks = booksRepository.findAllByBookCategory_Name(params.get("category"), PageRequest.of(Integer.parseInt(params.get("page"))-1, BOOKS_BY_PAGE, Sort.by(Sort.Direction.ASC, params.get("sortType"))));
             }
-
         }
         return preparedBooks;
     }

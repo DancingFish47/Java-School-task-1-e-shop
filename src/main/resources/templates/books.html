@@ -37,24 +37,24 @@
         <nav aria-label="Page navigation example">
             <ul class="pagination justify-content-center">
                 <li class="page-item disabled" th:if="${prevpage == 0}">
-                    <a class="page-link" th:if="${prevpage != null}"  th:href="${'?page=' + prevpage}" tabindex="-1" aria-disabled="true">Previous</a>
-                    <a class="page-link" th:if="${prevpage == null}"  tabindex="-1" aria-disabled="true">Previous</a>
+                    <a class="page-link"  tabindex="-1" aria-disabled="true">Previous</a>
                 </li>
                 <li class="page-item" th:if="${prevpage != 0}">
-                    <a class="page-link" th:if="${prevpage != null}"  th:href="${'?page=' + prevpage}" tabindex="-1" aria-disabled="true">Previous</a>
-                    <a class="page-link" th:if="${prevpage == null}"  tabindex="-1" aria-disabled="true">Previous</a>
+                    <a class="page-link"  th:href="${'?page=' + prevpage}" tabindex="-1" aria-disabled="true">Previous</a>
                 </li>
                 <li class="page-item"><a class="page-link" th:text="${page}" th:default="1"></a></li>
-                <li class="page-item">
-                    <a class="page-link" th:if="${nextpage != null}" th:href="${'?page=' + nextpage}">Next</a>
-                    <a class="page-link" th:if="${nextpage == null}" aria-disabled="true">Next</a>
+                <li class="page-item disabled" th:if="${nextpage == 0}">
+                    <a class="page-link" tabindex="-1" aria-disabled="true">Next</a>
+                </li>
+                <li class="page-item" th:if="${nextpage != 0}">
+                    <a class="page-link" th:href="${'?page=' + nextpage}" tabindex="-1" aria-disabled="true">Next</a>
                 </li>
             </ul>
         </nav>
 
-        <h3 th:if="${#lists.isEmpty(books)}">There are no books in this genre, yet.</h3>
-        <div class="card-deck" th:if="${!#lists.isEmpty(books)}">
-            <div class="card border-primary" style="min-width: 225px; min-height: 400px; max-width: 225px;"
+        <h3 th:if="${#lists.isEmpty(books.content)}">There are no books in this genre, yet.</h3>
+        <div class="card-deck" th:if="${!#lists.isEmpty(books.content)}">
+            <div class="card border-primary" style="min-width: 225px; min-height: 400px; max-width: 225px; margin-bottom: 5px"
                  th:each="book : ${books}">
                 <img alt="" class="card-img-top"
                      onerror="this.src='/images/placeholder.png'" style="padding-left: auto; padding-right: auto;"
