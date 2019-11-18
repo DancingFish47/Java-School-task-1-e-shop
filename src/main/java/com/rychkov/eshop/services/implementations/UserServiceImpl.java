@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public User registerNewUser(UserDto userDto) throws EmailExistsException, UsernameExistsException {
+    public void registerNewUser(UserDto userDto) throws EmailExistsException, UsernameExistsException {
         if (emailExists(userDto.getEmail())) throw new EmailExistsException("This email is already registered");
         if (usernameExists(userDto.getUsername()))
             throw new UsernameExistsException("This username is already registered");
@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
         user.setLastName(userDto.getLastName());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         user.setUserRole("User");
-        return userRepository.save(user);
+        userRepository.save(user);
     }
 
     @Override

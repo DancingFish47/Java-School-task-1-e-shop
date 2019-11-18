@@ -11,7 +11,7 @@ import net.minidev.json.JSONObject;
 
 
 public interface UserService {
-    User registerNewUser(UserDto userDto) throws EmailExistsException, UsernameExistsException;
+    void registerNewUser(UserDto userDto) throws EmailExistsException, UsernameExistsException;
 
     User changeMainSettings(JSONObject edit, Integer userId);
 

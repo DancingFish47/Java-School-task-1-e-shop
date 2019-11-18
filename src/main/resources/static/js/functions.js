@@ -171,8 +171,35 @@ async function doLogin() {
 
 async function register() {
     if ($("#registrationForm").valid()) {
-        let form = document.getElementById('registrationForm');
-        form.submit();
+        let newUser = {
+            username: document.getElementById("username").value,
+            password: document.getElementById("inputPassword").value,
+            email: document.getElementById("inputEmail").value,
+            birthdate: document.getElementById("birthdate").value,
+            firstName: document.getElementById("firstname").value,
+            lastName: document.getElementById("lastname").value
+        };
+
+        let call = await fetch('/registration', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(newUser),
+        });
+
+        let result = await call.json();
+
+        if (!result.error) {
+            toastr.success(result.message);
+            setTimeout(function(){
+                document.location.replace("/login");
+            }, 2000);
+
+        } else {
+            toastr.error(result.message);
+        }
     }
 }
 
