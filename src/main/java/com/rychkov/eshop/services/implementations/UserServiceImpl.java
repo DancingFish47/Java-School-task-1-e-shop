@@ -12,8 +12,8 @@ import com.rychkov.eshop.repositorys.AddressesRepository;
 import com.rychkov.eshop.repositorys.OrdersRepository;
 import com.rychkov.eshop.repositorys.UserRepository;
 import com.rychkov.eshop.services.UserService;
+import lombok.RequiredArgsConstructor;
 import net.minidev.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,16 +22,13 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
-    @Autowired
-    private AddressesRepository addressesRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private OrdersRepository ordersRepository;
+    private final AddressesRepository addressesRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final OrdersRepository ordersRepository;
 
     @Transactional
     @Override
@@ -108,9 +105,9 @@ public class UserServiceImpl implements UserService {
 
         if (deleteAddress.isPresent()) {
             List<Order> orders = ordersRepository.findAllByAddress_Id(addressId);
-            for (Order order : orders){
+            for (Order order : orders) {
                 Optional<Address> address = addressesRepository.findById(1);
-                if(address.isPresent()) {
+                if (address.isPresent()) {
                     order.setAddress(address.get());
                     ordersRepository.save(order);
                 } else throw new FailedToDeleteAddressException("Failed to delete address");

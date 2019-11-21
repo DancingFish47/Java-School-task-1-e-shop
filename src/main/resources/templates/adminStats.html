@@ -7,45 +7,46 @@
 <div class="container">
     <h1>Admin page statistics</h1>
     <div class="container bg-light">
-        <button class="row btn btn-success" onclick="changeStats()" type="button" id="switchButton">To top books</button>
+        <button class="row btn btn-success" id="switchButton" onclick="changeStats()" type="button">To top books
+        </button>
         <div id="topUsers" style="display: block;">
             <h2>Top users</h2>
-        <table id="topUsersTable" class="table" >
-            <thead>
-            <tr>
-                <th scope="col" onclick="sortByName(0, 'topUsersTable')">User</th>
-                <th scope="col" onclick="sortByValue(1,  'topUsersTable')">Books bought</th>
-                <th scope="col" onclick="sortByValue(2,  'topUsersTable')">Total value</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="user : ${topUsers}">
-                <td th:text="${user.name}"></td>
-                <td th:text="${user.totalBooks}"></td>
-                <td th:text="${user.totalValue}"></td>
-            </tr>
-            </tbody>
-        </table>
+            <table class="table" id="topUsersTable">
+                <thead>
+                <tr>
+                    <th onclick="sortByName(0, 'topUsersTable')" scope="col">User</th>
+                    <th onclick="sortByValue(1,  'topUsersTable')" scope="col">Books bought</th>
+                    <th onclick="sortByValue(2,  'topUsersTable')" scope="col">Total value</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="user : ${topUsers}">
+                    <td th:text="${user.name}"></td>
+                    <td th:text="${user.totalBooks}"></td>
+                    <td th:text="${user.totalValue}"></td>
+                </tr>
+                </tbody>
+            </table>
         </div>
         <div id="topBooks" style="display: none;">
             <h2>Top books</h2>
-        <table id="topBooksTable" class="table" >
-            <thead>
-            <tr>
-                <th scope="col" onclick="sortByName(0, 'topBooksTable')">Book</th>
-                <th scope="col" onclick="sortByValue(1,  'topBooksTable')">Units sold</th>
-                <th scope="col" onclick="sortByValue(2,  'topBooksTable')">Total value</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="book : ${topBooks}">
-                <td th:text="${book.name}"></td>
-                <td th:text="${book.sold}"></td>
-                <td th:text="${book.totalValue + '$'}"></td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+            <table class="table" id="topBooksTable">
+                <thead>
+                <tr>
+                    <th onclick="sortByName(0, 'topBooksTable')" scope="col">Book</th>
+                    <th onclick="sortByValue(1,  'topBooksTable')" scope="col">Units sold</th>
+                    <th onclick="sortByValue(2,  'topBooksTable')" scope="col">Total value</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="book : ${topBooks}">
+                    <td th:text="${book.name}"></td>
+                    <td th:text="${book.sold}"></td>
+                    <td th:text="${book.totalValue + '$'}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 </body>

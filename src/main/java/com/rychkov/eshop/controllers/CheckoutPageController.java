@@ -2,36 +2,30 @@ package com.rychkov.eshop.controllers;
 
 import com.rychkov.eshop.dtos.CartItem;
 import com.rychkov.eshop.dtos.OrderInfoDto;
-import com.rychkov.eshop.entitys.Order;
 import com.rychkov.eshop.exceptions.ProcessOrderException;
 import com.rychkov.eshop.repositorys.AddressesRepository;
 import com.rychkov.eshop.repositorys.DeliveryMethodsRepository;
 import com.rychkov.eshop.repositorys.PaymentMethodsRepository;
 import com.rychkov.eshop.repositorys.UserRepository;
 import com.rychkov.eshop.services.OrderService;
+import lombok.RequiredArgsConstructor;
 import net.minidev.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.List;
 
+@RequiredArgsConstructor
 @Controller
 public class CheckoutPageController {
-    @Autowired
-    DeliveryMethodsRepository deliveryMethodsRepository;
-    @Autowired
-    PaymentMethodsRepository paymentMethodsRepository;
-    @Autowired
-    AddressesRepository addressesRepository;
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    OrderService orderService;
+    private final DeliveryMethodsRepository deliveryMethodsRepository;
+    private final PaymentMethodsRepository paymentMethodsRepository;
+    private final AddressesRepository addressesRepository;
+    private final UserRepository userRepository;
+    private final OrderService orderService;
 
 
     @GetMapping("/checkout")

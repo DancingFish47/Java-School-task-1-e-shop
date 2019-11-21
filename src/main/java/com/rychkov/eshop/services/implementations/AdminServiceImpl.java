@@ -9,21 +9,19 @@ import com.rychkov.eshop.repositorys.BooksRepository;
 import com.rychkov.eshop.repositorys.OrdersRepository;
 import com.rychkov.eshop.repositorys.UserRepository;
 import com.rychkov.eshop.services.AdminService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+@RequiredArgsConstructor
 @Service
 public class AdminServiceImpl implements AdminService {
-    @Autowired
-    BooksRepository booksRepository;
-    @Autowired
-    OrdersRepository ordersRepository;
-    @Autowired
-    UserRepository userRepository;
+    private final BooksRepository booksRepository;
+    private final OrdersRepository ordersRepository;
+    private final UserRepository userRepository;
 
     @Override
     public List<TopBookDto> getTopBooksList() {

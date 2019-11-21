@@ -9,52 +9,54 @@
     <div class="container bg-light">
         <h1 style="text-align: center">Books</h1>
         <div style="text-align: center; padding-top: 5px; padding-bottom: 5px">
-        <div class="dropdown btn-group m-1">
-            <button aria-expanded="false" aria-haspopup="true" class="btn btn-info dropdown-toggle"
-                    data-toggle="dropdown" id="dropdownMenuButton2" th:text="${category} ?: 'Genre'" type="button">
-                Genre
-            </button>
-            <div aria-labelledby="dropdownMenuButton2" class="dropdown-menu">
-                <a class="dropdown-item" th:each="category : ${BookCategory}" th:href="${'/books/' + category.name}"
-                   th:text="${category.name}"></a>
+            <div class="dropdown btn-group m-1">
+                <button aria-expanded="false" aria-haspopup="true" class="btn btn-info dropdown-toggle"
+                        data-toggle="dropdown" id="dropdownMenuButton2" th:text="${category} ?: 'Genre'" type="button">
+                    Genre
+                </button>
+                <div aria-labelledby="dropdownMenuButton2" class="dropdown-menu">
+                    <a class="dropdown-item" th:each="category : ${BookCategory}" th:href="${'/books/' + category.name}"
+                       th:text="${category.name}"></a>
+                </div>
             </div>
-        </div>
-        <div class="dropdown btn-group m-1">
-            <button aria-expanded="false" aria-haspopup="true" class="btn btn-info dropdown-toggle"
-                    data-toggle="dropdown" id="dropdownMenuButton1" th:text="${sort} ?: 'Sort by'" type="button">
-                Sort by
-            </button>
-            <div aria-labelledby="dropdownMenuButton1" class="dropdown-menu">
-                <a class="dropdown-item" href="?sort=name">Book name</a>
-                <a class="dropdown-item" href="?sort=price">Price</a>
+            <div class="dropdown btn-group m-1">
+                <button aria-expanded="false" aria-haspopup="true" class="btn btn-info dropdown-toggle"
+                        data-toggle="dropdown" id="dropdownMenuButton1" th:text="${sort} ?: 'Sort by'" type="button">
+                    Sort by
+                </button>
+                <div aria-labelledby="dropdownMenuButton1" class="dropdown-menu">
+                    <a class="dropdown-item" href="?sort=name">Book name</a>
+                    <a class="dropdown-item" href="?sort=price">Price</a>
+                </div>
             </div>
-        </div>
-        <div class="dropdown btn-group m-1">
-            <a class="btn btn-primary" href="/books">Reset</a>
-        </div>
+            <div class="dropdown btn-group m-1">
+                <a class="btn btn-primary" href="/books">Reset</a>
+            </div>
         </div>
 
         <nav aria-label="Page navigation example">
             <ul class="pagination justify-content-center">
                 <li class="page-item disabled" th:if="${prevpage == 0}">
-                    <a class="page-link"  tabindex="-1" aria-disabled="true">Previous</a>
+                    <a aria-disabled="true" class="page-link" tabindex="-1">Previous</a>
                 </li>
                 <li class="page-item" th:if="${prevpage != 0}">
-                    <a class="page-link"  th:href="${'?page=' + prevpage}" tabindex="-1" aria-disabled="true">Previous</a>
+                    <a aria-disabled="true" class="page-link" tabindex="-1"
+                       th:href="${'?page=' + prevpage}">Previous</a>
                 </li>
-                <li class="page-item"><a class="page-link" th:text="${page}" th:default="1"></a></li>
+                <li class="page-item"><a class="page-link" th:default="1" th:text="${page}"></a></li>
                 <li class="page-item disabled" th:if="${nextpage == 0}">
-                    <a class="page-link" tabindex="-1" aria-disabled="true">Next</a>
+                    <a aria-disabled="true" class="page-link" tabindex="-1">Next</a>
                 </li>
                 <li class="page-item" th:if="${nextpage != 0}">
-                    <a class="page-link" th:href="${'?page=' + nextpage}" tabindex="-1" aria-disabled="true">Next</a>
+                    <a aria-disabled="true" class="page-link" tabindex="-1" th:href="${'?page=' + nextpage}">Next</a>
                 </li>
             </ul>
         </nav>
 
         <h3 th:if="${#lists.isEmpty(books.content)}">There are no books in this genre, yet.</h3>
         <div class="card-deck" th:if="${!#lists.isEmpty(books.content)}">
-            <div class="card border-primary" style="min-width: 225px; min-height: 400px; max-width: 225px; margin-bottom: 5px"
+            <div class="card border-primary"
+                 style="min-width: 225px; min-height: 400px; max-width: 225px; margin-bottom: 5px"
                  th:each="book : ${books}">
                 <img alt="" class="card-img-top"
                      onerror="this.src='/images/placeholder.png'" style="padding-left: auto; padding-right: auto;"
@@ -64,7 +66,8 @@
                     <p class="card-text" th:text="${'Amount left: ' + book.amount}"></p>
                     <p class="card-text" th:text="${'Pages: ' + book.pages}"></p>
                     <p class="card-text" th:text="${'Price: ' + book.price + '$'}"></p>
-                    <p class="card-text" th:if="${book.bookCategory != null}" th:text="${'Genre: ' + book.bookCategory.name}"></p>
+                    <p class="card-text" th:if="${book.bookCategory != null}"
+                       th:text="${'Genre: ' + book.bookCategory.name}"></p>
                     <p class="card-text" th:if="${book.bookCategory == null}" th:text="${'Genre: No genre'}"></p>
 
                     <a class="btn btn-primary" th:onclick="'javascript:addToCart(\'' + ${book.id} + '\');'">Add to

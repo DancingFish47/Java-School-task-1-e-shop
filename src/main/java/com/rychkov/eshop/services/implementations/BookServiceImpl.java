@@ -6,43 +6,47 @@ import com.rychkov.eshop.exceptions.BookException;
 import com.rychkov.eshop.repositorys.BookCategoryRepository;
 import com.rychkov.eshop.repositorys.BooksRepository;
 import com.rychkov.eshop.services.BookService;
-import org.springframework.amqp.core.AmqpTemplate;
+import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
-import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @Service
 public class BookServiceImpl implements BookService {
-    @Autowired
-    private BooksRepository booksRepository;
-    @Autowired
-    private BookCategoryRepository bookCategoryRepository;
-    @Autowired
-    RabbitTemplate template;
 
-    private final static Integer BOOKS_BY_PAGE = 5;
+    private final BooksRepository booksRepository;
+
+    private final BookCategoryRepository bookCategoryRepository;
+
+    private final RabbitTemplate template;
+
+    private final Environment env;
 
 
     @Override
     public Page<Book> prepareBooksList(Map<String, String> params) {
         Page<Book> preparedBooks;
 
+        int booksByPage = Integer.parseInt(Objects.requireNonNull(env.getProperty("books.by.page")));
+
         if (params.get("sortType") == null) {
-            if (params.get("category") == null) preparedBooks = booksRepository.findAll(PageRequest.of(Integer.parseInt(params.get("page"))-1, BOOKS_BY_PAGE));
-            else preparedBooks = booksRepository.findAllByBookCategory_Name(params.get("category"), PageRequest.of(Integer.parseInt(params.get("page"))-1, BOOKS_BY_PAGE));
-        }
-        else {
-            if (params.get("category") == null) preparedBooks = booksRepository.findAll(PageRequest.of(Integer.parseInt(params.get("page"))-1, BOOKS_BY_PAGE, Sort.by(Sort.Direction.ASC, params.get("sortType"))));
-            else{
-                preparedBooks = booksRepository.findAllByBookCategory_Name(params.get("category"), PageRequest.of(Integer.parseInt(params.get("page"))-1, BOOKS_BY_PAGE, Sort.by(Sort.Direction.ASC, params.get("sortType"))));
+            if (params.get("category") == null)
+                preparedBooks = booksRepository.findAll(PageRequest.of(Integer.parseInt(params.get("page")) - 1, booksByPage));
+            else
+                preparedBooks = booksRepository.findAllByBookCategory_Name(params.get("category"), PageRequest.of(Integer.parseInt(params.get("page")) - 1, booksByPage));
+        } else {
+            if (params.get("category") == null)
+                preparedBooks = booksRepository.findAll(PageRequest.of(Integer.parseInt(params.get("page")) - 1, booksByPage, Sort.by(Sort.Direction.ASC, params.get("sortType"))));
+            else {
+                preparedBooks = booksRepository.findAllByBookCategory_Name(params.get("category"), PageRequest.of(Integer.parseInt(params.get("page")) - 1, booksByPage, Sort.by(Sort.Direction.ASC, params.get("sortType"))));
             }
         }
         return preparedBooks;
@@ -84,7 +88,8 @@ public class BookServiceImpl implements BookService {
         book.setAmount(bookDto.getAmount());
         book.setPages(bookDto.getPages());
         book.setPrice(bookDto.getPrice());
-        if (!bookDto.getGenre().isEmpty()) book.setBookCategory(bookCategoryRepository.findByName(bookDto.getGenre()));
+        if (bookDto.getGenre() != null && !bookDto.getGenre().isEmpty())
+            book.setBookCategory(bookCategoryRepository.findByName(bookDto.getGenre()));
     }
 
 

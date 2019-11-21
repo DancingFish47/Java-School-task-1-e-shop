@@ -1,12 +1,10 @@
 package com.rychkov.eshop.configurations;
 
-import com.rabbitmq.client.AMQP;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,10 +30,12 @@ public class RabbitConfiguration {
         rabbitTemplate.setMessageConverter(producerJackson2MessageConverter());
         return rabbitTemplate;
     }
+
     @Bean
     public Queue myQueue2() {
         return new Queue("newBooks");
     }
+
     @Bean
     public Queue myQueue3() {
         return new Queue("editBook");
@@ -52,15 +52,17 @@ public class RabbitConfiguration {
     }
 
     @Bean
-    public Queue myQueue5() {return new Queue("addBook");}
+    public Queue myQueue5() {
+        return new Queue("addBook");
+    }
 
     @Bean
-    public DirectExchange directExchange(){
+    public DirectExchange directExchange() {
         return new DirectExchange("books_exchange");
     }
 
     @Bean
-    public Binding binding1(){
+    public Binding binding1() {
         return BindingBuilder.bind(myQueue2()).to(directExchange()).with("newBooks");
     }
 
@@ -70,17 +72,17 @@ public class RabbitConfiguration {
     }
 
     @Bean
-    public Binding binding3(){
+    public Binding binding3() {
         return BindingBuilder.bind(myQueue3()).to(directExchange()).with("editBook");
     }
 
     @Bean
-    public Binding binding4(){
+    public Binding binding4() {
         return BindingBuilder.bind(myQueue4()).to(directExchange()).with("deleteBook");
     }
 
     @Bean
-    public Binding binding5(){
+    public Binding binding5() {
         return BindingBuilder.bind(myQueue5()).to(directExchange()).with("addBook");
     }
 

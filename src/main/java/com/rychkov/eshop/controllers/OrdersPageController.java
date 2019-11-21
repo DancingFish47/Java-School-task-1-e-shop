@@ -3,8 +3,8 @@ package com.rychkov.eshop.controllers;
 import com.rychkov.eshop.dtos.CartItem;
 import com.rychkov.eshop.exceptions.FailedToRepeatOrderException;
 import com.rychkov.eshop.services.OrderService;
+import lombok.RequiredArgsConstructor;
 import net.minidev.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,9 +17,9 @@ import java.security.Principal;
 import java.util.List;
 
 @Controller
+@RequiredArgsConstructor
 public class OrdersPageController {
-    @Autowired
-    OrderService orderService;
+    private final OrderService orderService;
 
     @RequestMapping(value = "/orders", method = RequestMethod.GET)
     public String ordersView(Principal principal, Model model) {

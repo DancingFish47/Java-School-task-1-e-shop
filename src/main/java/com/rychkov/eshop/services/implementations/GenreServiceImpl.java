@@ -6,18 +6,17 @@ import com.rychkov.eshop.exceptions.GenreException;
 import com.rychkov.eshop.repositorys.BookCategoryRepository;
 import com.rychkov.eshop.repositorys.BooksRepository;
 import com.rychkov.eshop.services.GenreService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @Service
 public class GenreServiceImpl implements GenreService {
-    @Autowired
-    BookCategoryRepository bookCategoryRepository;
-    @Autowired
-    BooksRepository booksRepository;
+    private final BookCategoryRepository bookCategoryRepository;
+    private final BooksRepository booksRepository;
 
     @Override
     public void deleteGenre(Integer id) throws GenreException {
@@ -30,7 +29,7 @@ public class GenreServiceImpl implements GenreService {
                 booksRepository.save(book);
             }
             bookCategoryRepository.deleteById(id);
-            if (bookCategoryRepository.findById(id).isPresent()) throw new GenreException("Failed to delete Genre");
+            //if (bookCategoryRepository.findById(id).isPresent()) throw new GenreException("Failed to delete Genre");
         } else throw new GenreException("Failed to delete Genre");
     }
 
@@ -39,7 +38,7 @@ public class GenreServiceImpl implements GenreService {
         BookCategory bookCategory = new BookCategory();
         bookCategory.setName(name);
         if (bookCategoryRepository.findByName(name) != null) throw new GenreException("This category already exists!");
-        if (bookCategoryRepository.save(bookCategory) == null) throw new GenreException("Failed to create new Genre");
+        bookCategoryRepository.save(bookCategory);
     }
 
     @Override
@@ -48,7 +47,7 @@ public class GenreServiceImpl implements GenreService {
         if (optionalBookCategory.isPresent()) {
             BookCategory bookCategory = optionalBookCategory.get();
             bookCategory.setName(newName);
-            if (bookCategoryRepository.save(bookCategory) == null) throw new GenreException("Failed to edit Genre");
+            bookCategoryRepository.save(bookCategory);
         } else {
             throw new GenreException("Failed to find Genre with that ID");
         }

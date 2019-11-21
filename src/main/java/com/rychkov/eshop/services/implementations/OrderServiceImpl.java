@@ -11,7 +11,7 @@ import com.rychkov.eshop.exceptions.ProcessOrderException;
 import com.rychkov.eshop.exceptions.ReturnBooksToStockException;
 import com.rychkov.eshop.repositorys.*;
 import com.rychkov.eshop.services.OrderService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
@@ -20,28 +20,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @Service
 public class OrderServiceImpl implements OrderService {
 
     public static final String INITIAL_ORDER_STATUS = "REGISTERED";
     public static final String INITIAL_PAYMENT_STATUS = "NOT PAYED";
 
-    @Autowired
-    BooksRepository booksRepository;
-    @Autowired
-    PaymentMethodsRepository paymentMethodsRepository;
-    @Autowired
-    DeliveryMethodsRepository deliveryMethodsRepository;
-    @Autowired
-    OrderStatusRepository orderStatusRepository;
-    @Autowired
-    OrdersRepository ordersRepository;
-    @Autowired
-    PaymentStatusRepository paymentStatusRepository;
-    @Autowired
-    AddressesRepository addressesRepository;
-    @Autowired
-    UserRepository userRepository;
+    private final BooksRepository booksRepository;
+    private final PaymentMethodsRepository paymentMethodsRepository;
+    private final DeliveryMethodsRepository deliveryMethodsRepository;
+    private final OrderStatusRepository orderStatusRepository;
+    private final OrdersRepository ordersRepository;
+    private final PaymentStatusRepository paymentStatusRepository;
+    private final AddressesRepository addressesRepository;
+    private final UserRepository userRepository;
 
     @Override
     @Transactional

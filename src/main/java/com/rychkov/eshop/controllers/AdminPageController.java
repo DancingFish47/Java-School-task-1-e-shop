@@ -10,32 +10,24 @@ import com.rychkov.eshop.repositorys.BooksRepository;
 import com.rychkov.eshop.repositorys.OrderStatusRepository;
 import com.rychkov.eshop.repositorys.PaymentStatusRepository;
 import com.rychkov.eshop.services.*;
+import lombok.RequiredArgsConstructor;
 import net.minidev.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+@RequiredArgsConstructor
 @Controller
 public class AdminPageController {
-    @Autowired
-    BooksRepository booksRepository;
-    @Autowired
-    BookCategoryRepository bookCategoryRepository;
-    @Autowired
-    AdminService adminService;
-    @Autowired
-    BookService bookService;
-    @Autowired
-    OrderService orderService;
-    @Autowired
-    UserService userService;
-    @Autowired
-    OrderStatusRepository orderStatusRepository;
-    @Autowired
-    PaymentStatusRepository paymentStatusRepository;
-    @Autowired
-    GenreService genreService;
+    private final BooksRepository booksRepository;
+    private final BookCategoryRepository bookCategoryRepository;
+    private final AdminService adminService;
+    private final BookService bookService;
+    private final OrderService orderService;
+    private final UserService userService;
+    private final OrderStatusRepository orderStatusRepository;
+    private final PaymentStatusRepository paymentStatusRepository;
+    private final GenreService genreService;
 
     @GetMapping(value = "/adminPage")
     public String adminPage() {

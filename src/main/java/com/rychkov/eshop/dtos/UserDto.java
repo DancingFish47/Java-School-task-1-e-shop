@@ -3,7 +3,6 @@ package com.rychkov.eshop.dtos;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import org.junit.validator.ValidateWith;
 
 import javax.validation.Constraint;
 import javax.validation.ConstraintValidator;
@@ -11,10 +10,9 @@ import javax.validation.ConstraintValidatorContext;
 import javax.validation.Payload;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.lang.annotation.*;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 @Data
 @Getter
@@ -47,7 +45,7 @@ public class UserDto {
 
     @Retention(RetentionPolicy.RUNTIME)
     @Documented
-    @Constraint(validatedBy = { UserDtoValidator.class })
+    @Constraint(validatedBy = {UserDtoValidator.class})
     public @interface UserDtoValidate {
         String message() default "Incorrect date!";
 
@@ -58,7 +56,7 @@ public class UserDto {
     }
 
 
-//TODO ASK WHY ITS NOT WORKING
+    //TODO ASK WHY ITS NOT WORKING
     public static class UserDtoValidator implements ConstraintValidator<UserDtoValidate, UserDto> {
         @Override
         public boolean isValid(UserDto userDto, ConstraintValidatorContext constraintValidatorContext) {

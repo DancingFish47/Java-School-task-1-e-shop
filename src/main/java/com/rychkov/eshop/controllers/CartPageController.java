@@ -9,8 +9,8 @@ import com.rychkov.eshop.exceptions.ReturnBooksToStockException;
 import com.rychkov.eshop.repositorys.OrdersRepository;
 import com.rychkov.eshop.services.CartService;
 import com.rychkov.eshop.services.OrderService;
+import lombok.RequiredArgsConstructor;
 import net.minidev.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,21 +21,19 @@ import java.util.Optional;
 
 
 @Controller
+@RequiredArgsConstructor
 public class CartPageController {
-    @Autowired
-    CartService cartService;
-    @Autowired
-    OrdersRepository ordersRepository;
-    @Autowired
-    OrderService orderService;
+    private final CartService cartService;
+    private final OrdersRepository ordersRepository;
+    private final OrderService orderService;
 
     @GetMapping("/cart")
     public String cartpage(HttpSession session, Model model) throws ReturnBooksToStockException {
         List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
-        if(session.getAttribute("orderId") != null){
+        if (session.getAttribute("orderId") != null) {
             Integer orderId = (Integer) session.getAttribute("orderId");
             Optional<Order> optionalOrder = ordersRepository.findById(orderId);
-            if (optionalOrder.isPresent()){
+            if (optionalOrder.isPresent()) {
                 Order order = optionalOrder.get();
                 orderService.returnBooks(order);
                 ordersRepository.delete(order);
@@ -56,7 +54,7 @@ public class CartPageController {
 
     @RequestMapping(value = "/deleteFromCart", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject deleteFromCart(@RequestBody JSONObject deleteId, HttpSession session) {
+    public JSONObject deleteFromCart(@RequestBody Integer deleteId, HttpSession session) {
         JSONObject result;
         result = cartService.deleteItem(session, deleteId);
         return result;

@@ -1,28 +1,16 @@
 package com.rychkov.eshop.controllers;
 
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class HomepageController {
-    @Autowired
-    RabbitTemplate template;
 
     @GetMapping({"/", "/homepage"})
     public String homepage() {
         return "redirect:/books";
     }
 
-    @GetMapping("/emit")
-    @ResponseBody
-    public String emit() {
-        template.setExchange("books_fanout");
-        template.convertAndSend("Fanout message");
-        return "Emit to exchange-example-3";
-    }
 }
 /*
   TODO
@@ -40,6 +28,7 @@ public class HomepageController {
         17) mockito?
         18) Selenium + CI*
                          19) LIGHT THEME FOR REVIEW
+                         20)Front validation edit rules
 
 
 */

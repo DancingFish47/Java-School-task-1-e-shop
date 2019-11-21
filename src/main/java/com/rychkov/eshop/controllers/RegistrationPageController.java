@@ -1,28 +1,26 @@
 package com.rychkov.eshop.controllers;
 
 import com.rychkov.eshop.dtos.UserDto;
-import com.rychkov.eshop.entitys.User;
 import com.rychkov.eshop.exceptions.EmailExistsException;
 import com.rychkov.eshop.exceptions.UsernameExistsException;
 import com.rychkov.eshop.services.UserService;
+import lombok.RequiredArgsConstructor;
 import net.minidev.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
-import java.util.Objects;
 
 @Controller
+@RequiredArgsConstructor
 @Validated
 public class RegistrationPageController {
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
     @RequestMapping(value = "/registration", method = RequestMethod.GET)
     public String showRegistrationForm() {

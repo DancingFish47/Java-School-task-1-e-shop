@@ -1,6 +1,5 @@
 package com.rychkov.eshop.configurations;
 
-import com.rychkov.eshop.dtos.UserDto;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -20,13 +19,6 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 
-import javax.validation.Constraint;
-import javax.validation.Payload;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
 
 @Configuration
 @EnableRabbit
@@ -39,6 +31,12 @@ public class AppConfiguration implements WebMvcConfigurer {
 
     @Autowired
     private ApplicationContext applicationContext;
+
+    @Bean
+    public static PropertySourcesPlaceholderConfigurer propertyPlaceholderConfigurer() {
+
+        return new PropertySourcesPlaceholderConfigurer();
+    }
 
     @Bean
     public SpringResourceTemplateResolver templateResolver() {
@@ -58,13 +56,6 @@ public class AppConfiguration implements WebMvcConfigurer {
         return templateEngine;
     }
 
-    @Bean
-    public static PropertySourcesPlaceholderConfigurer propertyPlaceholderConfigurer() {
-
-        return new PropertySourcesPlaceholderConfigurer();
-    }
-
-
     @Override
     public void configureViewResolvers(ViewResolverRegistry registry) {
         ThymeleafViewResolver resolver = new ThymeleafViewResolver();
@@ -79,9 +70,6 @@ public class AppConfiguration implements WebMvcConfigurer {
         registry.addResourceHandler("/images/**").addResourceLocations("classpath:/static/images/");
         registry.addResourceHandler("/fonts/**").addResourceLocations("classpath:/static/fonts/");
     }
-
-
-
 
 
 }

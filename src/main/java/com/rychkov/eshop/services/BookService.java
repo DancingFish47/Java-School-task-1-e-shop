@@ -5,7 +5,6 @@ import com.rychkov.eshop.entitys.Book;
 import com.rychkov.eshop.exceptions.BookException;
 import org.springframework.data.domain.Page;
 
-import java.util.List;
 import java.util.Map;
 
 public interface BookService {

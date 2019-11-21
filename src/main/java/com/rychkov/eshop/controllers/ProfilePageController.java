@@ -8,8 +8,8 @@ import com.rychkov.eshop.exceptions.PasswordMismatchException;
 import com.rychkov.eshop.repositorys.AddressesRepository;
 import com.rychkov.eshop.repositorys.UserRepository;
 import com.rychkov.eshop.services.UserService;
+import lombok.RequiredArgsConstructor;
 import net.minidev.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -18,14 +18,12 @@ import java.security.Principal;
 import java.util.Optional;
 
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/profileSettings")
 public class ProfilePageController {
-    @Autowired
-    AddressesRepository addressesRepository;
-    @Autowired
-    UserService userService;
-    @Autowired
-    UserRepository userRepository;
+    private final AddressesRepository addressesRepository;
+    private final UserService userService;
+    private final UserRepository userRepository;
 
     @GetMapping
     public String profileSettings(Model model, Principal principal) {

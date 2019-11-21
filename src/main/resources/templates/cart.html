@@ -25,7 +25,8 @@
                 <td th:text="${item.quantity}"></td>
                 <td th:text="${item.book.price + '$'}"></td>
                 <td>
-                    <button class="row btn btn-danger" th:onclick="'javascript:deleteFromCart(\'' + ${item.book.id} + '\');'"
+                    <button class="row btn btn-danger"
+                            th:onclick="'javascript:deleteFromCart(\'' + ${item.book.id} + '\');'"
                             type="button">Delete
                     </button>
                 </td>

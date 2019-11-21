@@ -12,8 +12,8 @@
         <table class="table" id="ordersTable" th:if="${!#lists.isEmpty(ordersAndBooks)}">
             <thead>
             <tr>
-                <th scope="col" onclick="sortByValue(0, 'ordersTable')">Order Id</th>
-                <th scope="col" onclick="sortByName(1, 'ordersTable')">User</th>
+                <th onclick="sortByValue(0, 'ordersTable')" scope="col">Order Id</th>
+                <th onclick="sortByName(1, 'ordersTable')" scope="col">User</th>
                 <th scope="col">Address</th>
                 <th scope="col">Payment Status</th>
                 <th scope="col">Order Status</th>
@@ -33,15 +33,19 @@
                     <p th:text="${orderAndBook.order.address.zip}"></p>
                 </td>
                 <td>
-                    <select class="custom-select" th:id="${'paymentStatus' + orderAndBook.order.id}" th:onchange="'javascript:onChangePaymentStatus(\'' + ${orderAndBook.order.id} + '\');'">
-                        <option th:each="status : ${paymentStatus}" th:text="${status.name}"
-                                th:value="${status.name}" th:selected="${status.name == orderAndBook.order.paymentStatus.name}"></option>
+                    <select class="custom-select" th:id="${'paymentStatus' + orderAndBook.order.id}"
+                            th:onchange="'javascript:onChangePaymentStatus(\'' + ${orderAndBook.order.id} + '\');'">
+                        <option th:each="status : ${paymentStatus}" th:selected="${status.name == orderAndBook.order.paymentStatus.name}"
+                                th:text="${status.name}"
+                                th:value="${status.name}"></option>
                     </select>
                 </td>
                 <td>
-                    <select class="custom-select" th:id="${'orderStatus' + orderAndBook.order.id}" th:onchange="'javascript:onChangeOrderStatus(\'' + ${orderAndBook.order.id} + '\');'">
-                        <option th:each="status : ${orderStatus}" th:text="${status.name}"
-                                th:value="${status.name}" th:selected="${status.name == orderAndBook.order.orderStatus.name}"></option>
+                    <select class="custom-select" th:id="${'orderStatus' + orderAndBook.order.id}"
+                            th:onchange="'javascript:onChangeOrderStatus(\'' + ${orderAndBook.order.id} + '\');'">
+                        <option th:each="status : ${orderStatus}" th:selected="${status.name == orderAndBook.order.orderStatus.name}"
+                                th:text="${status.name}"
+                                th:value="${status.name}"></option>
                     </select>
                 </td>
                 <td>

@@ -603,14 +603,11 @@ async function addToCart(id) {
 /*
 Cart page functions
  */
-async function deleteFromCart(id) {
-    const deleteRow = document.getElementById("row" + id);
+async function deleteFromCart(deleteId) {
+    const deleteRow = document.getElementById("row" + deleteId);
     const totalField = document.getElementById("total");
     const table = document.getElementById("table");
     const div = document.getElementById("div");
-    let deleteId = {
-        id: id
-    };
     let call = await fetch("/deleteFromCart", {
         method: 'POST',
         headers: {

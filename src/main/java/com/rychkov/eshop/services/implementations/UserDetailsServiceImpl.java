@@ -2,6 +2,7 @@ package com.rychkov.eshop.services.implementations;
 
 import com.rychkov.eshop.entitys.User;
 import com.rychkov.eshop.repositorys.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

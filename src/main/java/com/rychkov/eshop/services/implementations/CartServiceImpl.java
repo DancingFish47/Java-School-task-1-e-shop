@@ -1,17 +1,16 @@
 package com.rychkov.eshop.services.implementations;
 
-import com.rychkov.eshop.configurations.ScheduledTasks;
+import com.rychkov.eshop.dtos.AddItemDto;
 import com.rychkov.eshop.dtos.CartItem;
 import com.rychkov.eshop.entitys.Book;
 import com.rychkov.eshop.entitys.Order;
 import com.rychkov.eshop.exceptions.OutOfStockException;
-import com.rychkov.eshop.exceptions.ProcessOrderException;
 import com.rychkov.eshop.repositorys.BooksRepository;
 import com.rychkov.eshop.repositorys.OrderStatusRepository;
 import com.rychkov.eshop.repositorys.OrdersRepository;
 import com.rychkov.eshop.services.CartService;
+import lombok.RequiredArgsConstructor;
 import net.minidev.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
@@ -21,21 +20,17 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class CartServiceImpl implements CartService {
-    @Autowired
-    ScheduledTasks scheduledTasks;
-    @Autowired
-    BooksRepository booksRepository;
-    @Autowired
-    OrderStatusRepository orderStatusRepository;
-    @Autowired
-    OrdersRepository ordersRepository;
+    private final BooksRepository booksRepository;
+    private final OrderStatusRepository orderStatusRepository;
+    private final OrdersRepository ordersRepository;
 
     @Override
-    public JSONObject addItem(HttpSession session, JSONObject item) throws OutOfStockException {
+    public JSONObject addItem(HttpSession session, AddItemDto item) throws OutOfStockException {
         JSONObject result = new JSONObject();
-        Integer addBookId = Integer.valueOf((String) item.get("id"));
-        Integer quantity = Integer.valueOf((String) item.get("quantity"));
+        Integer addBookId = item.getId();
+        Integer quantity = item.getQuantity();
         Optional<Book> optionalBook = booksRepository.findById(addBookId);
         if (optionalBook.isPresent()) {
             Book book = optionalBook.get();
@@ -67,9 +62,8 @@ public class CartServiceImpl implements CartService {
 
     @Transactional
     @Override
-    public JSONObject deleteItem(HttpSession session, JSONObject item) {
+    public JSONObject deleteItem(HttpSession session, Integer deleteId) {
         JSONObject result = new JSONObject();
-        Integer deleteId = Integer.valueOf((String) item.get("id"));
         List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
 
         if (exists(deleteId, cart) == -1) {
