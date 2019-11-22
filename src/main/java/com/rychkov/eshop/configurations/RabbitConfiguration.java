@@ -11,6 +11,13 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RabbitConfiguration {
+    public static final String ADD_QUEUE_NAME = "addBook";
+    public static final String EDIT_QUEUE_NAME = "editBook";
+    static final String TOP_SELLERS_QUEUE_NAME = "topSellers";
+    static final String NEW_BOOKS_QUEUE_NAME = "newBooks";
+    public static final String DELETE_QUEUE_NAME = "deleteBook";
+    private static final String BOOKS_EXCHANGE_NAME = "books_exchange";
+
     @Bean
     public ConnectionFactory connectionFactory() {
         CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory("localhost");
@@ -31,58 +38,58 @@ public class RabbitConfiguration {
     }
 
     @Bean
-    public Queue myQueue2() {
-        return new Queue("newBooks");
+    public Queue newBooksQueue() {
+        return new Queue(NEW_BOOKS_QUEUE_NAME);
     }
 
     @Bean
-    public Queue myQueue3() {
-        return new Queue("editBook");
+    public Queue editBookQueue() {
+        return new Queue(EDIT_QUEUE_NAME);
     }
 
     @Bean
-    public Queue myQueue1() {
-        return new Queue("topSellers");
+    public Queue topSellersQueue() {
+        return new Queue(TOP_SELLERS_QUEUE_NAME);
     }
 
     @Bean
-    public Queue myQueue4() {
-        return new Queue("deleteBook");
+    public Queue deleteBookQueue() {
+        return new Queue(DELETE_QUEUE_NAME);
     }
 
     @Bean
-    public Queue myQueue5() {
-        return new Queue("addBook");
+    public Queue addBookQueue() {
+        return new Queue(ADD_QUEUE_NAME);
     }
 
     @Bean
     public DirectExchange directExchange() {
-        return new DirectExchange("books_exchange");
+        return new DirectExchange(BOOKS_EXCHANGE_NAME);
     }
 
     @Bean
-    public Binding binding1() {
-        return BindingBuilder.bind(myQueue2()).to(directExchange()).with("newBooks");
+    public Binding newBooksBinding() {
+        return BindingBuilder.bind(newBooksQueue()).to(directExchange()).with(NEW_BOOKS_QUEUE_NAME);
     }
 
     @Bean
-    public Binding binding2() {
-        return BindingBuilder.bind(myQueue1()).to(directExchange()).with("topSellers");
+    public Binding topSellersBinding() {
+        return BindingBuilder.bind(topSellersQueue()).to(directExchange()).with(TOP_SELLERS_QUEUE_NAME);
     }
 
     @Bean
-    public Binding binding3() {
-        return BindingBuilder.bind(myQueue3()).to(directExchange()).with("editBook");
+    public Binding editBookBinding() {
+        return BindingBuilder.bind(editBookQueue()).to(directExchange()).with(EDIT_QUEUE_NAME);
     }
 
     @Bean
-    public Binding binding4() {
-        return BindingBuilder.bind(myQueue4()).to(directExchange()).with("deleteBook");
+    public Binding deleteBookBinding() {
+        return BindingBuilder.bind(deleteBookQueue()).to(directExchange()).with(DELETE_QUEUE_NAME);
     }
 
     @Bean
-    public Binding binding5() {
-        return BindingBuilder.bind(myQueue5()).to(directExchange()).with("addBook");
+    public Binding addBookBinding() {
+        return BindingBuilder.bind(addBookQueue()).to(directExchange()).with(ADD_QUEUE_NAME);
     }
 
     @Bean

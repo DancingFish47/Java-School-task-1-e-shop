@@ -7,6 +7,8 @@ import java.util.List;
 
 @Data
 @Builder(toBuilder = true)
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
 public class OrderInfoDto {
     private Integer creditCardDateYear;
     private Integer creditCardCvv;

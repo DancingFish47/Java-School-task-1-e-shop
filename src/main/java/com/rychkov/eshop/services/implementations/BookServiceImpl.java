@@ -19,6 +19,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
+import static com.rychkov.eshop.configurations.RabbitConfiguration.*;
+
 @RequiredArgsConstructor
 @Service
 public class BookServiceImpl implements BookService {
@@ -56,7 +58,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public void deleteBookById(Integer bookId) throws BookException {
         booksRepository.deleteById(bookId);
-        template.convertAndSend("deleteBook", bookId);
+        template.convertAndSend(DELETE_QUEUE_NAME, bookId);
         if (booksRepository.findById(bookId).isPresent()) throw new BookException("Failed to delete book");
     }
 
@@ -65,7 +67,7 @@ public class BookServiceImpl implements BookService {
         Book book = new Book();
         BookDtoToBook(bookDto, book);
         booksRepository.save(book);
-        template.convertAndSend("addBook", book);
+        template.convertAndSend(ADD_QUEUE_NAME, book);
     }
 
     @Override
@@ -75,7 +77,7 @@ public class BookServiceImpl implements BookService {
             Book book = optionalBook.get();
             BookDtoToBook(bookDto, book);
             booksRepository.save(book);
-            template.convertAndSend("editBook", book);
+            template.convertAndSend(EDIT_QUEUE_NAME, book);
         } else throw new BookException("Failed to edit book details");
     }
 

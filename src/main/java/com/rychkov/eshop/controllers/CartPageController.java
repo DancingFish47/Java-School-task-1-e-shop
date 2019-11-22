@@ -32,9 +32,6 @@ public class CartPageController {
     @GetMapping("/cart")
     public String cartpage(HttpSession session, Model model) throws ReturnBooksToStockException {
         Cart cart = (Cart) session.getAttribute("cart");
-
-
-
         if (session.getAttribute("orderId") != null) {
             Integer orderId = (Integer) session.getAttribute("orderId");
             Optional<Order> optionalOrder = ordersRepository.findById(orderId);

@@ -12,6 +12,7 @@ import com.rychkov.eshop.exceptions.ReturnBooksToStockException;
 import com.rychkov.eshop.repositories.*;
 import com.rychkov.eshop.services.OrderService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
@@ -20,12 +21,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.rychkov.eshop.configurations.RabbitConfiguration.EDIT_QUEUE_NAME;
+
 @RequiredArgsConstructor
 @Service
 public class OrderServiceImpl implements OrderService {
 
-    public static final String INITIAL_ORDER_STATUS = "REGISTERED";
-    public static final String INITIAL_PAYMENT_STATUS = "NOT PAYED";
+    static final String INITIAL_ORDER_STATUS = "REGISTERED";
+    static final String INITIAL_PAYMENT_STATUS = "NOT PAYED";
 
     private final BooksRepository booksRepository;
     private final PaymentMethodsRepository paymentMethodsRepository;
@@ -35,6 +38,7 @@ public class OrderServiceImpl implements OrderService {
     private final PaymentStatusRepository paymentStatusRepository;
     private final AddressesRepository addressesRepository;
     private final UserRepository userRepository;
+    private final RabbitTemplate rabbitTemplate;
 
     @Override
     @Transactional
@@ -51,6 +55,8 @@ public class OrderServiceImpl implements OrderService {
                 int newSold = book.getSold() + item.getQuantity();
                 book.setSold(newSold);
                 booksRepository.save(book);
+                //TODO rabbitmq message on finishing order since book data is changed
+                rabbitTemplate.convertAndSend(EDIT_QUEUE_NAME, book);
                 totalPrice += item.getBook().getPrice() * item.getQuantity();
             } else {
                 throw new ProcessOrderException("Book " + item.getBook().getName() + " is not found");

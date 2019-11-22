@@ -16,6 +16,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+import static com.rychkov.eshop.configurations.RabbitConfiguration.NEW_BOOKS_QUEUE_NAME;
+import static com.rychkov.eshop.configurations.RabbitConfiguration.TOP_SELLERS_QUEUE_NAME;
+
 @RequiredArgsConstructor
 @PropertySource("classpath:properties.properties")
 @Component
@@ -49,9 +52,9 @@ public class ScheduledTasks {
     @Scheduled(cron = "${scheduled.cron}")
     public void sendTopLists() {
         List<Book> topBooks = booksRepository.findTop10ByOrderBySoldDesc();
-        rabbitTemplate.convertAndSend("topSellers", topBooks);
+        rabbitTemplate.convertAndSend(TOP_SELLERS_QUEUE_NAME, topBooks);
         List<Book> newBooks = booksRepository.findTop10ByOrderByDateDesc();
-        rabbitTemplate.convertAndSend("newBooks", newBooks);
+        rabbitTemplate.convertAndSend(NEW_BOOKS_QUEUE_NAME, newBooks);
 
     }
 }
