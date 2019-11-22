@@ -3,8 +3,9 @@ package com.rychkov.eshop.services.implementations;
 import com.rychkov.eshop.configurations.AppConfiguration;
 import com.rychkov.eshop.configurations.PersistenceJPAConfig;
 import com.rychkov.eshop.dtos.BookDto;
-import com.rychkov.eshop.entitys.Book;
-import com.rychkov.eshop.repositorys.BooksRepository;
+import com.rychkov.eshop.dtos.PageParams;
+import com.rychkov.eshop.entities.Book;
+import com.rychkov.eshop.repositories.BooksRepository;
 import com.rychkov.eshop.services.BookService;
 import org.junit.After;
 import org.junit.Test;
@@ -36,9 +37,8 @@ public class BookServiceImplTest {
             book.setName("Test" + i);
             booksRepository.save(book);
         }
-        Map<String, String> params = new HashMap<>();
-        params.put("page", "1");
-        assertTrue(bookService.prepareBooksList(params).getTotalElements() > 0);
+        PageParams pageParams = PageParams.builder().page(1).build();
+        assertTrue(bookService.prepareBooksList(pageParams).getTotalElements() > 0);
     }
 
     @Test

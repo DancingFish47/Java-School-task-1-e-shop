@@ -1,11 +1,19 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
-<head>
-</head>
-<body>
-<p th:text="${exception}"></p>
-<p th:text="${url}"></p>
-<p th:text="${accessdenied}"></p>
+<head th:insert="htmlparts/header.html"></head>
+<body class="bg-light">
+<nav th:replace="~{htmlparts/navbar.html :: navbar (books='active') }"></nav>
+
+<div class="container bg-light">
+    <div class="container bg-light">
+<div id="serviceOff" style="position: fixed; top: 30%; left: 40%;">
+    <img src="/images/errorCat.png" style="margin-left:auto; margin-right: auto" alt="ErrorImage">
+    <h3 th:text="${'Exception: ' + exception}"></h3>
+    <h3 th:text="${'Url: ' + url}"></h3>
+    <h3 th:text="${accessdenied}"></h3>
+</div>
+    </div>
+</div>
 </body>
 </html>

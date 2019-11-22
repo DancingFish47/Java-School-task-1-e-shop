@@ -1,12 +1,14 @@
 package com.rychkov.eshop.controllers;
 
 
+import com.rychkov.eshop.dtos.Cart;
 import com.rychkov.eshop.dtos.CartItem;
-import com.rychkov.eshop.entitys.Order;
+import com.rychkov.eshop.entities.Order;
+import com.rychkov.eshop.exceptions.BookException;
 import com.rychkov.eshop.exceptions.OutOfStockException;
 import com.rychkov.eshop.exceptions.ProcessOrderException;
 import com.rychkov.eshop.exceptions.ReturnBooksToStockException;
-import com.rychkov.eshop.repositorys.OrdersRepository;
+import com.rychkov.eshop.repositories.OrdersRepository;
 import com.rychkov.eshop.services.CartService;
 import com.rychkov.eshop.services.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +31,10 @@ public class CartPageController {
 
     @GetMapping("/cart")
     public String cartpage(HttpSession session, Model model) throws ReturnBooksToStockException {
-        List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
+        Cart cart = (Cart) session.getAttribute("cart");
+
+
+
         if (session.getAttribute("orderId") != null) {
             Integer orderId = (Integer) session.getAttribute("orderId");
             Optional<Order> optionalOrder = ordersRepository.findById(orderId);
@@ -40,13 +45,16 @@ public class CartPageController {
                 session.setAttribute("orderId", null);
             }
         }
+
         float total = 0;
-        model.addAttribute("cart", cart);
-        if (cart != null) {
-            for (CartItem cartItem : cart) {
-                total += cartItem.getBook().getPrice() * cartItem.getQuantity();
+        if(cart != null){
+            model.addAttribute("cart", cart.getCartItems());
+            if (cart.getCartItems() != null) {
+                for (CartItem cartItem : cart.getCartItems()) {
+                    total += cartItem.getBook().getPrice() * cartItem.getQuantity();
+                }
+                model.addAttribute("total", total);
             }
-            model.addAttribute("total", total);
         }
 
         return "cart";
@@ -54,16 +62,29 @@ public class CartPageController {
 
     @RequestMapping(value = "/deleteFromCart", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject deleteFromCart(@RequestBody Integer deleteId, HttpSession session) {
-        JSONObject result;
-        result = cartService.deleteItem(session, deleteId);
+    public JSONObject deleteFromCart(@RequestBody Integer deleteId, HttpSession session) throws BookException {
+        JSONObject result = new JSONObject();
+        Cart cart = (Cart) session.getAttribute("cart");
+        if(cart == null){
+            cart = new Cart();
+            session.setAttribute("cart", cart);
+        }
+        cartService.deleteItem(cart, deleteId);
+        result.put("error", false);
+        result.put("message", "Book's deleted from your cart!");
         return result;
     }
 
     @RequestMapping(value = "/checkStocks", method = RequestMethod.POST)
     @ResponseBody
     public JSONObject checkStocks(HttpSession session) throws ProcessOrderException, OutOfStockException {
-        cartService.checkStocksAndCreateTempOrder(session);
+        Cart cart = (Cart) session.getAttribute("cart");
+        if(cart == null){
+            cart = new Cart();
+            session.setAttribute("cart", cart);
+        }
+        int orderId = cartService.checkStocksAndCreateTempOrder(cart);
+        session.setAttribute("orderId", orderId);
         return new JSONObject();
     }
 }

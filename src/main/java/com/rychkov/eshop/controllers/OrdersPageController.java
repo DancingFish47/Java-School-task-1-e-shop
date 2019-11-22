@@ -1,5 +1,6 @@
 package com.rychkov.eshop.controllers;
 
+import com.rychkov.eshop.dtos.Cart;
 import com.rychkov.eshop.dtos.CartItem;
 import com.rychkov.eshop.exceptions.FailedToRepeatOrderException;
 import com.rychkov.eshop.services.OrderService;
@@ -31,8 +32,9 @@ public class OrdersPageController {
     @ResponseBody
     public JSONObject repeatOrder(@RequestBody Integer orderId, HttpSession session) throws FailedToRepeatOrderException {
         JSONObject result = new JSONObject();
-        List<CartItem> repeatCart = orderService.repeatCartFromOrder(orderId);
-        session.setAttribute("cart", repeatCart);
+        Cart cart = new Cart();
+        cart.setCartItems(orderService.repeatCartFromOrder(orderId));
+        session.setAttribute("cart", cart);
         result.put("message", "Chosen order was copied to your cart!");
         return result;
     }

@@ -1,7 +1,7 @@
-package com.rychkov.eshop.repositorys;
+package com.rychkov.eshop.repositories;
 
-import com.rychkov.eshop.entitys.Book;
-import com.rychkov.eshop.entitys.BookCategory;
+import com.rychkov.eshop.entities.Book;
+import com.rychkov.eshop.entities.BookCategory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;

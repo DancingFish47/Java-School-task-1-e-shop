@@ -1,10 +1,10 @@
 package com.rychkov.eshop.services.implementations;
 
-import com.rychkov.eshop.entitys.Book;
-import com.rychkov.eshop.entitys.BookCategory;
+import com.rychkov.eshop.entities.Book;
+import com.rychkov.eshop.entities.BookCategory;
 import com.rychkov.eshop.exceptions.GenreException;
-import com.rychkov.eshop.repositorys.BookCategoryRepository;
-import com.rychkov.eshop.repositorys.BooksRepository;
+import com.rychkov.eshop.repositories.BookCategoryRepository;
+import com.rychkov.eshop.repositories.BooksRepository;
 import com.rychkov.eshop.services.GenreService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -2,7 +2,7 @@ package com.rychkov.eshop.services.implementations;
 
 import com.rychkov.eshop.configurations.AppConfiguration;
 import com.rychkov.eshop.configurations.PersistenceJPAConfig;
-import com.rychkov.eshop.repositorys.BookCategoryRepository;
+import com.rychkov.eshop.repositories.BookCategoryRepository;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;

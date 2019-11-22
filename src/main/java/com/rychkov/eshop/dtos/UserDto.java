@@ -15,8 +15,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @Data
-@Getter
-@Setter
 @UserDto.UserDtoValidate
 public class UserDto {
     @NotNull
@@ -56,7 +54,7 @@ public class UserDto {
     }
 
 
-    //TODO ASK WHY ITS NOT WORKING
+    //TODO ask why its not working
     public static class UserDtoValidator implements ConstraintValidator<UserDtoValidate, UserDto> {
         @Override
         public boolean isValid(UserDto userDto, ConstraintValidatorContext constraintValidatorContext) {

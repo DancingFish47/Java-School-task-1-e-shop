@@ -2,10 +2,10 @@ package com.rychkov.eshop.services.implementations;
 
 import com.rychkov.eshop.configurations.AppConfiguration;
 import com.rychkov.eshop.configurations.PersistenceJPAConfig;
-import com.rychkov.eshop.entitys.Book;
-import com.rychkov.eshop.entitys.User;
-import com.rychkov.eshop.repositorys.BooksRepository;
-import com.rychkov.eshop.repositorys.UserRepository;
+import com.rychkov.eshop.entities.Book;
+import com.rychkov.eshop.entities.User;
+import com.rychkov.eshop.repositories.BooksRepository;
+import com.rychkov.eshop.repositories.UserRepository;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,7 +39,7 @@ public class AdminServiceImplTest {
 
     @Test
     public void getTopUsersList() {
-        User user = new User();
+        User user = User.builder().build();
         userRepository.save(user);
         assertNotNull(adminService.getTopUsersList());
     }

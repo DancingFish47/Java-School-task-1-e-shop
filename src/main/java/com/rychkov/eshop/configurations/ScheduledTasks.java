@@ -1,10 +1,10 @@
 package com.rychkov.eshop.configurations;
 
-import com.rychkov.eshop.entitys.Book;
-import com.rychkov.eshop.entitys.Order;
+import com.rychkov.eshop.entities.Book;
+import com.rychkov.eshop.entities.Order;
 import com.rychkov.eshop.exceptions.ReturnBooksToStockException;
-import com.rychkov.eshop.repositorys.BooksRepository;
-import com.rychkov.eshop.repositorys.OrdersRepository;
+import com.rychkov.eshop.repositories.BooksRepository;
+import com.rychkov.eshop.repositories.OrdersRepository;
 import com.rychkov.eshop.services.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;

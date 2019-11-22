@@ -1,6 +1,6 @@
-package com.rychkov.eshop.repositorys;
+package com.rychkov.eshop.repositories;
 
-import com.rychkov.eshop.entitys.BookCategory;
+import com.rychkov.eshop.entities.BookCategory;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

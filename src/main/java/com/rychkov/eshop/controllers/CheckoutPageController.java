@@ -1,12 +1,13 @@
 package com.rychkov.eshop.controllers;
 
+import com.rychkov.eshop.dtos.Cart;
 import com.rychkov.eshop.dtos.CartItem;
 import com.rychkov.eshop.dtos.OrderInfoDto;
 import com.rychkov.eshop.exceptions.ProcessOrderException;
-import com.rychkov.eshop.repositorys.AddressesRepository;
-import com.rychkov.eshop.repositorys.DeliveryMethodsRepository;
-import com.rychkov.eshop.repositorys.PaymentMethodsRepository;
-import com.rychkov.eshop.repositorys.UserRepository;
+import com.rychkov.eshop.repositories.AddressesRepository;
+import com.rychkov.eshop.repositories.DeliveryMethodsRepository;
+import com.rychkov.eshop.repositories.PaymentMethodsRepository;
+import com.rychkov.eshop.repositories.UserRepository;
 import com.rychkov.eshop.services.OrderService;
 import lombok.RequiredArgsConstructor;
 import net.minidev.json.JSONObject;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
-import java.util.List;
 
 @RequiredArgsConstructor
 @Controller
@@ -30,12 +30,12 @@ public class CheckoutPageController {
 
     @GetMapping("/checkout")
     public String checkoutPage(HttpSession session, Model model, Principal principal) {
-        List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
+        Cart cart = (Cart) session.getAttribute("cart");
 
         float total = 0;
-        model.addAttribute("cart", cart);
-        if (cart != null) {
-            for (CartItem cartItem : cart) {
+        model.addAttribute("cart", cart.getCartItems());
+        if (cart.getCartItems() != null) {
+            for (CartItem cartItem : cart.getCartItems()) {
                 total += cartItem.getBook().getPrice() * cartItem.getQuantity();
             }
             model.addAttribute("total", total);
@@ -51,9 +51,13 @@ public class CheckoutPageController {
     @ResponseBody
     public JSONObject processOrder(@RequestBody OrderInfoDto orderInfo, Principal principal, HttpSession session) throws ProcessOrderException {
         JSONObject result = new JSONObject();
+        Cart cart = (Cart) session.getAttribute("cart");
+        Integer orderId = (Integer) session.getAttribute("orderId");
+        if((cart == null) || (orderId == null)) throw new ProcessOrderException("Something went wrong");
+
         orderInfo.setUser(userRepository.findByUsername(principal.getName()));
-        orderInfo.setCartItems((List<CartItem>) session.getAttribute("cart"));
-        orderService.newOrder(orderInfo, session);
+        orderInfo.setCartItems(cart.getCartItems());
+        orderService.completeOrder(orderInfo, orderId);
         session.setAttribute("cart", null);
         session.setAttribute("orderId", null);
         result.put("message", "Your order registered!");

@@ -1,8 +1,6 @@
-package com.rychkov.eshop.entitys;
+package com.rychkov.eshop.entities;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,9 +16,10 @@ import java.util.Collection;
 
 @Entity
 @Data
-@Getter
-@Setter
 @Transactional
+@Builder(toBuilder = true)
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
 @Table(name = "User")
 public class User extends AbstractEntity implements UserDetails {
     @NotNull

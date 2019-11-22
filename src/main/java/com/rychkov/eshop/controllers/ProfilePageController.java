@@ -1,12 +1,16 @@
 package com.rychkov.eshop.controllers;
 
 
-import com.rychkov.eshop.entitys.Address;
-import com.rychkov.eshop.entitys.User;
+import com.rychkov.eshop.dtos.AddressDto;
+import com.rychkov.eshop.dtos.UserMainInfoDto;
+import com.rychkov.eshop.dtos.PasswordDto;
+import com.rychkov.eshop.entities.Address;
+import com.rychkov.eshop.entities.User;
 import com.rychkov.eshop.exceptions.FailedToDeleteAddressException;
+import com.rychkov.eshop.exceptions.JsonException;
 import com.rychkov.eshop.exceptions.PasswordMismatchException;
-import com.rychkov.eshop.repositorys.AddressesRepository;
-import com.rychkov.eshop.repositorys.UserRepository;
+import com.rychkov.eshop.repositories.AddressesRepository;
+import com.rychkov.eshop.repositories.UserRepository;
 import com.rychkov.eshop.services.UserService;
 import lombok.RequiredArgsConstructor;
 import net.minidev.json.JSONObject;
@@ -49,22 +53,17 @@ public class ProfilePageController {
 
     @RequestMapping(value = "/saveMainEdit", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject profileSaveMainSettings(@RequestBody JSONObject edit, Principal principal) {
+    public JSONObject profileSaveMainSettings(@RequestBody UserMainInfoDto edit, Principal principal) throws JsonException {
         JSONObject result = new JSONObject();
-        User user = userService.changeMainSettings(edit, userRepository.findByUsername(principal.getName()).getId());
-        if (user != null) {
-            result.put("error", false);
-            result.put("user", user);
-        } else {
-            result.put("error", true);
-            result.put("message", "Saving failed");
-        }
+        userService.editMainInfo(edit, userRepository.findByUsername(principal.getName()).getId());
+        result.put("error", false);
+        result.put("user", edit);
         return result;
     }
 
     @RequestMapping(value = "/changePassword", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject profileChangePassword(@RequestBody JSONObject edit, Principal principal) throws PasswordMismatchException {
+    public JSONObject profileChangePassword(@RequestBody PasswordDto edit, Principal principal) throws PasswordMismatchException {
         JSONObject result = new JSONObject();
         userService.changePassword(edit, userRepository.findByUsername(principal.getName()).getId());
         result.put("message", "Password changed!");
@@ -87,9 +86,9 @@ public class ProfilePageController {
 
     @RequestMapping(value = "/saveEditAddress", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject saveEditAddress(@RequestBody JSONObject edit) {
+    public JSONObject saveEditAddress(@RequestBody AddressDto edit) {
         JSONObject result = new JSONObject();
-        Address address = userService.editAddress(edit, (Integer) edit.get("id"));
+        Address address = userService.editAddress(edit);
         if (address != null) {
             result.put("error", false);
             result.put("message", "Address edited successfully!");
@@ -112,7 +111,7 @@ public class ProfilePageController {
 
     @RequestMapping(value = "/saveNewAddress", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject saveNewAddress(@RequestBody JSONObject newAddress, Principal principal) {
+    public JSONObject saveNewAddress(@RequestBody AddressDto newAddress, Principal principal) {
         JSONObject result = new JSONObject();
         User user = userRepository.findByUsername(principal.getName());
         Address address = userService.saveNewAddress(newAddress, user);

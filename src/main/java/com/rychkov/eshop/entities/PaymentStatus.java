@@ -1,5 +1,6 @@
-package com.rychkov.eshop.entitys;
+package com.rychkov.eshop.entities;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,10 +10,9 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Getter
-@Setter
-@Table(name = "Order_Status")
-public class OrderStatus extends AbstractEntity {
+@Data
+@Table(name = "Payment_Status")
+public class PaymentStatus extends AbstractEntity {
     @NotNull
     @Column(name = "name")
     private String name;

@@ -22,8 +22,8 @@
             <tbody>
             <tr th:each="item : ${cart}" th:id="${'row' + item.book.id}">
                 <td th:text="${item.book.name}"></td>
-                <td th:text="${item.quantity}"></td>
-                <td th:text="${item.book.price + '$'}"></td>
+                <td th:id="${'quantity' + item.book.id}" th:text="${item.quantity}"></td>
+                <td th:id="${'price' + item.book.id}" th:text="${item.book.price}"><p>$</p></td>
                 <td>
                     <button class="row btn btn-danger"
                             th:onclick="'javascript:deleteFromCart(\'' + ${item.book.id} + '\');'"
@@ -36,7 +36,7 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td id="total" th:text="${total + '$'}"></td>
+                <td id="total" th:text="${total}"><p>$</p></td>
             </tr>
             <tr>
                 <td></td>

@@ -26,7 +26,7 @@ import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 @EnableAsync
 @EnableWebMvc
 @ComponentScan(basePackages = "com.rychkov.eshop")
-@EnableJpaRepositories(value = "com.rychkov.eshop.repositorys")
+@EnableJpaRepositories(value = "com.rychkov.eshop.repositories")
 public class AppConfiguration implements WebMvcConfigurer {
 
     @Autowired

@@ -1,14 +1,15 @@
-package com.rychkov.eshop.entitys;
+package com.rychkov.eshop.entities;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Getter
-@Setter
+@Data
+@Builder(toBuilder = true)
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
 @Table(name = "Address")
 public class Address extends AbstractEntity {
     @ManyToOne(fetch = FetchType.EAGER)

@@ -1,15 +1,12 @@
 package com.rychkov.eshop.dtos;
 
-import com.rychkov.eshop.entitys.User;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import com.rychkov.eshop.entities.User;
+import lombok.*;
 
 import java.util.List;
 
 @Data
-@Getter
-@Setter
+@Builder(toBuilder = true)
 public class OrderInfoDto {
     private Integer creditCardDateYear;
     private Integer creditCardCvv;

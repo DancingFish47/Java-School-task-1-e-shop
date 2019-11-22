@@ -1,19 +1,18 @@
 package com.rychkov.eshop.services.implementations;
 
+import com.rychkov.eshop.dtos.AddressDto;
+import com.rychkov.eshop.dtos.UserMainInfoDto;
+import com.rychkov.eshop.dtos.PasswordDto;
 import com.rychkov.eshop.dtos.UserDto;
-import com.rychkov.eshop.entitys.Address;
-import com.rychkov.eshop.entitys.Order;
-import com.rychkov.eshop.entitys.User;
-import com.rychkov.eshop.exceptions.EmailExistsException;
-import com.rychkov.eshop.exceptions.FailedToDeleteAddressException;
-import com.rychkov.eshop.exceptions.PasswordMismatchException;
-import com.rychkov.eshop.exceptions.UsernameExistsException;
-import com.rychkov.eshop.repositorys.AddressesRepository;
-import com.rychkov.eshop.repositorys.OrdersRepository;
-import com.rychkov.eshop.repositorys.UserRepository;
+import com.rychkov.eshop.entities.Address;
+import com.rychkov.eshop.entities.Order;
+import com.rychkov.eshop.entities.User;
+import com.rychkov.eshop.exceptions.*;
+import com.rychkov.eshop.repositories.AddressesRepository;
+import com.rychkov.eshop.repositories.OrdersRepository;
+import com.rychkov.eshop.repositories.UserRepository;
 import com.rychkov.eshop.services.UserService;
 import lombok.RequiredArgsConstructor;
-import net.minidev.json.JSONObject;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -36,37 +35,36 @@ public class UserServiceImpl implements UserService {
         if (emailExists(userDto.getEmail())) throw new EmailExistsException("This email is already registered");
         if (usernameExists(userDto.getUsername()))
             throw new UsernameExistsException("This username is already registered");
-        User user = new User();
-        user.setUsername(userDto.getUsername());
-        user.setBirthdate(userDto.getBirthdate());
-        user.setEmail(userDto.getEmail().toLowerCase());
-        user.setFirstName(userDto.getFirstName());
-        user.setLastName(userDto.getLastName());
-        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        user.setUserRole("User");
+
+        User user = User.builder()
+                .userRole("User")
+                .birthdate(userDto.getBirthdate())
+                .email(userDto.getEmail())
+                .firstName(userDto.getFirstName())
+                .lastName(userDto.getLastName())
+                .password(passwordEncoder.encode(userDto.getPassword()))
+                .username(userDto.getUsername())
+                .build();
+
         userRepository.save(user);
     }
 
     @Override
-    public User changeMainSettings(JSONObject edit, Integer userId) {
+    public void editMainInfo(UserMainInfoDto dto, Integer userId) throws JsonException{
         Optional<User> optionalUser = userRepository.findById(userId);
 
         User user;
-        if (optionalUser.isPresent()) {
-            user = optionalUser.get();
-        } else {
-            return null;
-        }
-        user.setFirstName((String) edit.get("firstname"));
-        user.setLastName((String) edit.get("lastname"));
-        user.setBirthdate((String) edit.get("birthdate"));
+        if (optionalUser.isPresent())  user = optionalUser.get();
+        else throw new JsonException("User not found");
+        user.setFirstName(dto.getFirstname());
+        user.setLastName(dto.getLastname());
+        user.setBirthdate(dto.getBirthdate());
         userRepository.save(user);
-        return user;
     }
 
     @Override
-    public void changePassword(JSONObject edit, Integer userId) throws PasswordMismatchException {
-        String currentPassword = (String) edit.get("currentPassword");
+    public void changePassword(PasswordDto passwordDto, Integer userId) throws PasswordMismatchException {
+        String currentPassword = passwordDto.getCurrentPassword();
         Optional<User> optionalUser = userRepository.findById(userId);
         User user;
 
@@ -74,24 +72,24 @@ public class UserServiceImpl implements UserService {
         else throw new UsernameNotFoundException("User not found");
 
         if (passwordEncoder.matches(currentPassword, user.getPassword())) {
-            user.setPassword(passwordEncoder.encode((String) edit.get("newPassword")));
+            user.setPassword(passwordEncoder.encode(passwordDto.getNewPassword()));
         } else throw new PasswordMismatchException("Wrong current password!");
 
         userRepository.save(user);
     }
 
     @Override
-    public Address editAddress(JSONObject edit, Integer id) {
-        Optional<Address> optionalAddress = addressesRepository.findById(id);
+    public Address editAddress(AddressDto addressDto) {
+        Optional<Address> optionalAddress = addressesRepository.findById(addressDto.getId());
         Address address;
         if (optionalAddress.isPresent()) {
             address = optionalAddress.get();
-            address.setCountry((String) edit.get("country"));
-            address.setCity((String) edit.get("city"));
-            address.setStreet((String) edit.get("street"));
-            address.setBuilding((String) edit.get("building"));
-            address.setApartment((String) edit.get("apartment"));
-            address.setZip((String) edit.get("zip"));
+            address.setCountry(addressDto.getCountry());
+            address.setCity((addressDto.getCity()));
+            address.setStreet(addressDto.getStreet());
+            address.setBuilding(addressDto.getBuilding());
+            address.setApartment(addressDto.getApartment());
+            address.setZip(addressDto.getZip());
             addressesRepository.save(address);
         } else {
             return null;
@@ -100,7 +98,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean deleteAddressById(Integer addressId) throws FailedToDeleteAddressException {
+    public void deleteAddressById(Integer addressId) throws FailedToDeleteAddressException {
         Optional<Address> deleteAddress = addressesRepository.findById(addressId);
 
         if (deleteAddress.isPresent()) {
@@ -113,22 +111,23 @@ public class UserServiceImpl implements UserService {
                 } else throw new FailedToDeleteAddressException("Failed to delete address");
             }
             addressesRepository.delete(deleteAddress.get());
-        } else return false;
+        } else return;
 
         Optional<Address> address = addressesRepository.findById(addressId);
-        return !address.isPresent();
     }
 
     @Override
-    public Address saveNewAddress(JSONObject newAddress, User user) {
-        Address address = new Address();
-        address.setCountry((String) newAddress.get("country"));
-        address.setCity((String) newAddress.get("city"));
-        address.setStreet((String) newAddress.get("street"));
-        address.setBuilding((String) newAddress.get("building"));
-        address.setApartment((String) newAddress.get("apartment"));
-        address.setZip((String) newAddress.get("zip"));
-        address.setUser(user);
+    public Address saveNewAddress(AddressDto newAddress, User user) {
+        Address address = Address.builder()
+                .country(newAddress.getCountry())
+                .city(newAddress.getCity())
+                .apartment(newAddress.getApartment())
+                .building(newAddress.getBuilding())
+                .street(newAddress.getStreet())
+                .user(user)
+                .zip(newAddress.getZip())
+                .build();
+
         return addressesRepository.save(address);
     }
 

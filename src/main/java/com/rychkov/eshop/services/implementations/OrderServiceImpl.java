@@ -4,12 +4,12 @@ import com.rychkov.eshop.dtos.CartItem;
 import com.rychkov.eshop.dtos.NewStatusDto;
 import com.rychkov.eshop.dtos.OrderAndBooks;
 import com.rychkov.eshop.dtos.OrderInfoDto;
-import com.rychkov.eshop.entitys.*;
+import com.rychkov.eshop.entities.*;
 import com.rychkov.eshop.exceptions.FailedToChangeStatusException;
 import com.rychkov.eshop.exceptions.FailedToRepeatOrderException;
 import com.rychkov.eshop.exceptions.ProcessOrderException;
 import com.rychkov.eshop.exceptions.ReturnBooksToStockException;
-import com.rychkov.eshop.repositorys.*;
+import com.rychkov.eshop.repositories.*;
 import com.rychkov.eshop.services.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -38,8 +38,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public Order newOrder(OrderInfoDto orderInfoDto, HttpSession session) throws ProcessOrderException {
-        Optional<Order> optionalOrder = ordersRepository.findById((Integer) session.getAttribute("orderId"));
+    public void completeOrder(OrderInfoDto orderInfoDto, Integer orderId) throws ProcessOrderException {
+        Optional<Order> optionalOrder = ordersRepository.findById(orderId);
         if (!optionalOrder.isPresent()) throw new ProcessOrderException("Failed to process order");
         Order order = optionalOrder.get();
         float totalPrice = 0;
@@ -80,7 +80,7 @@ public class OrderServiceImpl implements OrderService {
         order.setUser(orderInfoDto.getUser());
         order.setTotalPrice(totalPrice);
 
-        return ordersRepository.save(order);
+        ordersRepository.save(order);
     }
 
     @Override

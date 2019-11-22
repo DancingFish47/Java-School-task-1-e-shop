@@ -2,12 +2,12 @@ package com.rychkov.eshop.services.implementations;
 
 import com.rychkov.eshop.dtos.TopBookDto;
 import com.rychkov.eshop.dtos.TopUserDto;
-import com.rychkov.eshop.entitys.Book;
-import com.rychkov.eshop.entitys.Order;
-import com.rychkov.eshop.entitys.User;
-import com.rychkov.eshop.repositorys.BooksRepository;
-import com.rychkov.eshop.repositorys.OrdersRepository;
-import com.rychkov.eshop.repositorys.UserRepository;
+import com.rychkov.eshop.entities.Book;
+import com.rychkov.eshop.entities.Order;
+import com.rychkov.eshop.entities.User;
+import com.rychkov.eshop.repositories.BooksRepository;
+import com.rychkov.eshop.repositories.OrdersRepository;
+import com.rychkov.eshop.repositories.UserRepository;
 import com.rychkov.eshop.services.AdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

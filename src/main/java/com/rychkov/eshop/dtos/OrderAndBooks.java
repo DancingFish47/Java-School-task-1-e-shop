@@ -1,13 +1,13 @@
 package com.rychkov.eshop.dtos;
 
-import com.rychkov.eshop.entitys.Order;
+import com.rychkov.eshop.entities.Order;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
 
-@Getter
-@Setter
+@Data
 public class OrderAndBooks {
     private Order order;
     private List<CartItem> books;

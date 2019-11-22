@@ -1,7 +1,7 @@
-package com.rychkov.eshop.repositorys;
+package com.rychkov.eshop.repositories;
 
-import com.rychkov.eshop.entitys.Address;
-import com.rychkov.eshop.entitys.User;
+import com.rychkov.eshop.entities.Address;
+import com.rychkov.eshop.entities.User;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,13 +1,15 @@
 package com.rychkov.eshop.services.implementations;
 
 import com.rychkov.eshop.dtos.AddItemDto;
+import com.rychkov.eshop.dtos.Cart;
 import com.rychkov.eshop.dtos.CartItem;
-import com.rychkov.eshop.entitys.Book;
-import com.rychkov.eshop.entitys.Order;
+import com.rychkov.eshop.entities.Book;
+import com.rychkov.eshop.entities.Order;
+import com.rychkov.eshop.exceptions.BookException;
 import com.rychkov.eshop.exceptions.OutOfStockException;
-import com.rychkov.eshop.repositorys.BooksRepository;
-import com.rychkov.eshop.repositorys.OrderStatusRepository;
-import com.rychkov.eshop.repositorys.OrdersRepository;
+import com.rychkov.eshop.repositories.BooksRepository;
+import com.rychkov.eshop.repositories.OrderStatusRepository;
+import com.rychkov.eshop.repositories.OrdersRepository;
 import com.rychkov.eshop.services.CartService;
 import lombok.RequiredArgsConstructor;
 import net.minidev.json.JSONObject;
@@ -27,8 +29,7 @@ public class CartServiceImpl implements CartService {
     private final OrdersRepository ordersRepository;
 
     @Override
-    public JSONObject addItem(HttpSession session, AddItemDto item) throws OutOfStockException {
-        JSONObject result = new JSONObject();
+    public void addItem(Cart cart, AddItemDto item) throws OutOfStockException {
         Integer addBookId = item.getId();
         Integer quantity = item.getQuantity();
         Optional<Book> optionalBook = booksRepository.findById(addBookId);
@@ -38,47 +39,25 @@ public class CartServiceImpl implements CartService {
                 throw new OutOfStockException("There are only " + book.getAmount() + " copies of " + book.getName() +
                         "left, while you are trying to add " + quantity);
             CartItem cartItem = new CartItem(book, quantity);
-            if (session.getAttribute("cart") == null) {
-                List<CartItem> cart = new ArrayList<>();
-                cart.add(cartItem);
-                session.setAttribute("cart", cart);
+
+            List<CartItem> cartItems = cart.getCartItems();
+            if (exists(addBookId, cartItems) == -1) {
+                cartItems.add(cartItem);
             } else {
-                List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
-                if (exists(addBookId, cart) == -1) {
-                    cart.add(cartItem);
-                } else {
-                    cart.get(exists(addBookId, cart)).addQuantity(quantity);
-                }
-                session.setAttribute("cart", cart);
+                cartItems.get(exists(addBookId, cartItems)).addQuantity(quantity);
             }
-            result.put("error", false);
-            result.put("message", "Book " + book.getName() + " added to cart with quantity " + quantity);
         } else {
-            result.put("error", true);
-            result.put("message", "Could not find book with that id in DB");
+            throw new BookException("Could not find that book in db");
         }
-        return result;
     }
 
     @Transactional
     @Override
-    public JSONObject deleteItem(HttpSession session, Integer deleteId) {
-        JSONObject result = new JSONObject();
-        List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
+    public void deleteItem(Cart cart, Integer deleteId) throws BookException {
+        List<CartItem> cartItems = cart.getCartItems();
 
-        if (exists(deleteId, cart) == -1) {
-            result.put("error", true);
-            result.put("message", "Could not find that book in your cart!");
-            result.put("total", calculateTotal(cart));
-            return result;
-        } else {
-            result.put("error", false);
-            result.put("message", "Book " + cart.get(exists(deleteId, cart)).getBook().getName() + " deleted from cart!");
-            cart.remove(exists(deleteId, cart));
-            result.put("total", calculateTotal(cart));
-            session.setAttribute("cart", cart);
-            return result;
-        }
+        if (exists(deleteId, cartItems) == -1) throw new BookException("Could not find that book in your cart!");
+        else cartItems.remove(exists(deleteId, cartItems));
     }
 
     private int exists(Integer id, List<CartItem> cart) {
@@ -100,10 +79,10 @@ public class CartServiceImpl implements CartService {
 
     @Transactional
     @Override
-    public void checkStocksAndCreateTempOrder(HttpSession session) throws OutOfStockException {
+    public int checkStocksAndCreateTempOrder(Cart cart) throws OutOfStockException {
         List<Book> orderBooks = new ArrayList<>();
-        List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
-        for (CartItem item : cart) {
+        List<CartItem> cartItems = cart.getCartItems();
+        for (CartItem item : cartItems) {
             Optional<Book> optionalBook = booksRepository.findById(item.getBook().getId());
             if (optionalBook.isPresent()) {
                 Book book = optionalBook.get();
@@ -119,7 +98,7 @@ public class CartServiceImpl implements CartService {
         order.setOrderStatus(orderStatusRepository.findByName("TEMPORDER"));
 
         order.setBooks(orderBooks);
-        session.setAttribute("orderId", ordersRepository.save(order).getId());
+        return ordersRepository.save(order).getId();
     }
 
 

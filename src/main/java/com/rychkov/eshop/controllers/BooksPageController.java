@@ -1,12 +1,14 @@
 package com.rychkov.eshop.controllers;
 
 import com.rychkov.eshop.dtos.AddItemDto;
-import com.rychkov.eshop.entitys.Book;
-import com.rychkov.eshop.entitys.Order;
+import com.rychkov.eshop.dtos.Cart;
+import com.rychkov.eshop.dtos.PageParams;
+import com.rychkov.eshop.entities.Book;
+import com.rychkov.eshop.entities.Order;
 import com.rychkov.eshop.exceptions.OutOfStockException;
 import com.rychkov.eshop.exceptions.ReturnBooksToStockException;
-import com.rychkov.eshop.repositorys.BookCategoryRepository;
-import com.rychkov.eshop.repositorys.OrdersRepository;
+import com.rychkov.eshop.repositories.BookCategoryRepository;
+import com.rychkov.eshop.repositories.OrdersRepository;
 import com.rychkov.eshop.services.BookService;
 import com.rychkov.eshop.services.CartService;
 import com.rychkov.eshop.services.OrderService;
@@ -52,12 +54,13 @@ public class BooksPageController {
             }
         }
 
-        Map<String, String> params = new HashMap<>();
-        params.put("category", category);
-        params.put("sortType", sortType);
-        params.put("page", page);
+        PageParams pageParams = PageParams.builder()
+                .page(Integer.parseInt(page))
+                .category(category)
+                .sort(sortType)
+                .build();
 
-        Page<Book> books = bookService.prepareBooksList(params);
+        Page<Book> books = bookService.prepareBooksList(pageParams);
 
         int maxpage = books.getTotalPages();
         int nextpage = 0;
@@ -79,7 +82,16 @@ public class BooksPageController {
     @RequestMapping(value = "/addToCart", method = RequestMethod.POST)
     @ResponseBody
     public JSONObject addToCart(@RequestBody AddItemDto addItem, HttpSession session) throws OutOfStockException {
-        return cartService.addItem(session, addItem);
+        JSONObject result = new JSONObject();
+        Cart cart = (Cart) session.getAttribute("cart");
+        if (cart == null) {
+            cart = new Cart();
+            session.setAttribute("cart", cart);
+        }
+        cartService.addItem(cart, addItem);
+        result.put("error", false);
+        result.put("message", "Book added to cart!");
+        return result;
     }
 
 }

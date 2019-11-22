@@ -1,14 +1,12 @@
 package com.rychkov.eshop.dtos;
 
-import com.rychkov.eshop.entitys.Book;
+import com.rychkov.eshop.entities.Book;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
 @Data
-@Getter
-@Setter
 @EqualsAndHashCode
 public class CartItem {
     private Book book;

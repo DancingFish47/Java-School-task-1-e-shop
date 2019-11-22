@@ -258,8 +258,8 @@ async function saveMainEdit() {
         });
         let result = await call.json();
         if (!result.error) {
-            firstNameField.value = result.user.firstName;
-            lastNameField.value = result.user.lastName;
+            firstNameField.value = result.user.firstname;
+            lastNameField.value = result.user.lastname;
             birthdateField.value = result.user.birthdate;
         } else {
             toastr.error(result.message);
@@ -605,6 +605,8 @@ Cart page functions
  */
 async function deleteFromCart(deleteId) {
     const deleteRow = document.getElementById("row" + deleteId);
+    const deletePrice = document.getElementById("price" + deleteId);
+    const deleteQuantity = document.getElementById("quantity" + deleteId);
     const totalField = document.getElementById("total");
     const table = document.getElementById("table");
     const div = document.getElementById("div");
@@ -622,8 +624,9 @@ async function deleteFromCart(deleteId) {
     if (!result.error) {
         toastr.success(result.message);
         deleteRow.parentNode.removeChild(deleteRow);
-        totalField.textContent = result.total + "$";
-        if (result.total === 0) {
+        let total = totalField.textContent - deletePrice.textContent * deleteQuantity.textContent;
+        totalField.textContent = total;
+        if (total === 0) {
             table.style.display = 'none';
             div.innerHTML = "<h3>Your cart is empty.</h3>"
         }

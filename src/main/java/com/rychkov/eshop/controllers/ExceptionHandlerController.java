@@ -95,6 +95,12 @@ class ExceptionHandlerController {
         return new ErrorInfo(e.getMessage());
     }
 
+    @ExceptionHandler(JsonException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseBody
+    public ErrorInfo handleException(JsonException e) {
+        return new ErrorInfo(e.getMessage());
+    }
 
     @ExceptionHandler(NoHandlerFoundException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

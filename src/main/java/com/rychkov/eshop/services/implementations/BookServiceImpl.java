@@ -1,10 +1,11 @@
 package com.rychkov.eshop.services.implementations;
 
 import com.rychkov.eshop.dtos.BookDto;
-import com.rychkov.eshop.entitys.Book;
+import com.rychkov.eshop.dtos.PageParams;
+import com.rychkov.eshop.entities.Book;
 import com.rychkov.eshop.exceptions.BookException;
-import com.rychkov.eshop.repositorys.BookCategoryRepository;
-import com.rychkov.eshop.repositorys.BooksRepository;
+import com.rychkov.eshop.repositories.BookCategoryRepository;
+import com.rychkov.eshop.repositories.BooksRepository;
 import com.rychkov.eshop.services.BookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -32,21 +33,21 @@ public class BookServiceImpl implements BookService {
 
 
     @Override
-    public Page<Book> prepareBooksList(Map<String, String> params) {
+    public Page<Book> prepareBooksList(PageParams pageParams) {
         Page<Book> preparedBooks;
 
         int booksByPage = Integer.parseInt(Objects.requireNonNull(env.getProperty("books.by.page")));
 
-        if (params.get("sortType") == null) {
-            if (params.get("category") == null)
-                preparedBooks = booksRepository.findAll(PageRequest.of(Integer.parseInt(params.get("page")) - 1, booksByPage));
+        if (pageParams.getSort() == null) {
+            if (pageParams.getCategory() == null)
+                preparedBooks = booksRepository.findAll(PageRequest.of(pageParams.getPage() - 1, booksByPage));
             else
-                preparedBooks = booksRepository.findAllByBookCategory_Name(params.get("category"), PageRequest.of(Integer.parseInt(params.get("page")) - 1, booksByPage));
+                preparedBooks = booksRepository.findAllByBookCategory_Name(pageParams.getCategory(), PageRequest.of(pageParams.getPage() - 1, booksByPage));
         } else {
-            if (params.get("category") == null)
-                preparedBooks = booksRepository.findAll(PageRequest.of(Integer.parseInt(params.get("page")) - 1, booksByPage, Sort.by(Sort.Direction.ASC, params.get("sortType"))));
+            if (pageParams.getCategory() == null)
+                preparedBooks = booksRepository.findAll(PageRequest.of(pageParams.getPage(), booksByPage, Sort.by(Sort.Direction.ASC, pageParams.getSort())));
             else {
-                preparedBooks = booksRepository.findAllByBookCategory_Name(params.get("category"), PageRequest.of(Integer.parseInt(params.get("page")) - 1, booksByPage, Sort.by(Sort.Direction.ASC, params.get("sortType"))));
+                preparedBooks = booksRepository.findAllByBookCategory_Name(pageParams.getCategory(), PageRequest.of(pageParams.getPage() - 1, booksByPage, Sort.by(Sort.Direction.ASC, pageParams.getSort())));
             }
         }
         return preparedBooks;
@@ -63,7 +64,6 @@ public class BookServiceImpl implements BookService {
     public void addNewBook(BookDto bookDto) throws BookException {
         Book book = new Book();
         BookDtoToBook(bookDto, book);
-        //Could use Mapper here
         booksRepository.save(book);
         template.convertAndSend("addBook", book);
     }
@@ -74,8 +74,7 @@ public class BookServiceImpl implements BookService {
         if (optionalBook.isPresent()) {
             Book book = optionalBook.get();
             BookDtoToBook(bookDto, book);
-            //Could use Mapper here
-            if (booksRepository.save(book) == null) throw new BookException("Failed to edit book details");
+            booksRepository.save(book);
             template.convertAndSend("editBook", book);
         } else throw new BookException("Failed to edit book details");
     }

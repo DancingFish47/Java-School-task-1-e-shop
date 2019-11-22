@@ -1,5 +1,6 @@
-package com.rychkov.eshop.entitys;
+package com.rychkov.eshop.entities;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -8,8 +9,7 @@ import javax.persistence.*;
 import java.sql.Date;
 
 @MappedSuperclass
-@Getter
-@Setter
+@Data
 public class AbstractEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

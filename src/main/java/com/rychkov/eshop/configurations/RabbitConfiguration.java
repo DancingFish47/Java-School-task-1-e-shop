@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RabbitConfiguration {
-    //настраиваем соединение с RabbitMQ
     @Bean
     public ConnectionFactory connectionFactory() {
         CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory("localhost");

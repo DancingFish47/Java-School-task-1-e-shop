@@ -1,5 +1,6 @@
-package com.rychkov.eshop.entitys;
+package com.rychkov.eshop.entities;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,8 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Getter
-@Setter
+@Data
 @Table(name = "Book")
 public class Book extends AbstractEntity {
     @NotNull
