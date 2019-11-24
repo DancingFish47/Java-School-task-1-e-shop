@@ -24,7 +24,6 @@ public class AdminPageController {
     private final AdminService adminService;
     private final BookService bookService;
     private final OrderService orderService;
-    private final UserService userService;
     private final OrderStatusRepository orderStatusRepository;
     private final PaymentStatusRepository paymentStatusRepository;
     private final GenreService genreService;
@@ -50,14 +49,14 @@ public class AdminPageController {
     }
 
     @GetMapping("/adminPage/adminManageBooks")
-    public String newBookView(Model model) {
+    public String adminManageBooksView(Model model) {
         model.addAttribute("allBooks", booksRepository.findAll());
         model.addAttribute("genres", bookCategoryRepository.findAll());
         return "adminManageBooks";
     }
 
     @GetMapping("/adminPage/adminManageCategories")
-    public String newCategoryView(Model model) {
+    public String adminManageCategoriesView(Model model) {
         model.addAttribute("genres", bookCategoryRepository.findAll());
         return "adminManageCategories";
     }
@@ -112,11 +111,11 @@ public class AdminPageController {
     public JSONObject saveNewGenre(@RequestBody String genre) throws GenreException {
         JSONObject result = new JSONObject();
         genreService.addGenre(genre);
-        result.put("message", "Genre edited!");
+        result.put("message", "Genre saved!");
         return result;
     }
 
-    @RequestMapping(value = "adminPage/adminManageCategories/saveNewBook", method = RequestMethod.POST)
+    @RequestMapping(value = "adminPage/adminManageBooks/saveNewBook", method = RequestMethod.POST)
     @ResponseBody
     public JSONObject saveNewBook(@RequestBody BookDto bookDto) throws BookException {
         JSONObject result = new JSONObject();
@@ -125,7 +124,7 @@ public class AdminPageController {
         return result;
     }
 
-    @RequestMapping(value = "adminPage/adminManageCategories/saveEditBook", method = RequestMethod.POST)
+    @RequestMapping(value = "adminPage/adminManageBooks/saveEditBook", method = RequestMethod.POST)
     @ResponseBody
     public JSONObject saveEditBook(@RequestBody BookDto bookDto) throws BookException {
         JSONObject result = new JSONObject();
@@ -134,7 +133,7 @@ public class AdminPageController {
         return result;
     }
 
-    @RequestMapping(value = "adminPage/adminManageCategories/getBookById", method = RequestMethod.POST)
+    @RequestMapping(value = "adminPage/adminManageBooks/getBookById", method = RequestMethod.POST)
     @ResponseBody
     public JSONObject getBookById(@RequestBody Integer bookId) {
         JSONObject result = new JSONObject();
@@ -142,7 +141,7 @@ public class AdminPageController {
         return result;
     }
 
-    @RequestMapping(value = "adminPage/adminManageCategories/deleteBook", method = RequestMethod.POST)
+    @RequestMapping(value = "adminPage/adminManageBooks/deleteBook", method = RequestMethod.POST)
     @ResponseBody
     public JSONObject deleteBookById(@RequestBody Integer deleteId) throws BookException {
         JSONObject result = new JSONObject();

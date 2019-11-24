@@ -1108,7 +1108,7 @@ async function editBook(id) {
     const bookPagesField = document.getElementById("bookPages");
 
 
-    let call = await fetch('/adminPage/adminManageCategories/getBookById', {
+    let call = await fetch('/adminPage/adminManageBooks/getBookById', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -1135,7 +1135,7 @@ async function editBook(id) {
 async function deleteBook(id){
     const deleteBookRow = document.getElementById("row" + id);
 
-    let call = await fetch('/adminPage/adminManageCategories/deleteBook', {
+    let call = await fetch('/adminPage/adminManageBooks/deleteBook', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -1185,7 +1185,7 @@ async function saveNewBook(){
             genre: bookGenreField.value,
             pages: bookPagesField.value,
         };
-        let call = await fetch('/adminPage/adminManageCategories/saveNewBook', {
+        let call = await fetch('/adminPage/adminManageBooks/saveNewBook', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -1228,7 +1228,7 @@ async function saveEditBook(id){
             genre: bookGenreField.value,
             pages: bookPagesField.value,
         };
-        let call = await fetch('/adminPage/adminManageCategories/saveEditBook', {
+        let call = await fetch('/adminPage/adminManageBooks/saveEditBook', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
