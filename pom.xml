@@ -199,6 +199,11 @@
 						<warSourceDirectory>src/main/web</warSourceDirectory>
 						<warName>Eshop</warName>
 						<failOnMissingWebXml>false</failOnMissingWebXml>
+						<archive>
+							<manifestEntries>
+								<Dependencies>jdk.unsupported</Dependencies>
+							</manifestEntries>
+						</archive>
 					</configuration>
 				</plugin>
 				<plugin>

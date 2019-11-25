@@ -24,7 +24,6 @@ public class HomepageController {
              5) backend validation
              6) Junit tests
              7) Technical solution doc
-                                               8) java doc?
                          9) jenkinks, teamcity, ci*
                          10) LIGHT THEME FOR REVIEW
                          11)Front validation edit rules

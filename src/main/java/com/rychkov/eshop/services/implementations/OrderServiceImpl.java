@@ -55,8 +55,6 @@ public class OrderServiceImpl implements OrderService {
                 int newSold = book.getSold() + item.getQuantity();
                 book.setSold(newSold);
                 booksRepository.save(book);
-                //TODO rabbitmq message on finishing order since book data is changed
-                rabbitTemplate.convertAndSend(EDIT_QUEUE_NAME, book);
                 totalPrice += item.getBook().getPrice() * item.getQuantity();
             } else {
                 throw new ProcessOrderException("Book " + item.getBook().getName() + " is not found");

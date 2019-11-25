@@ -11,12 +11,15 @@ import com.rychkov.eshop.repositories.UserRepository;
 import com.rychkov.eshop.services.OrderService;
 import lombok.RequiredArgsConstructor;
 import net.minidev.json.JSONObject;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
+
+import static com.rychkov.eshop.configurations.RabbitConfiguration.EDIT_QUEUE_NAME;
 
 @RequiredArgsConstructor
 @Controller
@@ -26,6 +29,8 @@ public class CheckoutPageController {
     private final AddressesRepository addressesRepository;
     private final UserRepository userRepository;
     private final OrderService orderService;
+
+    private final RabbitTemplate template;
 
 
     @GetMapping("/checkout")
@@ -51,6 +56,7 @@ public class CheckoutPageController {
     @ResponseBody
     public JSONObject processOrder(@RequestBody OrderInfoDto orderInfo, Principal principal, HttpSession session) throws ProcessOrderException {
         JSONObject result = new JSONObject();
+
         Cart cart = (Cart) session.getAttribute("cart");
         Integer orderId = (Integer) session.getAttribute("orderId");
         if((cart == null) || (orderId == null)) throw new ProcessOrderException("Something went wrong");
@@ -58,6 +64,11 @@ public class CheckoutPageController {
         orderInfo.setUser(userRepository.findByUsername(principal.getName()));
         orderInfo.setCartItems(cart.getCartItems());
         orderService.completeOrder(orderInfo, orderId);
+
+        //TODO check if its working
+        for (CartItem cartItem : orderInfo.getCartItems()){
+            template.convertAndSend(EDIT_QUEUE_NAME, cartItem.getBook());
+        }
         session.setAttribute("cart", null);
         session.setAttribute("orderId", null);
         result.put("message", "Your order registered!");
