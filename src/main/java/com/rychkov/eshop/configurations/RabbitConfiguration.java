@@ -7,6 +7,7 @@ import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -23,6 +24,7 @@ public class RabbitConfiguration {
     static final String NEW_BOOKS_QUEUE_NAME = "newBooks";
     public static final String DELETE_QUEUE_NAME = "deleteBook";
     private static final String BOOKS_EXCHANGE_NAME = "books_exchange";
+
 
     @Bean
     public ConnectionFactory connectionFactory() {

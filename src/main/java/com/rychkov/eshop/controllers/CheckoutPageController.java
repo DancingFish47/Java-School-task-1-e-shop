@@ -3,11 +3,9 @@ package com.rychkov.eshop.controllers;
 import com.rychkov.eshop.dtos.Cart;
 import com.rychkov.eshop.dtos.CartItem;
 import com.rychkov.eshop.dtos.OrderInfoDto;
+import com.rychkov.eshop.entities.Book;
 import com.rychkov.eshop.exceptions.ProcessOrderException;
-import com.rychkov.eshop.repositories.AddressesRepository;
-import com.rychkov.eshop.repositories.DeliveryMethodsRepository;
-import com.rychkov.eshop.repositories.PaymentMethodsRepository;
-import com.rychkov.eshop.repositories.UserRepository;
+import com.rychkov.eshop.repositories.*;
 import com.rychkov.eshop.services.OrderService;
 import lombok.RequiredArgsConstructor;
 import net.minidev.json.JSONObject;
@@ -18,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
+import java.util.Optional;
 
 import static com.rychkov.eshop.configurations.RabbitConfiguration.EDIT_QUEUE_NAME;
 
@@ -29,6 +28,7 @@ public class CheckoutPageController {
     private final AddressesRepository addressesRepository;
     private final UserRepository userRepository;
     private final OrderService orderService;
+    private final BooksRepository booksRepository;
 
     private final RabbitTemplate template;
 
@@ -65,10 +65,11 @@ public class CheckoutPageController {
         orderInfo.setCartItems(cart.getCartItems());
         orderService.completeOrder(orderInfo, orderId);
 
-        //TODO check if its working
         for (CartItem cartItem : orderInfo.getCartItems()){
+            cartItem.getBook().setAmount(cartItem.getBook().getAmount()-cartItem.getQuantity());
             template.convertAndSend(EDIT_QUEUE_NAME, cartItem.getBook());
         }
+
         session.setAttribute("cart", null);
         session.setAttribute("orderId", null);
         result.put("message", "Your order registered!");

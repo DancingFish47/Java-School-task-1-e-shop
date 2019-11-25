@@ -7,16 +7,20 @@ import com.rychkov.eshop.repositories.BookCategoryRepository;
 import com.rychkov.eshop.repositories.BooksRepository;
 import com.rychkov.eshop.services.GenreService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+
+import static com.rychkov.eshop.configurations.RabbitConfiguration.EDIT_QUEUE_NAME;
 
 @RequiredArgsConstructor
 @Service
 public class GenreServiceImpl implements GenreService {
     private final BookCategoryRepository bookCategoryRepository;
     private final BooksRepository booksRepository;
+    private final RabbitTemplate rabbitTemplate;
 
     @Override
     public void deleteGenre(Integer id) throws GenreException {
@@ -26,10 +30,10 @@ public class GenreServiceImpl implements GenreService {
             List<Book> books = booksRepository.findAllByBookCategory(bookCategory);
             for (Book book : books) {
                 book.setBookCategory(null);
+                rabbitTemplate.convertAndSend(EDIT_QUEUE_NAME, book);
                 booksRepository.save(book);
             }
             bookCategoryRepository.deleteById(id);
-            //if (bookCategoryRepository.findById(id).isPresent()) throw new GenreException("Failed to delete Genre");
         } else throw new GenreException("Failed to delete Genre");
     }
 
@@ -48,6 +52,12 @@ public class GenreServiceImpl implements GenreService {
             BookCategory bookCategory = optionalBookCategory.get();
             bookCategory.setName(newName);
             bookCategoryRepository.save(bookCategory);
+
+            List<Book> books = booksRepository.findAllByBookCategory(bookCategory);
+            for (Book book : books) {
+                rabbitTemplate.convertAndSend(EDIT_QUEUE_NAME, book);
+                booksRepository.save(book);
+            }
         } else {
             throw new GenreException("Failed to find Genre with that ID");
         }

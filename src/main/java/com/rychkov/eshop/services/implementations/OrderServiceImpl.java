@@ -38,7 +38,6 @@ public class OrderServiceImpl implements OrderService {
     private final PaymentStatusRepository paymentStatusRepository;
     private final AddressesRepository addressesRepository;
     private final UserRepository userRepository;
-    private final RabbitTemplate rabbitTemplate;
 
     @Override
     @Transactional

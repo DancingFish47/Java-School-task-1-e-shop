@@ -86,19 +86,16 @@ $(function () {
                     required: true,
                     minlength: 3,
                     maxlength: 24,
-                    lettersAndNumbersOnly: true
                 },
                 city: {
                     required: true,
-                    minlength: 4,
+                    minlength: 3,
                     maxlength: 24,
-                    lettersAndNumbersOnly: true
                 },
                 street: {
                     required: true,
-                    minlength: 4,
+                    minlength: 3,
                     maxlength: 24,
-                    lettersAndNumbersOnly: true
                 },
                 building: {
                     required: true,

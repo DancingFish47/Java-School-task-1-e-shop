@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/../java-school-task-2-advertisements-application/e-ads.iml" filepath="$PROJECT_DIR$/../java-school-task-2-advertisements-application/e-ads.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/java-school-task-1-e-shop.iml" filepath="$PROJECT_DIR$/.idea/java-school-task-1-e-shop.iml" />
+      <module fileurl="file://$PROJECT_DIR$/..//e-shop/../../java-school-task-1-e-shop/.idea/java-school-task-1-e-shop.iml" filepath="$PROJECT_DIR$/..//e-shop/../../java-school-task-1-e-shop/.idea/java-school-task-1-e-shop.iml" />
     </modules>
   </component>
 </project>
