@@ -2,6 +2,9 @@ package com.rychkov.eshop.controllers;
 
 import com.rychkov.eshop.dtos.BookDto;
 import com.rychkov.eshop.dtos.NewStatusDto;
+import com.rychkov.eshop.dtos.ResponseDto;
+import com.rychkov.eshop.entities.Book;
+import com.rychkov.eshop.entities.BookCategory;
 import com.rychkov.eshop.exceptions.BookException;
 import com.rychkov.eshop.exceptions.FailedToChangeStatusException;
 import com.rychkov.eshop.exceptions.GenreException;
@@ -15,6 +18,8 @@ import net.minidev.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Controller
@@ -63,90 +68,94 @@ public class AdminPageController {
 
     @RequestMapping(value = "/adminPage/changeOrderStatus", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject changeOrderStatus(@RequestBody NewStatusDto newStatusDto) throws FailedToChangeStatusException {
-        JSONObject result = new JSONObject();
+    public ResponseDto changeOrderStatus(@RequestBody NewStatusDto newStatusDto) throws FailedToChangeStatusException {
         orderService.changeOrderStatus(newStatusDto);
-        result.put("message", "Order status for order with id " + newStatusDto.getOrderId() + " changed!");
-        return result;
+        return ResponseDto.builder()
+                .message("Order status for order with id " + newStatusDto.getOrderId() + " changed!")
+                .build();
     }
 
     @RequestMapping(value = "/adminPage/changePaymentStatus", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject changePaymentStatus(@RequestBody NewStatusDto newStatusDto) throws FailedToChangeStatusException {
-        JSONObject result = new JSONObject();
+    public ResponseDto changePaymentStatus(@RequestBody NewStatusDto newStatusDto) throws FailedToChangeStatusException {
         orderService.changePaymentStatus(newStatusDto);
-        result.put("message", "Payment status for order with id " + newStatusDto.getOrderId() + " changed!");
-        return result;
+        return ResponseDto.builder()
+                .message("Payment status for order with id " + newStatusDto.getOrderId() + " changed!")
+                .build();
     }
 
     @RequestMapping(value = "adminPage/adminManageCategories/getGenreById", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject getGenreById(@RequestBody Integer genreId) {
-        JSONObject result = new JSONObject();
-        result.put("genre", bookCategoryRepository.findById(genreId));
-        return result;
+    public ResponseDto getGenreById(@RequestBody Integer genreId) throws GenreException{
+        Optional<BookCategory> genreOptional = bookCategoryRepository.findById(genreId);
+        if (!genreOptional.isPresent()) throw new GenreException("Genre not found");
+        return ResponseDto.builder()
+                .genre(genreOptional.get())
+                .build();
     }
 
     @RequestMapping(value = "adminPage/adminManageCategories/deleteGenre", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject deleteGenreById(@RequestBody Integer deleteId) throws GenreException {
-        JSONObject result = new JSONObject();
+    public ResponseDto deleteGenreById(@RequestBody Integer deleteId) throws GenreException {
         genreService.deleteGenre(deleteId);
-        result.put("message", "Genre deleted!");
-        return result;
+        return ResponseDto.builder()
+                .message("Genre deleted!")
+                .build();
     }
 
 
     @RequestMapping(value = "adminPage/adminManageCategories/saveEditGenre", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject saveEditGenre(@RequestBody JSONObject edit) throws GenreException {
-        JSONObject result = new JSONObject();
+    public ResponseDto saveEditGenre(@RequestBody JSONObject edit) throws GenreException {
         genreService.editGenre((Integer) edit.get("id"), (String) edit.get("genre"));
-        result.put("message", "Genre edited!");
-        return result;
+        return ResponseDto.builder()
+                .message("Genre edited!")
+                .build();
     }
 
     @RequestMapping(value = "adminPage/adminManageCategories/saveNewGenre", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject saveNewGenre(@RequestBody String genre) throws GenreException {
-        JSONObject result = new JSONObject();
+    public ResponseDto saveNewGenre(@RequestBody String genre) throws GenreException {
         genreService.addGenre(genre);
-        result.put("message", "Genre saved!");
-        return result;
+        return ResponseDto.builder()
+                .message("Genre saved!")
+                .build();
     }
 
     @RequestMapping(value = "adminPage/adminManageBooks/saveNewBook", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject saveNewBook(@RequestBody BookDto bookDto) throws BookException {
-        JSONObject result = new JSONObject();
+    public ResponseDto saveNewBook(@RequestBody BookDto bookDto) throws BookException {
         bookService.addNewBook(bookDto);
-        result.put("message", "New book " + bookDto.getName() + " added!");
-        return result;
+        return ResponseDto.builder()
+                .message("New book " + bookDto.getName() + " added!")
+                .build();
     }
 
     @RequestMapping(value = "adminPage/adminManageBooks/saveEditBook", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject saveEditBook(@RequestBody BookDto bookDto) throws BookException {
-        JSONObject result = new JSONObject();
+    public ResponseDto saveEditBook(@RequestBody BookDto bookDto) throws BookException {
         bookService.editBook(bookDto);
-        result.put("message", "Book details for " + bookDto.getName() + " saved!");
-        return result;
+        return ResponseDto.builder()
+                .message("Book details for"  + bookDto.getName() +  " saved!")
+                .build();
     }
 
     @RequestMapping(value = "adminPage/adminManageBooks/getBookById", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject getBookById(@RequestBody Integer bookId) {
-        JSONObject result = new JSONObject();
-        result.put("book", booksRepository.findById(bookId));
-        return result;
+    public ResponseDto getBookById(@RequestBody Integer bookId) throws BookException{
+        Optional<Book> optionalBook = booksRepository.findById(bookId);
+        if(!optionalBook.isPresent()) throw new BookException("Book not found");
+        return ResponseDto.builder()
+                .book(optionalBook.get())
+                .build();
     }
 
     @RequestMapping(value = "adminPage/adminManageBooks/deleteBook", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject deleteBookById(@RequestBody Integer deleteId) throws BookException {
-        JSONObject result = new JSONObject();
+    public ResponseDto deleteBookById(@RequestBody Integer deleteId) throws BookException {
         bookService.deleteBookById(deleteId);
-        result.put("message", "Book deleted!");
-        return result;
+        return ResponseDto.builder()
+                .message("Book deleted!")
+                .build();
     }
 }

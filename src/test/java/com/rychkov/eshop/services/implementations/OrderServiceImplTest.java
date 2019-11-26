@@ -22,8 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.rychkov.eshop.services.implementations.OrderServiceImpl.INITIAL_ORDER_STATUS;
-import static com.rychkov.eshop.services.implementations.OrderServiceImpl.INITIAL_PAYMENT_STATUS;
+
+import static com.rychkov.eshop.configurations.AppConfiguration.INITIAL_ORDER_STATUS;
+import static com.rychkov.eshop.configurations.AppConfiguration.INITIAL_PAYMENT_STATUS;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)

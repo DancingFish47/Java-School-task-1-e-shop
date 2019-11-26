@@ -16,7 +16,7 @@ import java.util.Map;
 @RestControllerAdvice
 @ControllerAdvice
 class ExceptionHandlerController {
-    public static final String DEFAULT_ERROR_VIEW = "error";
+    private static final String DEFAULT_ERROR_VIEW = "error";
 
     @ExceptionHandler(FailedToDeleteAddressException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

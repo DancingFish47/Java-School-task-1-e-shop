@@ -2,6 +2,7 @@ package com.rychkov.eshop.controllers;
 
 
 import com.rychkov.eshop.dtos.AddressDto;
+import com.rychkov.eshop.dtos.ResponseDto;
 import com.rychkov.eshop.dtos.UserMainInfoDto;
 import com.rychkov.eshop.dtos.PasswordDto;
 import com.rychkov.eshop.entities.Address;
@@ -21,6 +22,8 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 import java.util.Optional;
 
+import static com.rychkov.eshop.configurations.AppConfiguration.ADDRESS_EXISTS;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/profileSettings")
@@ -32,98 +35,105 @@ public class ProfilePageController {
     @GetMapping
     public String profileSettings(Model model, Principal principal) {
         model.addAttribute("user", userRepository.findByUsername(principal.getName()));
-        model.addAttribute("addresses", addressesRepository.findAllOrderByUser(userRepository.findByUsername(principal.getName())));
+        model.addAttribute("addresses", addressesRepository.findAllByAddressStatus_NameAndUser(ADDRESS_EXISTS, userRepository.findByUsername(principal.getName())));
         return "profileSettings";
     }
 
     @RequestMapping(value = "/cancelMainEdit", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject profileEditMainSettings(Principal principal) {
-        JSONObject result = new JSONObject();
+    public ResponseDto profileEditMainSettings(Principal principal) {
         User user = userRepository.findByUsername(principal.getName());
-        if (user != null) {
-            result.put("error", false);
-            result.put("user", user);
-        } else {
-            result.put("error", true);
-            result.put("message", "Something happened");
-        }
-        return result;
+        return ResponseDto.builder()
+                .error(false)
+                .user(user)
+                .build();
     }
 
     @RequestMapping(value = "/saveMainEdit", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject profileSaveMainSettings(@RequestBody UserMainInfoDto edit, Principal principal) throws JsonException {
-        JSONObject result = new JSONObject();
-        userService.editMainInfo(edit, userRepository.findByUsername(principal.getName()).getId());
-        result.put("error", false);
-        result.put("user", edit);
-        return result;
+    public ResponseDto profileSaveMainSettings(@RequestBody UserMainInfoDto userMainInfoDto, Principal principal) throws JsonException {
+        userService.editMainInfo(userMainInfoDto, userRepository.findByUsername(principal.getName()).getId());
+        return ResponseDto.builder()
+                .userMainInfoDto(userMainInfoDto)
+                .error(false)
+                .build();
     }
 
     @RequestMapping(value = "/changePassword", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject profileChangePassword(@RequestBody PasswordDto edit, Principal principal) throws PasswordMismatchException {
-        JSONObject result = new JSONObject();
+    public ResponseDto profileChangePassword(@RequestBody PasswordDto edit, Principal principal) throws PasswordMismatchException {
         userService.changePassword(edit, userRepository.findByUsername(principal.getName()).getId());
-        result.put("message", "Password changed!");
-        return result;
+        return ResponseDto.builder()
+                .message("Password has been changed!")
+                .build();
     }
 
     @RequestMapping(value = "/getAddressById", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject getAddressById(@RequestBody JSONObject addressId) {
-        JSONObject result = new JSONObject();
-        Optional<Address> address = addressesRepository.findById(Integer.valueOf((String) addressId.get("id")));
+    public ResponseDto getAddressById(@RequestBody Integer addressId) {
+        ResponseDto responseDto;
+        Optional<Address> address = addressesRepository.findById(addressId);
         if (address.isPresent()) {
-            result.put("address", address);
+            responseDto = ResponseDto.builder()
+                    .address(address.get())
+                    .build();
         } else {
-            result.put("error", true);
-            result.put("message", "Could not retrieve address from database");
+            responseDto = ResponseDto.builder()
+                    .error(true)
+                    .message("Could not retrieve address from database")
+                    .build();
         }
-        return result;
+        return responseDto;
     }
 
     @RequestMapping(value = "/saveEditAddress", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject saveEditAddress(@RequestBody AddressDto edit) {
-        JSONObject result = new JSONObject();
+    public ResponseDto saveEditAddress(@RequestBody AddressDto edit) {
+        ResponseDto responseDto;
         Address address = userService.editAddress(edit);
         if (address != null) {
-            result.put("error", false);
-            result.put("message", "Address edited successfully!");
-            result.put("address", address);
+            responseDto = ResponseDto.builder()
+                    .error(false)
+                    .message("Address had been edited!")
+                    .address(address)
+                    .build();
         } else {
-            result.put("error", true);
-            result.put("message", "Failed to edit address!");
+            responseDto = ResponseDto.builder()
+                    .error(true)
+                    .message("Failed to edit address!")
+                    .build();
         }
-        return result;
+        return responseDto;
     }
 
     @RequestMapping(value = "/deleteAddress", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject deleteAddress(@RequestBody JSONObject deleteId) throws FailedToDeleteAddressException {
-        JSONObject result = new JSONObject();
-        userService.deleteAddressById(Integer.valueOf((String) deleteId.get("id")));
-        result.put("message", "Address deleted!");
-        return result;
+    public ResponseDto deleteAddress(@RequestBody Integer deleteId) throws FailedToDeleteAddressException {
+        userService.deleteAddressById(deleteId);
+        return ResponseDto.builder()
+                .message("Address has been deleted!")
+                .build();
     }
 
     @RequestMapping(value = "/saveNewAddress", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject saveNewAddress(@RequestBody AddressDto newAddress, Principal principal) {
-        JSONObject result = new JSONObject();
+    public ResponseDto saveNewAddress(@RequestBody AddressDto newAddress, Principal principal) {
+        ResponseDto responseDto;
         User user = userRepository.findByUsername(principal.getName());
         Address address = userService.saveNewAddress(newAddress, user);
         if (address != null) {
-            result.put("error", false);
-            result.put("message", "New address added!");
-            result.put("address", address);
+            responseDto = ResponseDto.builder()
+                    .error(false)
+                    .message("New address has been added!")
+                    .address(address)
+                    .build();
         } else {
-            result.put("error", true);
-            result.put("message", "Failed to add new address!");
+            responseDto = ResponseDto.builder()
+                    .error(true)
+                    .message("Failed to add new address!")
+                    .build();
         }
-        return result;
+        return responseDto;
     }
 
 }

@@ -21,14 +21,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.rychkov.eshop.configurations.AppConfiguration.INITIAL_ORDER_STATUS;
+import static com.rychkov.eshop.configurations.AppConfiguration.INITIAL_PAYMENT_STATUS;
 import static com.rychkov.eshop.configurations.RabbitConfiguration.EDIT_QUEUE_NAME;
 
 @RequiredArgsConstructor
 @Service
 public class OrderServiceImpl implements OrderService {
 
-    static final String INITIAL_ORDER_STATUS = "REGISTERED";
-    static final String INITIAL_PAYMENT_STATUS = "NOT PAYED";
+
 
     private final BooksRepository booksRepository;
     private final PaymentMethodsRepository paymentMethodsRepository;

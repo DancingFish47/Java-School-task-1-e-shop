@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface AddressesRepository extends CrudRepository<Address, Integer> {
     List<Address> findAllOrderByUser(User user);
-
+    List<Address> findAllByAddressStatus_NameAndUser(String addressStatusName, User user);
 }

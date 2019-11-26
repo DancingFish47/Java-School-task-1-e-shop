@@ -3,6 +3,7 @@ package com.rychkov.eshop.controllers;
 import com.rychkov.eshop.dtos.AddItemDto;
 import com.rychkov.eshop.dtos.Cart;
 import com.rychkov.eshop.dtos.PageParams;
+import com.rychkov.eshop.dtos.ResponseDto;
 import com.rychkov.eshop.entities.Book;
 import com.rychkov.eshop.entities.Order;
 import com.rychkov.eshop.exceptions.OutOfStockException;
@@ -81,17 +82,17 @@ public class BooksPageController {
 
     @RequestMapping(value = "/addToCart", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject addToCart(@RequestBody AddItemDto addItem, HttpSession session) throws OutOfStockException {
-        JSONObject result = new JSONObject();
+    public ResponseDto addToCart(@RequestBody AddItemDto addItem, HttpSession session) throws OutOfStockException {
         Cart cart = (Cart) session.getAttribute("cart");
         if (cart == null) {
             cart = new Cart();
             session.setAttribute("cart", cart);
         }
         cartService.addItem(cart, addItem);
-        result.put("error", false);
-        result.put("message", "Book added to cart!");
-        return result;
+        return ResponseDto.builder()
+                .error(false)
+                .message("Book has been added to cart")
+                .build();
     }
 
 }

@@ -6,6 +6,8 @@ import com.rychkov.eshop.configurations.PersistenceJPAConfig;
 import com.rychkov.eshop.dtos.BookDto;
 import com.rychkov.eshop.dtos.NewStatusDto;
 import com.rychkov.eshop.dtos.OrderAndBooks;
+import com.rychkov.eshop.entities.Book;
+import com.rychkov.eshop.entities.BookCategory;
 import com.rychkov.eshop.entities.PaymentStatus;
 import com.rychkov.eshop.repositories.BookCategoryRepository;
 import com.rychkov.eshop.repositories.BooksRepository;
@@ -46,6 +48,7 @@ import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -163,6 +166,9 @@ public class AdminPageControllerTest extends AbstractJUnit4SpringContextTests {
 
     @Test
     public void getGenreById() throws Exception{
+        Optional<BookCategory> optionalBookCategory = Optional.of(new BookCategory());
+        when(bookCategoryRepository.findById(anyInt())).thenReturn(optionalBookCategory);
+
         MvcResult result = mockMvc.perform(post("/adminPage/adminManageCategories/getGenreById")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(0)))
@@ -235,6 +241,9 @@ public class AdminPageControllerTest extends AbstractJUnit4SpringContextTests {
 
     @Test
     public void getBookById() throws Exception{
+        Optional<Book> optionalBook = Optional.of(new Book());
+        when(booksRepository.findById(anyInt())).thenReturn(optionalBook);
+
         MvcResult result = mockMvc.perform(post("/adminPage/adminManageBooks/getBookById")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(0)))

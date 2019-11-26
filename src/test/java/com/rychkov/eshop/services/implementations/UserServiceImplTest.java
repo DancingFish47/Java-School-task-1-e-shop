@@ -7,7 +7,9 @@ import com.rychkov.eshop.dtos.UserMainInfoDto;
 import com.rychkov.eshop.dtos.PasswordDto;
 import com.rychkov.eshop.dtos.UserDto;
 import com.rychkov.eshop.entities.Address;
+import com.rychkov.eshop.entities.AddressStatus;
 import com.rychkov.eshop.entities.User;
+import com.rychkov.eshop.repositories.AddressStatusRepository;
 import com.rychkov.eshop.repositories.AddressesRepository;
 import com.rychkov.eshop.repositories.UserRepository;
 import com.rychkov.eshop.services.UserService;
@@ -20,6 +22,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
+
+import static com.rychkov.eshop.configurations.AppConfiguration.ADDRESS_DELETED;
+import static com.rychkov.eshop.configurations.AppConfiguration.ADDRESS_EXISTS;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -34,6 +39,8 @@ public class UserServiceImplTest {
     AddressesRepository addressesRepository;
     @Autowired
     BCryptPasswordEncoder passwordEncoder;
+    @Autowired
+    AddressStatusRepository addressStatusRepository;
 
     private User user;
     private Address address;
@@ -47,6 +54,13 @@ public class UserServiceImplTest {
                 .build();
         user = userRepository.save(user);
 
+        AddressStatus exists = AddressStatus.builder().name(ADDRESS_EXISTS).build();
+        AddressStatus deleted = AddressStatus.builder().name(ADDRESS_DELETED).build();
+
+        addressStatusRepository.save(exists);
+        addressStatusRepository.save(deleted);
+
+
         address = Address.builder()
                 .zip("111111")
                 .user(user)
@@ -55,8 +69,11 @@ public class UserServiceImplTest {
                 .apartment("apartment")
                 .city("city")
                 .country("country")
+                .addressStatus(exists)
                 .build();
         address = addressesRepository.save(address);
+
+
     }
 
     @Test
@@ -107,13 +124,15 @@ public class UserServiceImplTest {
                 .build();
 
         userService.editAddress(addressDto);
+        assertTrue(addressesRepository.findById(address.getId()).isPresent());
         assertEquals("test", addressesRepository.findById(address.getId()).get().getCity());
     }
 
     @Test
     public void deleteAddressById() {
         userService.deleteAddressById(address.getId());
-        assertFalse(addressesRepository.findById(address.getId()).isPresent());
+        assertTrue(addressesRepository.findById(address.getId()).isPresent());
+        assertEquals(ADDRESS_DELETED, addressesRepository.findById(address.getId()).get().getAddressStatus().getName());
     }
 
     @Test
@@ -133,8 +152,8 @@ public class UserServiceImplTest {
     @After
     public void clear(){
         addressesRepository.deleteAll();
+        addressStatusRepository.deleteAll();
         userRepository.deleteAll();
         user = null;
-
     }
 }

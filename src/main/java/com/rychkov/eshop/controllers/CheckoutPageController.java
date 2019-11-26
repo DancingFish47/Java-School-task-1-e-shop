@@ -3,6 +3,7 @@ package com.rychkov.eshop.controllers;
 import com.rychkov.eshop.dtos.Cart;
 import com.rychkov.eshop.dtos.CartItem;
 import com.rychkov.eshop.dtos.OrderInfoDto;
+import com.rychkov.eshop.dtos.ResponseDto;
 import com.rychkov.eshop.entities.Book;
 import com.rychkov.eshop.exceptions.ProcessOrderException;
 import com.rychkov.eshop.repositories.*;
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpSession;
 import java.security.Principal;
 import java.util.Optional;
 
+import static com.rychkov.eshop.configurations.AppConfiguration.ADDRESS_EXISTS;
 import static com.rychkov.eshop.configurations.RabbitConfiguration.EDIT_QUEUE_NAME;
 
 @RequiredArgsConstructor
@@ -28,9 +30,9 @@ public class CheckoutPageController {
     private final AddressesRepository addressesRepository;
     private final UserRepository userRepository;
     private final OrderService orderService;
-    private final BooksRepository booksRepository;
 
     private final RabbitTemplate template;
+
 
 
     @GetMapping("/checkout")
@@ -46,7 +48,7 @@ public class CheckoutPageController {
             model.addAttribute("total", total);
         }
 
-        model.addAttribute("addresses", addressesRepository.findAllOrderByUser(userRepository.findByUsername(principal.getName())));
+        model.addAttribute("addresses", addressesRepository.findAllByAddressStatus_NameAndUser(ADDRESS_EXISTS ,userRepository.findByUsername(principal.getName())));
         model.addAttribute("deliveryMethods", deliveryMethodsRepository.findAll());
         model.addAttribute("paymentMethods", paymentMethodsRepository.findAll());
         return "checkout";
@@ -54,8 +56,7 @@ public class CheckoutPageController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/checkout/processOrder")
     @ResponseBody
-    public JSONObject processOrder(@RequestBody OrderInfoDto orderInfo, Principal principal, HttpSession session) throws ProcessOrderException {
-        JSONObject result = new JSONObject();
+    public ResponseDto processOrder(@RequestBody OrderInfoDto orderInfo, Principal principal, HttpSession session) throws ProcessOrderException {
 
         Cart cart = (Cart) session.getAttribute("cart");
         Integer orderId = (Integer) session.getAttribute("orderId");
@@ -72,8 +73,9 @@ public class CheckoutPageController {
 
         session.setAttribute("cart", null);
         session.setAttribute("orderId", null);
-        result.put("message", "Your order registered!");
-        result.put("error", false);
-        return result;
+        return ResponseDto.builder()
+                .error(false)
+                .message("Your order has been registered!")
+                .build();
     }
 }

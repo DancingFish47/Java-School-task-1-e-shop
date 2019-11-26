@@ -39,5 +39,9 @@ public class Address extends AbstractEntity {
     @Column(name = "apartment")
     private String apartment;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "address_status")
+    private AddressStatus addressStatus;
+
 
 }

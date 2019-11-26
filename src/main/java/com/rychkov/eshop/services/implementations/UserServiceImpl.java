@@ -5,9 +5,11 @@ import com.rychkov.eshop.dtos.UserMainInfoDto;
 import com.rychkov.eshop.dtos.PasswordDto;
 import com.rychkov.eshop.dtos.UserDto;
 import com.rychkov.eshop.entities.Address;
+import com.rychkov.eshop.entities.AddressStatus;
 import com.rychkov.eshop.entities.Order;
 import com.rychkov.eshop.entities.User;
 import com.rychkov.eshop.exceptions.*;
+import com.rychkov.eshop.repositories.AddressStatusRepository;
 import com.rychkov.eshop.repositories.AddressesRepository;
 import com.rychkov.eshop.repositories.OrdersRepository;
 import com.rychkov.eshop.repositories.UserRepository;
@@ -21,13 +23,17 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+import static com.rychkov.eshop.configurations.AppConfiguration.ADDRESS_DELETED;
+import static com.rychkov.eshop.configurations.AppConfiguration.ADDRESS_EXISTS;
+
 @RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
     private final AddressesRepository addressesRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final OrdersRepository ordersRepository;
+    private final AddressStatusRepository addressStatusRepository;
+
 
     @Transactional
     @Override
@@ -85,35 +91,26 @@ public class UserServiceImpl implements UserService {
         if (optionalAddress.isPresent()) {
             address = optionalAddress.get();
             address.setCountry(addressDto.getCountry());
-            address.setCity((addressDto.getCity()));
-            address.setStreet(addressDto.getStreet());
-            address.setBuilding(addressDto.getBuilding());
             address.setApartment(addressDto.getApartment());
+            address.setBuilding(addressDto.getBuilding());
+            address.setCity(addressDto.getCity());
+            address.setStreet(addressDto.getStreet());
             address.setZip(addressDto.getZip());
+
             addressesRepository.save(address);
-        } else {
-            return null;
-        }
+        } else return null;
+
         return address;
     }
 
     @Override
     public void deleteAddressById(Integer addressId) throws FailedToDeleteAddressException {
         Optional<Address> deleteAddress = addressesRepository.findById(addressId);
-
         if (deleteAddress.isPresent()) {
-            List<Order> orders = ordersRepository.findAllByAddress_Id(addressId);
-            for (Order order : orders) {
-                Optional<Address> address = addressesRepository.findById(1);
-                if (address.isPresent()) {
-                    order.setAddress(address.get());
-                    ordersRepository.save(order);
-                } else throw new FailedToDeleteAddressException("Failed to delete address");
-            }
-            addressesRepository.delete(deleteAddress.get());
-        } else return;
-
-        Optional<Address> address = addressesRepository.findById(addressId);
+            Address address = deleteAddress.get();
+            address.setAddressStatus(addressStatusRepository.findByName(ADDRESS_DELETED));
+            addressesRepository.save(address);
+        } else throw new FailedToDeleteAddressException("Failed to delete address");
     }
 
     @Override
@@ -126,6 +123,7 @@ public class UserServiceImpl implements UserService {
                 .street(newAddress.getStreet())
                 .user(user)
                 .zip(newAddress.getZip())
+                .addressStatus(addressStatusRepository.findByName(ADDRESS_EXISTS))
                 .build();
 
         return addressesRepository.save(address);

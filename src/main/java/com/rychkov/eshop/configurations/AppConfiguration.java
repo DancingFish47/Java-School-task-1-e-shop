@@ -29,6 +29,11 @@ import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 @EnableJpaRepositories(value = "com.rychkov.eshop.repositories")
 public class AppConfiguration implements WebMvcConfigurer {
 
+    public static final String ADDRESS_EXISTS = "EXISTS";
+    public static final String ADDRESS_DELETED = "DELETED";
+    public static final String INITIAL_ORDER_STATUS = "REGISTERED";
+    public static final String INITIAL_PAYMENT_STATUS = "NOT PAYED";
+
     @Autowired
     private ApplicationContext applicationContext;
 

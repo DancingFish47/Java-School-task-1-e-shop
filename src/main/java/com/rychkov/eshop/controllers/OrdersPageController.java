@@ -2,6 +2,7 @@ package com.rychkov.eshop.controllers;
 
 import com.rychkov.eshop.dtos.Cart;
 import com.rychkov.eshop.dtos.CartItem;
+import com.rychkov.eshop.dtos.ResponseDto;
 import com.rychkov.eshop.exceptions.FailedToRepeatOrderException;
 import com.rychkov.eshop.services.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -30,13 +31,13 @@ public class OrdersPageController {
 
     @RequestMapping(value = "/repeatOrder", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject repeatOrder(@RequestBody Integer orderId, HttpSession session) throws FailedToRepeatOrderException {
-        JSONObject result = new JSONObject();
+    public ResponseDto repeatOrder(@RequestBody Integer orderId, HttpSession session) throws FailedToRepeatOrderException {
         Cart cart = new Cart();
         cart.setCartItems(orderService.repeatCartFromOrder(orderId));
         session.setAttribute("cart", cart);
-        result.put("message", "Chosen order was copied to your cart!");
-        return result;
+        return ResponseDto.builder()
+                .message("Chosen order has been copied to your cart!")
+                .build();
     }
 
 

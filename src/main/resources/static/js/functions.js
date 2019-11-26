@@ -255,9 +255,9 @@ async function saveMainEdit() {
         });
         let result = await call.json();
         if (!result.error) {
-            firstNameField.value = result.user.firstname;
-            lastNameField.value = result.user.lastname;
-            birthdateField.value = result.user.birthdate;
+            firstNameField.value = result.userMainInfoDto.firstname;
+            lastNameField.value = result.userMainInfoDto.lastname;
+            birthdateField.value = result.userMainInfoDto.birthdate;
         } else {
             toastr.error(result.message);
         }
@@ -374,6 +374,7 @@ function clearPasswordFields() {
 /*
 Addresses functions
  */
+//TODO Set 'enter' listener
 async function editAddress(id) {
     clearNewAddressForm();
     document.getElementById("newAddressForm").style.display = 'block';
@@ -388,9 +389,8 @@ async function editAddress(id) {
     const apartmentField = document.getElementById("apartment");
     const zipcodeField = document.getElementById("zipcode");
 
-    let addressId = {
-        id: id
-    };
+    let addressId = id;
+
     let call = await fetch('profileSettings/getAddressById', {
         method: 'POST',
         headers: {
@@ -416,9 +416,7 @@ async function editAddress(id) {
 
 async function deleteAddress(id) {
     const deleteAddressRow = document.getElementById("row" + id);
-    let deleteId = {
-        id: id
-    };
+    let deleteId = id;
     let call = await fetch('profileSettings/deleteAddress', {
         method: 'POST',
         headers: {

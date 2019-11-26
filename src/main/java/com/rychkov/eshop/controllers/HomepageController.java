@@ -10,23 +10,19 @@ public class HomepageController {
     public String homepage() {
         return "redirect:/books";
     }
-    @GetMapping("/null")
-    public void nullTest(){
-        throw new NullPointerException();
-    }
+
 }
 /*
   TODO
      1) Ddd autovalidate
-                                               2) Docker/Docker Compose
-                     3) Flyway for sql*
-                                               4) Logger
+     2) Docker/Docker Compose in root, update wars
+     3) Flyway for sql*
+     4) sonar coverage
+     5) light theme
+             4) Logger
              5) backend validation
-             6) Junit tests
              7) Technical solution doc
-                         9) jenkinks, teamcity, ci*
-                         10) LIGHT THEME FOR REVIEW
-                         11)Front validation edit rules
+             11)Front validation edit rules
 
 
 */

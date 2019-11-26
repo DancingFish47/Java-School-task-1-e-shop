@@ -1,5 +1,6 @@
 package com.rychkov.eshop.controllers;
 
+import com.rychkov.eshop.dtos.ResponseDto;
 import com.rychkov.eshop.dtos.UserDto;
 import com.rychkov.eshop.exceptions.EmailExistsException;
 import com.rychkov.eshop.exceptions.UsernameExistsException;
@@ -29,12 +30,12 @@ public class RegistrationPageController {
 
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject registerNewUser(
+    public ResponseDto registerNewUser(
             @Valid @RequestBody UserDto newUser, Errors errors) throws EmailExistsException, UsernameExistsException {
-        JSONObject result = new JSONObject();
         userService.registerNewUser(newUser);
-        result.put("message", "Registration complete!");
-        return result;
+        return ResponseDto.builder()
+                .message("Registration complete!")
+                .build();
     }
 
 
