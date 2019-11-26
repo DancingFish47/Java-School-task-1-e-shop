@@ -3,9 +3,9 @@ package com.rychkov.eshop.services.implementations;
 import com.rychkov.eshop.configurations.AppConfiguration;
 import com.rychkov.eshop.configurations.PersistenceJPAConfig;
 import com.rychkov.eshop.dtos.AddressDto;
-import com.rychkov.eshop.dtos.UserMainInfoDto;
 import com.rychkov.eshop.dtos.PasswordDto;
 import com.rychkov.eshop.dtos.UserDto;
+import com.rychkov.eshop.dtos.UserMainInfoDto;
 import com.rychkov.eshop.entities.Address;
 import com.rychkov.eshop.entities.AddressStatus;
 import com.rychkov.eshop.entities.User;
@@ -46,7 +46,7 @@ public class UserServiceImplTest {
     private Address address;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         user = User.builder()
                 .username("User")
                 .password(passwordEncoder.encode("1234"))
@@ -84,7 +84,7 @@ public class UserServiceImplTest {
         userDto.setPassword("1234");
 
         userService.registerNewUser(userDto);
-        assertEquals("Test" ,userRepository.findByUsername(userDto.getUsername()).getUsername());
+        assertEquals("Test", userRepository.findByUsername(userDto.getUsername()).getUsername());
 
     }
 
@@ -146,11 +146,11 @@ public class UserServiceImplTest {
                 .zip("test")
                 .build();
         userService.saveNewAddress(addressDto, user);
-        assertTrue(addressesRepository.count()>1);
+        assertTrue(addressesRepository.count() > 1);
     }
 
     @After
-    public void clear(){
+    public void clear() {
         addressesRepository.deleteAll();
         addressStatusRepository.deleteAll();
         userRepository.deleteAll();

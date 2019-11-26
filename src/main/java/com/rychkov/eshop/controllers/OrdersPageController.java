@@ -1,12 +1,10 @@
 package com.rychkov.eshop.controllers;
 
 import com.rychkov.eshop.dtos.Cart;
-import com.rychkov.eshop.dtos.CartItem;
 import com.rychkov.eshop.dtos.ResponseDto;
 import com.rychkov.eshop.exceptions.FailedToRepeatOrderException;
 import com.rychkov.eshop.services.OrderService;
 import lombok.RequiredArgsConstructor;
-import net.minidev.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,7 +14,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
-import java.util.List;
 
 @Controller
 @RequiredArgsConstructor

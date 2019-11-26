@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-
 import static com.rychkov.eshop.configurations.AppConfiguration.INITIAL_ORDER_STATUS;
 import static com.rychkov.eshop.configurations.AppConfiguration.INITIAL_PAYMENT_STATUS;
 import static org.junit.Assert.*;
@@ -56,7 +55,7 @@ public class OrderServiceImplTest {
     private User user;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         user = User.builder().username("TestUser").build();
         userRepository.save(user);
 
@@ -177,12 +176,12 @@ public class OrderServiceImplTest {
         book = optionalBook.get();
         int afterAmount = book.getAmount();
 
-        assertEquals(afterAmount, currentAmount+orderAmount);
+        assertEquals(afterAmount, currentAmount + orderAmount);
 
     }
 
     @After
-    public void clear(){
+    public void clear() {
         ordersRepository.deleteAll();
         orderStatusRepository.deleteAll();
         booksRepository.deleteAll();

@@ -1,6 +1,6 @@
 package com.rychkov.eshop.dtos;
 
-import lombok.*;
+import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +9,7 @@ import java.util.List;
 public class Cart {
     private List<CartItem> cartItems;
 
-    public Cart(){
+    public Cart() {
         cartItems = new ArrayList<>();
     }
 }

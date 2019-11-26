@@ -6,7 +6,7 @@
  */
 (function (factory) {
     factory(jQuery, window.Inputmask, window);
-}
+};
 (function ($, Inputmask, window) {
     $(window.document).ajaxComplete(function (event, xmlHttpRequest, ajaxOptions) {
         if ($.inArray("html", ajaxOptions.dataTypes) !== -1) {

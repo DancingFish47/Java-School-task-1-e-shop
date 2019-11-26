@@ -12,10 +12,8 @@ import com.rychkov.eshop.exceptions.ReturnBooksToStockException;
 import com.rychkov.eshop.repositories.*;
 import com.rychkov.eshop.services.OrderService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,12 +21,10 @@ import java.util.Optional;
 
 import static com.rychkov.eshop.configurations.AppConfiguration.INITIAL_ORDER_STATUS;
 import static com.rychkov.eshop.configurations.AppConfiguration.INITIAL_PAYMENT_STATUS;
-import static com.rychkov.eshop.configurations.RabbitConfiguration.EDIT_QUEUE_NAME;
 
 @RequiredArgsConstructor
 @Service
 public class OrderServiceImpl implements OrderService {
-
 
 
     private final BooksRepository booksRepository;

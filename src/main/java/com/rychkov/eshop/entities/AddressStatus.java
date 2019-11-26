@@ -12,8 +12,8 @@ import javax.validation.constraints.NotNull;
 @Builder(toBuilder = true)
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
-@Table(name = "Address_Status")
-public class AddressStatus extends AbstractEntity{
+@Table(name = "address_status")
+public class AddressStatus extends AbstractEntity {
     @NotNull
     @Column(name = "name")
     private String name;

@@ -1,8 +1,6 @@
 package com.rychkov.eshop.entities;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;

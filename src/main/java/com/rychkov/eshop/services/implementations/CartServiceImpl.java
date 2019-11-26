@@ -12,10 +12,8 @@ import com.rychkov.eshop.repositories.OrderStatusRepository;
 import com.rychkov.eshop.repositories.OrdersRepository;
 import com.rychkov.eshop.services.CartService;
 import lombok.RequiredArgsConstructor;
-import net.minidev.json.JSONObject;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;

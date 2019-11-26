@@ -1,8 +1,6 @@
 package com.rychkov.eshop.dtos;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 import javax.validation.Constraint;
 import javax.validation.ConstraintValidator;

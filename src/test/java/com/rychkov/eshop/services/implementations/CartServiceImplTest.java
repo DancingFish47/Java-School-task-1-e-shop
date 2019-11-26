@@ -15,20 +15,15 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {AppConfiguration.class, PersistenceJPAConfig.class})
@@ -67,7 +62,7 @@ public class CartServiceImplTest {
         addItemDto.setQuantity(1);
 
         Cart cart = new Cart();
-        cartService.addItem(cart,addItemDto);
+        cartService.addItem(cart, addItemDto);
         assertNotNull(cart.getCartItems());
     }
 
@@ -81,13 +76,14 @@ public class CartServiceImplTest {
     }
 
     @Test
-    public void checkStocksAndCreateTempOrder(){
+    public void checkStocksAndCreateTempOrder() {
         Cart cart = new Cart();
         List<CartItem> cartItems = cart.getCartItems();
         cartItems.add(new CartItem(savedbook, 1));
         cartService.checkStocksAndCreateTempOrder(cart);
         assertNotNull(ordersRepository.findAllByOrderStatus_Name("TEMPORDER"));
     }
+
     @After
     public void clear() {
         ordersRepository.deleteAll();

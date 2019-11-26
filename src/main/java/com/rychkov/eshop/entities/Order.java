@@ -1,8 +1,6 @@
 package com.rychkov.eshop.entities;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -10,7 +8,7 @@ import java.util.List;
 
 @Entity
 @Data
-@Table(name = "Orders")
+@Table(name = "orders")
 public class Order extends AbstractEntity {
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

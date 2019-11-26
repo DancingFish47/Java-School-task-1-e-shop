@@ -1,8 +1,6 @@
 package com.rychkov.eshop.entities;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,7 +9,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Data
-@Table(name = "Delivery_Method")
+@Table(name = "delivery_method")
 public class DeliveryMethod extends AbstractEntity {
     @NotNull
     @Column(name = "name")

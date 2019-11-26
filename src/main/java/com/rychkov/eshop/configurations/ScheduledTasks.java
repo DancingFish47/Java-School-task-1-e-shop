@@ -57,8 +57,8 @@ public class ScheduledTasks {
         rabbitTemplate.convertAndSend(NEW_BOOKS_QUEUE_NAME, newBooks);
     }
 
-    @Scheduled(initialDelay = 1000, fixedDelay=Long.MAX_VALUE)
-    public void initialSend(){
+    @Scheduled(initialDelay = 1000, fixedDelay = Long.MAX_VALUE)
+    public void initialSend() {
         List<Book> topBooks = booksRepository.findTop10ByOrderBySoldDesc();
         rabbitTemplate.convertAndSend(TOP_SELLERS_QUEUE_NAME, topBooks);
         List<Book> newBooks = booksRepository.findTop10ByOrderByDateDesc();

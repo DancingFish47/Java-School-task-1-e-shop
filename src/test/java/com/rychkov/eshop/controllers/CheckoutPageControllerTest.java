@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rychkov.eshop.configurations.AppConfiguration;
 import com.rychkov.eshop.configurations.PersistenceJPAConfig;
 import com.rychkov.eshop.dtos.Cart;
-import com.rychkov.eshop.dtos.OrderInfoDto;
 import com.rychkov.eshop.repositories.AddressesRepository;
 import com.rychkov.eshop.repositories.DeliveryMethodsRepository;
 import com.rychkov.eshop.repositories.PaymentMethodsRepository;
@@ -18,13 +17,11 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
 import org.thymeleaf.spring5.SpringTemplateEngine;
@@ -32,21 +29,14 @@ import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 
 import javax.servlet.http.HttpSession;
 
-import java.util.ArrayList;
-
-import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {AppConfiguration.class, PersistenceJPAConfig.class})
 @WebAppConfiguration
 public class CheckoutPageControllerTest extends AbstractJUnit4SpringContextTests {
+    @InjectMocks
+    CheckoutPageController checkoutPageController;
+    @Autowired
+    SpringTemplateEngine springTemplateEngine;
     @Mock
     private DeliveryMethodsRepository deliveryMethodsRepository;
     @Mock
@@ -65,18 +55,11 @@ public class CheckoutPageControllerTest extends AbstractJUnit4SpringContextTests
     private Cart cart;
     @Mock
     private Model model;
-
-    @InjectMocks
-    CheckoutPageController checkoutPageController;
-
     private MockMvc mockMvc;
     private ObjectMapper objectMapper;
 
-    @Autowired
-    SpringTemplateEngine springTemplateEngine;
-
     @Before
-    public void setUp(){
+    public void setUp() {
         objectMapper = new ObjectMapper();
 
         MockitoAnnotations.initMocks(this);
@@ -86,8 +69,9 @@ public class CheckoutPageControllerTest extends AbstractJUnit4SpringContextTests
 
         this.mockMvc = MockMvcBuilders.standaloneSetup(checkoutPageController).setViewResolvers(resolver).build();
     }
+
     @Test
-    public void checkoutPage() throws Exception{
+    public void checkoutPage() throws Exception {
 //        when(httpSession.getAttribute(anyString())).thenReturn(null);
 //        when(addressesRepository.findAllByAddressStatus_NameAndUser(any(), any())).thenReturn(new ArrayList<>());
 //        when(deliveryMethodsRepository.findAll()).thenReturn(new ArrayList<>());
@@ -100,7 +84,7 @@ public class CheckoutPageControllerTest extends AbstractJUnit4SpringContextTests
     }
 
     @Test
-    public void processOrder() throws Exception{
+    public void processOrder() throws Exception {
 //        when(httpSession.getAttribute(anyString())).thenReturn(0);
 //        MvcResult result = mockMvc.perform(post("/checkout/processOrder")
 //                .contentType(MediaType.APPLICATION_JSON)
@@ -110,5 +94,5 @@ public class CheckoutPageControllerTest extends AbstractJUnit4SpringContextTests
 //
 //        String content = result.getResponse().getContentAsString();
 //        assertTrue(content.contains("Your order has been"));
-   }
+    }
 }

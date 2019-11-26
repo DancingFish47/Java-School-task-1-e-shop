@@ -13,13 +13,11 @@ import com.rychkov.eshop.repositories.OrdersRepository;
 import com.rychkov.eshop.services.CartService;
 import com.rychkov.eshop.services.OrderService;
 import lombok.RequiredArgsConstructor;
-import net.minidev.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
-import java.util.List;
 import java.util.Optional;
 
 
@@ -45,7 +43,7 @@ public class CartPageController {
         }
 
         float total = 0;
-        if(cart != null){
+        if (cart != null) {
             model.addAttribute("cart", cart.getCartItems());
             if (cart.getCartItems() != null) {
                 for (CartItem cartItem : cart.getCartItems()) {
@@ -62,7 +60,7 @@ public class CartPageController {
     @ResponseBody
     public ResponseDto deleteFromCart(@RequestBody Integer deleteId, HttpSession session) throws BookException {
         Cart cart = (Cart) session.getAttribute("cart");
-        if(cart == null){
+        if (cart == null) {
             cart = new Cart();
             session.setAttribute("cart", cart);
         }
@@ -77,7 +75,7 @@ public class CartPageController {
     @ResponseBody
     public ResponseDto checkStocks(HttpSession session) throws ProcessOrderException, OutOfStockException {
         Cart cart = (Cart) session.getAttribute("cart");
-        if(cart == null){
+        if (cart == null) {
             cart = new Cart();
             session.setAttribute("cart", cart);
         }

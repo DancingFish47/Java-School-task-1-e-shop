@@ -6,7 +6,6 @@ import com.rychkov.eshop.exceptions.EmailExistsException;
 import com.rychkov.eshop.exceptions.UsernameExistsException;
 import com.rychkov.eshop.services.UserService;
 import lombok.RequiredArgsConstructor;
-import net.minidev.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;

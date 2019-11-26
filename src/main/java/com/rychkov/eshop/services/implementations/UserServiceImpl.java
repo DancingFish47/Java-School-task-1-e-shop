@@ -1,17 +1,14 @@
 package com.rychkov.eshop.services.implementations;
 
 import com.rychkov.eshop.dtos.AddressDto;
-import com.rychkov.eshop.dtos.UserMainInfoDto;
 import com.rychkov.eshop.dtos.PasswordDto;
 import com.rychkov.eshop.dtos.UserDto;
+import com.rychkov.eshop.dtos.UserMainInfoDto;
 import com.rychkov.eshop.entities.Address;
-import com.rychkov.eshop.entities.AddressStatus;
-import com.rychkov.eshop.entities.Order;
 import com.rychkov.eshop.entities.User;
 import com.rychkov.eshop.exceptions.*;
 import com.rychkov.eshop.repositories.AddressStatusRepository;
 import com.rychkov.eshop.repositories.AddressesRepository;
-import com.rychkov.eshop.repositories.OrdersRepository;
 import com.rychkov.eshop.repositories.UserRepository;
 import com.rychkov.eshop.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +17,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.List;
 import java.util.Optional;
 
 import static com.rychkov.eshop.configurations.AppConfiguration.ADDRESS_DELETED;
@@ -56,11 +52,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void editMainInfo(UserMainInfoDto dto, Integer userId) throws JsonException{
+    public void editMainInfo(UserMainInfoDto dto, Integer userId) throws JsonException {
         Optional<User> optionalUser = userRepository.findById(userId);
 
         User user;
-        if (optionalUser.isPresent())  user = optionalUser.get();
+        if (optionalUser.isPresent()) user = optionalUser.get();
         else throw new JsonException("User not found");
         user.setFirstName(dto.getFirstname());
         user.setLastName(dto.getLastname());

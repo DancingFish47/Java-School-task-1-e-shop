@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 @Builder(toBuilder = true)
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
-@Table(name = "Address")
+@Table(name = "address")
 public class Address extends AbstractEntity {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")

@@ -44,6 +44,11 @@ public class AppConfiguration implements WebMvcConfigurer {
     }
 
     @Bean
+    public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
+        return new PropertySourcesPlaceholderConfigurer();
+    }
+
+    @Bean
     public SpringResourceTemplateResolver templateResolver() {
         SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
         templateResolver.setApplicationContext(applicationContext);
@@ -59,11 +64,6 @@ public class AppConfiguration implements WebMvcConfigurer {
         templateEngine.setEnableSpringELCompiler(true);
         templateEngine.addDialect(new SpringSecurityDialect());
         return templateEngine;
-    }
-
-    @Bean
-    public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
-        return new PropertySourcesPlaceholderConfigurer();
     }
 
     @Override

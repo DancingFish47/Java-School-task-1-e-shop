@@ -2,9 +2,9 @@ package com.rychkov.eshop.controllers;
 
 
 import com.rychkov.eshop.dtos.AddressDto;
+import com.rychkov.eshop.dtos.PasswordDto;
 import com.rychkov.eshop.dtos.ResponseDto;
 import com.rychkov.eshop.dtos.UserMainInfoDto;
-import com.rychkov.eshop.dtos.PasswordDto;
 import com.rychkov.eshop.entities.Address;
 import com.rychkov.eshop.entities.User;
 import com.rychkov.eshop.exceptions.FailedToDeleteAddressException;
@@ -14,7 +14,6 @@ import com.rychkov.eshop.repositories.AddressesRepository;
 import com.rychkov.eshop.repositories.UserRepository;
 import com.rychkov.eshop.services.UserService;
 import lombok.RequiredArgsConstructor;
-import net.minidev.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;

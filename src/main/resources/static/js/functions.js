@@ -128,25 +128,25 @@ $(function () {
                 cardNumber: {
                     required: true,
                 },
-                bookName:{
+                bookName: {
                     required: true,
                 },
-                bookAuthor:{
+                bookAuthor: {
                     required: true,
                 },
-                bookPrice:{
-                    required:true,
+                bookPrice: {
+                    required: true,
                     digits: true
                 },
-                bookAmount:{
-                    required:true,
-                    digits: true,
-                },
-                bookSold:{
+                bookAmount: {
                     required: true,
                     digits: true,
                 },
-                bookGenre:{
+                bookSold: {
+                    required: true,
+                    digits: true,
+                },
+                bookGenre: {
                     lettersOnly: true,
                 }
             }
@@ -190,7 +190,7 @@ async function register() {
 
         if (!result.error) {
             toastr.success(result.message);
-            setTimeout(function(){
+            setTimeout(function () {
                 document.location.replace("/login");
             }, 2000);
 
@@ -326,13 +326,12 @@ async function savePasswordEdit() {
         });
         let result = await call.json();
 
-        if(!result.error){
-            toastr.success(result.message)
+        if (!result.error) {
+            toastr.success(result.message);
             switchPasswordFields('none');
             clearPasswordFields();
             switchPasswordButtons('block', 'none', 'none');
-        }
-        else {
+        } else {
             clearPasswordFields();
             toastr.error(result.message);
         }
@@ -374,6 +373,7 @@ function clearPasswordFields() {
 /*
 Addresses functions
  */
+
 //TODO Set 'enter' listener
 async function editAddress(id) {
     clearNewAddressForm();
@@ -589,7 +589,7 @@ async function addToCart(id) {
     });
 
     let result = await call.json();
-    if (result.error){
+    if (result.error) {
         toastr.error(result.message);
     } else toastr.success(result.message);
 
@@ -639,10 +639,10 @@ async function toCheckOut() {
         },
     });
     let result = await call.json();
-    if(!result.error){
+    if (!result.error) {
         document.location.href = '/checkout';
-    }else{
-        toastr.error (result.message);
+    } else {
+        toastr.error(result.message);
     }
 }
 
@@ -738,10 +738,10 @@ async function finishOrder() {
 
     let result = await call.json();
 
-    if(!result.error){
+    if (!result.error) {
         toastr.success(result.message);
         showDivs('block', 'none', 'none', 'none', 'block');
-    }else{
+    } else {
         toastr.error(result.message);
     }
 }
@@ -749,7 +749,7 @@ async function finishOrder() {
 /*
 Orders Page functions
  */
-async function repeatOrder(orderId){
+async function repeatOrder(orderId) {
     let call = await fetch("/repeatOrder", {
         method: 'POST',
         headers: {
@@ -760,14 +760,15 @@ async function repeatOrder(orderId){
     });
 
     let result = await call.json();
-    if(!result.error) toastr.success(result.message);
+    if (!result.error) toastr.success(result.message);
     else toastr.error(result.message);
 
 }
+
 /*
 Admins page functions
  */
-async function onChangePaymentStatus(orderId){
+async function onChangePaymentStatus(orderId) {
     let paymentStatusSelector = document.getElementById("paymentStatus" + orderId);
     let newStatus = paymentStatusSelector.options[paymentStatusSelector.selectedIndex].text;
 
@@ -787,13 +788,14 @@ async function onChangePaymentStatus(orderId){
 
     let result = await call.json();
 
-    if(!result.error){
+    if (!result.error) {
         toastr.success(result.message);
-    }else{
+    } else {
         toastr.error(result.message);
     }
 }
-async function onChangeOrderStatus(orderId){
+
+async function onChangeOrderStatus(orderId) {
     let orderStatusSelector = document.getElementById("orderStatus" + orderId);
     let newStatus = orderStatusSelector.options[orderStatusSelector.selectedIndex].text;
 
@@ -813,27 +815,28 @@ async function onChangeOrderStatus(orderId){
 
     let result = await call.json();
 
-    if(!result.error){
+    if (!result.error) {
         toastr.success(result.message);
-    }else{
+    } else {
         toastr.error(result.message);
     }
 }
-function changeStats(){
+
+function changeStats() {
     let usersTable = document.getElementById("topUsers");
     let booksTable = document.getElementById("topBooks");
     let button = document.getElementById("switchButton");
-    if(usersTable.style.display === 'block'){
+    if (usersTable.style.display === 'block') {
         usersTable.style.display = 'none';
         booksTable.style.display = 'block';
         button.textContent = 'To top users';
-    }
-    else{
+    } else {
         usersTable.style.display = 'block';
         booksTable.style.display = 'none';
         button.textContent = 'To top books';
     }
 }
+
 function sortByName(tableColumn, tableId) {
     let table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
     table = document.getElementById(tableId);
@@ -877,7 +880,7 @@ function sortByName(tableColumn, tableId) {
             rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
             switching = true;
             // Each time a switch is done, increase this count by 1:
-            switchcount ++;
+            switchcount++;
         } else {
             /* If no switching has been done AND the direction is "asc",
             set the direction to "desc" and run the while loop again. */
@@ -888,7 +891,8 @@ function sortByName(tableColumn, tableId) {
         }
     }
 }
-function sortByValue(tableColumn, tableId){
+
+function sortByValue(tableColumn, tableId) {
     let table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
     table = document.getElementById(tableId);
     switching = true;
@@ -931,7 +935,7 @@ function sortByValue(tableColumn, tableId){
             rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
             switching = true;
             // Each time a switch is done, increase this count by 1:
-            switchcount ++;
+            switchcount++;
         } else {
             /* If no switching has been done AND the direction is "asc",
             set the direction to "desc" and run the while loop again. */
@@ -1067,7 +1071,7 @@ async function saveEditGenre(id) {
             let Newcell1 = NewRow.insertCell(0);
             let Newcell2 = NewRow.insertCell(1);
             let Newcell3 = NewRow.insertCell(2);
-            let Newcell4= NewRow.insertCell(3);
+            let Newcell4 = NewRow.insertCell(3);
             Newcell1.innerHTML = id;
             Newcell2.innerHTML = genreField.value;
             Newcell3.innerHTML = "<button type=\"button\" class=\"row btn btn-primary\" onclick=\"editGenre('" + id + "');\">Edit</button>";
@@ -1084,6 +1088,7 @@ async function saveEditGenre(id) {
 function clearNewGenreForm() {
     document.getElementById("genreName").value = null;
 }
+
 /*
 Books manage function
  */
@@ -1118,7 +1123,7 @@ async function editBook(id) {
         bookNameField.value = result.book.name;
         bookAuthorField.value = result.book.author;
         bookAmountField.value = result.book.amount;
-        if(result.book.bookCategory!=null) bookGenreField.value = result.book.bookCategory.name;
+        if (result.book.bookCategory != null) bookGenreField.value = result.book.bookCategory.name;
         else bookGenreField.value = null;
         bookPriceField.value = result.book.price;
         bookSoldField.value = result.book.sold;
@@ -1127,7 +1132,8 @@ async function editBook(id) {
         toastr.error(result.message);
     }
 }
-async function deleteBook(id){
+
+async function deleteBook(id) {
     const deleteBookRow = document.getElementById("row" + id);
 
     let call = await fetch('/adminPage/adminManageBooks/deleteBook', {
@@ -1146,14 +1152,16 @@ async function deleteBook(id){
         toastr.error(result.message);
     }
 }
-function addBook(){
+
+function addBook() {
     clearNewBookForm();
     document.getElementById("newBookForm").style.display = 'block';
     document.getElementById("addNewBookButton").style.display = 'none';
     document.getElementById("saveNewBookButton").style.display = 'block';
     document.getElementById("cancelBookButton").style.display = 'block';
 }
-function cancelBook(){
+
+function cancelBook() {
     clearNewBookForm();
     document.getElementById("newBookForm").style.display = 'none';
     document.getElementById("addNewBookButton").style.display = 'block';
@@ -1161,7 +1169,8 @@ function cancelBook(){
     document.getElementById("saveEditBookButton").style.display = 'none';
     document.getElementById("saveNewBookButton").style.display = 'none';
 }
-async function saveNewBook(){
+
+async function saveNewBook() {
     if ($("#booksForm").valid()) {
         const bookNameField = document.getElementById("bookName");
         const bookAuthorField = document.getElementById("bookAuthor");
@@ -1193,7 +1202,7 @@ async function saveNewBook(){
 
         if (!result.error) {
             toastr.success(result.message);
-            setTimeout(function(){
+            setTimeout(function () {
                 document.location.reload();
             }, 2000);
         } else {
@@ -1202,7 +1211,8 @@ async function saveNewBook(){
         }
     }
 }
-async function saveEditBook(id){
+
+async function saveEditBook(id) {
     if ($("#booksForm").valid()) {
         const bookNameField = document.getElementById("bookName");
         const bookAuthorField = document.getElementById("bookAuthor");
@@ -1242,20 +1252,20 @@ async function saveEditBook(id){
             let Newcell1 = NewRow.insertCell(0);
             let Newcell2 = NewRow.insertCell(1);
             let Newcell3 = NewRow.insertCell(2);
-            let Newcell4= NewRow.insertCell(3);
-            let Newcell5= NewRow.insertCell(4);
-            let Newcell6= NewRow.insertCell(5);
-            let Newcell7= NewRow.insertCell(6);
-            let Newcell8= NewRow.insertCell(7);
-            let Newcell9= NewRow.insertCell(8);
-            let Newcell10= NewRow.insertCell(9);
-            let Newcell11= NewRow.insertCell(10);
+            let Newcell4 = NewRow.insertCell(3);
+            let Newcell5 = NewRow.insertCell(4);
+            let Newcell6 = NewRow.insertCell(5);
+            let Newcell7 = NewRow.insertCell(6);
+            let Newcell8 = NewRow.insertCell(7);
+            let Newcell9 = NewRow.insertCell(8);
+            let Newcell10 = NewRow.insertCell(9);
+            let Newcell11 = NewRow.insertCell(10);
             Newcell1.innerHTML = id;
             Newcell2.innerHTML = bookNameField.value;
             Newcell3.innerHTML = bookAuthorField.value;
             Newcell4.innerHTML = bookAmountField.value;
             Newcell5.innerHTML = bookPagesField.value;
-            if(bookGenreField.value == null) Newcell6.innerHTML = 'No genre';
+            if (bookGenreField.value == null) Newcell6.innerHTML = 'No genre';
             else Newcell6.innerHTML = bookGenreField.value;
             Newcell7.innerHTML = bookPriceField.value;
             Newcell8.innerHTML = bookSoldField.value;
@@ -1269,7 +1279,8 @@ async function saveEditBook(id){
         }
     }
 }
-function clearNewBookForm(){
+
+function clearNewBookForm() {
     document.getElementById("bookName").value = null;
     document.getElementById("bookAuthor").value = null;
     document.getElementById("bookPrice").value = null;

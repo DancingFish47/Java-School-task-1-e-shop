@@ -12,7 +12,10 @@ import com.rychkov.eshop.repositories.BookCategoryRepository;
 import com.rychkov.eshop.repositories.BooksRepository;
 import com.rychkov.eshop.repositories.OrderStatusRepository;
 import com.rychkov.eshop.repositories.PaymentStatusRepository;
-import com.rychkov.eshop.services.*;
+import com.rychkov.eshop.services.AdminService;
+import com.rychkov.eshop.services.BookService;
+import com.rychkov.eshop.services.GenreService;
+import com.rychkov.eshop.services.OrderService;
 import lombok.RequiredArgsConstructor;
 import net.minidev.json.JSONObject;
 import org.springframework.stereotype.Controller;
@@ -86,7 +89,7 @@ public class AdminPageController {
 
     @RequestMapping(value = "adminPage/adminManageCategories/getGenreById", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseDto getGenreById(@RequestBody Integer genreId) throws GenreException{
+    public ResponseDto getGenreById(@RequestBody Integer genreId) throws GenreException {
         Optional<BookCategory> genreOptional = bookCategoryRepository.findById(genreId);
         if (!genreOptional.isPresent()) throw new GenreException("Genre not found");
         return ResponseDto.builder()
@@ -136,15 +139,15 @@ public class AdminPageController {
     public ResponseDto saveEditBook(@RequestBody BookDto bookDto) throws BookException {
         bookService.editBook(bookDto);
         return ResponseDto.builder()
-                .message("Book details for"  + bookDto.getName() +  " saved!")
+                .message("Book details for" + bookDto.getName() + " saved!")
                 .build();
     }
 
     @RequestMapping(value = "adminPage/adminManageBooks/getBookById", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseDto getBookById(@RequestBody Integer bookId) throws BookException{
+    public ResponseDto getBookById(@RequestBody Integer bookId) throws BookException {
         Optional<Book> optionalBook = booksRepository.findById(bookId);
-        if(!optionalBook.isPresent()) throw new BookException("Book not found");
+        if (!optionalBook.isPresent()) throw new BookException("Book not found");
         return ResponseDto.builder()
                 .book(optionalBook.get())
                 .build();

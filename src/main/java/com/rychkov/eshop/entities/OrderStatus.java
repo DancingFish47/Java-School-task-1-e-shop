@@ -1,8 +1,6 @@
 package com.rychkov.eshop.entities;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,7 +9,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Data
-@Table(name = "Order_Status")
+@Table(name = "order_status")
 public class OrderStatus extends AbstractEntity {
     @NotNull
     @Column(name = "name")

@@ -35,7 +35,8 @@
                 <td>
                     <select class="custom-select" th:id="${'paymentStatus' + orderAndBook.order.id}"
                             th:onchange="'javascript:onChangePaymentStatus(\'' + ${orderAndBook.order.id} + '\');'">
-                        <option th:each="status : ${paymentStatus}" th:selected="${status.name == orderAndBook.order.paymentStatus.name}"
+                        <option th:each="status : ${paymentStatus}"
+                                th:selected="${status.name == orderAndBook.order.paymentStatus.name}"
                                 th:text="${status.name}"
                                 th:value="${status.name}"></option>
                     </select>
@@ -43,7 +44,8 @@
                 <td>
                     <select class="custom-select" th:id="${'orderStatus' + orderAndBook.order.id}"
                             th:onchange="'javascript:onChangeOrderStatus(\'' + ${orderAndBook.order.id} + '\');'">
-                        <option th:each="status : ${orderStatus}" th:selected="${status.name == orderAndBook.order.orderStatus.name}"
+                        <option th:each="status : ${orderStatus}"
+                                th:selected="${status.name == orderAndBook.order.orderStatus.name}"
                                 th:text="${status.name}"
                                 th:value="${status.name}"></option>
                     </select>

@@ -15,9 +15,11 @@ services:
     depends_on:
       - mysql
       - rabbitmq
+      - flyway
     environment:
       db.url: jdbc:mysql://mysql:3306/eshopdb?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
       rabbit.factory.hostname: rabbitmq
+      hibernate.hbm2ddl.auto: update
     networks:
       - net
 
@@ -32,12 +34,13 @@ services:
     depends_on:
       - rabbitmq
       - eshop
+      - flyway
       - mysql
     environment:
-          spring.rabbitmq.host: rabbitmq
-          spring.rabbitmq.port: 5672
-          spring.rabbitmq.username: guest
-          spring.rabbitmq.password: guest
+      spring.rabbitmq.host: rabbitmq
+      spring.rabbitmq.port: 5672
+      spring.rabbitmq.username: guest
+      spring.rabbitmq.password: guest
     networks:
       - net
 
@@ -55,6 +58,17 @@ services:
     networks:
       - net
 
+  flyway:
+    container_name: flyway
+    image: flyway/flyway
+    command: -url=jdbc:mysql://mysql -schemas=eshopdb -user=root -connectRetries=60 migrate
+    volumes:
+      - ./schema.sql:/flyway/sql/V1__Initial.sql
+    depends_on:
+      - mysql
+    networks:
+      - net
+
   mysql:
     image: mysql
     container_name: mysql
@@ -62,8 +76,8 @@ services:
       - 3306:3306
     restart: always
     environment:
-      MYSQL_DATABASE: eshopdb
       MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      MYSQL_DATABASE: eshopdb
     volumes:
       - db-data:/var/lib/mysql
     networks:

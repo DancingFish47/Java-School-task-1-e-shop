@@ -11,17 +11,18 @@ import java.util.List;
  * @author Roman Rychkov
  * @see #getTopBooksList()
  * @see #getTopUsersList()
- *
  */
 public interface AdminService {
     /**
      * Gets statistics for books.
+     *
      * @return List of TopBookDto objects, containing name, amount sold and total profit for each book.
      */
     List<TopBookDto> getTopBooksList();
 
     /**
      * Gets statistics for users.
+     *
      * @return list of TopUserDto objects, containing username, amount of books bought and total value of bought books.
      */
     List<TopUserDto> getTopUsersList();

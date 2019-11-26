@@ -20,7 +20,7 @@ import java.util.Collection;
 @Builder(toBuilder = true)
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
-@Table(name = "User")
+@Table(name = "user")
 public class User extends AbstractEntity implements UserDetails {
     @NotNull
     @Column(name = "username", unique = true)

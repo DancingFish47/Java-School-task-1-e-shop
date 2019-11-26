@@ -4,9 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rychkov.eshop.configurations.AppConfiguration;
 import com.rychkov.eshop.configurations.PersistenceJPAConfig;
 import com.rychkov.eshop.dtos.AddItemDto;
-import com.rychkov.eshop.dtos.NewStatusDto;
 import com.rychkov.eshop.dtos.PageParams;
-import com.rychkov.eshop.entities.Book;
 import com.rychkov.eshop.repositories.BookCategoryRepository;
 import com.rychkov.eshop.repositories.OrdersRepository;
 import com.rychkov.eshop.services.BookService;
@@ -32,19 +30,22 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 
 import javax.servlet.http.HttpSession;
-
 import java.util.ArrayList;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {AppConfiguration.class, PersistenceJPAConfig.class})
 @WebAppConfiguration
 public class BooksPageControllerTest extends AbstractJUnit4SpringContextTests {
+    @InjectMocks
+    BooksPageController booksPageController;
+    @Autowired
+    SpringTemplateEngine springTemplateEngine;
     @Mock
     private BookService bookService;
     @Mock
@@ -57,18 +58,11 @@ public class BooksPageControllerTest extends AbstractJUnit4SpringContextTests {
     private OrderService orderService;
     @Mock
     private HttpSession httpSession;
-
-    @InjectMocks
-    BooksPageController booksPageController;
-
     private MockMvc mockMvc;
     private ObjectMapper objectMapper;
 
-    @Autowired
-    SpringTemplateEngine springTemplateEngine;
-
     @Before
-    public void setUp(){
+    public void setUp() {
         objectMapper = new ObjectMapper();
 
         MockitoAnnotations.initMocks(this);
@@ -78,8 +72,9 @@ public class BooksPageControllerTest extends AbstractJUnit4SpringContextTests {
 
         this.mockMvc = MockMvcBuilders.standaloneSetup(booksPageController).setViewResolvers(resolver).build();
     }
+
     @Test
-    public void showBooks() throws Exception{
+    public void showBooks() throws Exception {
         when(httpSession.getAttribute(anyString())).thenReturn(null);
         when(bookService.prepareBooksList(any(PageParams.class))).thenReturn(Page.empty());
         when(bookCategoryRepository.findAll()).thenReturn(new ArrayList<>());
