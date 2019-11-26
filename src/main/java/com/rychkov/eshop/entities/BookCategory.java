@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Data
-@Table(name = "book_Category")
+@Table(name = "book_category")
 
 public class BookCategory extends AbstractEntity {
     @NotNull

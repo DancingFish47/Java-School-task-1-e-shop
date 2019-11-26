@@ -12,7 +12,7 @@ import java.util.List;
 public class Order extends AbstractEntity {
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "Order_Books",
+            name = "order_books",
             joinColumns = {@JoinColumn(name = "order_id")},
             inverseJoinColumns = {@JoinColumn(name = "book_id")}
     )
